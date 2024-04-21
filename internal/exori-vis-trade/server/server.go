@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/adriein/exori-vis-trade/pkg/types"
 	"log"
 	"log/slog"
 	"net/http"
@@ -28,9 +29,16 @@ func (s *ExoriVisTradeApiServer) Start() {
 		Addr:    s.address,
 		Handler: v1,
 	}
+
 	slog.Info("Starting the ExoriVisTradeApiServer at " + s.address)
 
-	log.Fatal(server.ListenAndServe())
+	err := server.ListenAndServe()
+
+	if err != nil {
+		evtErr := &types.EvtError{Msg: err.Error(), Function: "Start", File: "server.go"}
+
+		log.Fatal(evtErr.Error())
+	}
 }
 
 func (s *ExoriVisTradeApiServer) Route(url string, handler http.HandlerFunc) *ExoriVisTradeApiServer {
