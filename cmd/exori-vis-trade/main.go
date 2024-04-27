@@ -9,7 +9,7 @@ import (
 func main() {
 	api, err := server.New(":8080")
 
-	api.Route("/index", handler.IndexHandler)
+	api.Route("/index", handler.HomeHandler)
 
 	if err != nil {
 		os.Exit(1)
