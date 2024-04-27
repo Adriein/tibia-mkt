@@ -1,6 +1,9 @@
 package types
 
+import "encoding/json"
+
 type ServerResponse struct {
-	Status int
-	Data   any
+	Ok    bool            `json:"ok"`
+	Data  json.RawMessage `json:"data"`
+	Error string          `json:"error,omitempty"`
 }

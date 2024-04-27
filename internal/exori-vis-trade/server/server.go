@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/adriein/exori-vis-trade/pkg/middleware"
 	"github.com/adriein/exori-vis-trade/pkg/types"
 	"log"
 	"log/slog"
@@ -8,8 +9,9 @@ import (
 )
 
 type ExoriVisTradeApiServer struct {
-	address string
-	router  *http.ServeMux
+	address     string
+	router      *http.ServeMux
+	middlewares middleware.MiddlewareStack
 }
 
 func New(address string) (*ExoriVisTradeApiServer, error) {
