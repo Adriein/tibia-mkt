@@ -3,14 +3,19 @@ package main
 import (
 	"github.com/adriein/exori-vis-trade/internal/exori-vis-trade/handler"
 	"github.com/adriein/exori-vis-trade/internal/exori-vis-trade/server"
+	"github.com/adriein/exori-vis-trade/pkg/middleware"
 	"os"
 )
 
 func main() {
 	api, err := server.New(":4000")
 
+	fooMiddlewares := middleware.NewMiddlewareChain(
+		middleware.NewAuthMiddleWare,
+	)
+
 	api.Route("/home", api.NewHandler(handler.HomeHandler))
-	api.Route("/foo", api.NewHandler(handler.FooHandler))
+	api.Route("/foo", fooMiddlewares.ApplyOn(api.NewHandler(handler.FooHandler)))
 
 	if err != nil {
 		os.Exit(1)

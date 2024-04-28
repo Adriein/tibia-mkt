@@ -27,13 +27,13 @@ func (s *ExoriVisTradeApiServer) Start() {
 	v1 := http.NewServeMux()
 	v1.Handle("/api/v1/", http.StripPrefix("/api/v1", s.router))
 
-	MiddleWareChain := middleware.New(
-		middleware.NewRequestTracingMiddleWare,
+	MuxMiddleWareChain := middleware.NewMiddlewareChain(
+		middleware.NewRequestTracingMiddleware,
 	)
 
 	server := http.Server{
 		Addr:    s.address,
-		Handler: MiddleWareChain.Apply(v1),
+		Handler: MuxMiddleWareChain.ApplyOn(v1),
 	}
 
 	slog.Info("Starting the ExoriVisTradeApiServer at " + s.address)
@@ -47,8 +47,8 @@ func (s *ExoriVisTradeApiServer) Start() {
 	}
 }
 
-func (s *ExoriVisTradeApiServer) Route(url string, handler http.HandlerFunc) {
-	s.router.HandleFunc(url, handler)
+func (s *ExoriVisTradeApiServer) Route(url string, handler http.Handler) {
+	s.router.Handle(url, handler)
 }
 
 func (s *ExoriVisTradeApiServer) NewHandler(handler types.ExoriVisTradeHttpHandler) http.HandlerFunc {
