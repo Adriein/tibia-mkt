@@ -7,9 +7,10 @@ import (
 )
 
 func main() {
-	api, err := server.New(":8080")
+	api, err := server.New(":4000")
 
-	api.Route("/index", handler.HomeHandler)
+	api.Route("/home", api.NewHandler(handler.HomeHandler))
+	api.Route("/foo", api.NewHandler(handler.FooHandler))
 
 	if err != nil {
 		os.Exit(1)
