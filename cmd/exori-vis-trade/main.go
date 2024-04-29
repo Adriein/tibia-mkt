@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/adriein/exori-vis-trade/internal/exori-vis-trade/handler"
+	"github.com/adriein/exori-vis-trade/internal/exori-vis-trade/repository"
 	"github.com/adriein/exori-vis-trade/internal/exori-vis-trade/server"
 	"github.com/adriein/exori-vis-trade/pkg/middleware"
 	"os"
@@ -14,7 +15,11 @@ func main() {
 		middleware.NewAuthMiddleWare,
 	)
 
-	api.Route("/home", api.NewHandler(handler.HomeHandler))
+	repo := repository.NewCsvSecuraCogRepository()
+
+	home := handler.NewHomeHandler(repo)
+
+	api.Route("/home", api.NewHandler(home.Handler))
 	api.Route("/foo", fooMiddlewares.ApplyOn(api.NewHandler(handler.FooHandler)))
 
 	if err != nil {
