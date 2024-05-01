@@ -41,7 +41,7 @@ func (s *ExoriVisTradeApiServer) Start() {
 	err := server.ListenAndServe()
 
 	if err != nil {
-		evtErr := types.EvtError{Msg: err.Error(), Function: "Start", File: "server.go"}
+		evtErr := types.ApiError{Msg: err.Error(), Function: "Start", File: "server.go"}
 
 		log.Fatal(evtErr.Error())
 	}
@@ -53,7 +53,7 @@ func (s *ExoriVisTradeApiServer) Route(url string, handler http.Handler) {
 
 func (s *ExoriVisTradeApiServer) NewHandler(handler types.ExoriVisTradeHttpHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var appError types.EvtError
+		var appError types.ApiErrorInterface
 
 		if err := handler(w, r); errors.As(err, &appError) {
 			log.Fatal(appError.Error())

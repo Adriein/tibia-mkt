@@ -12,14 +12,18 @@ type HomeResponse struct {
 
 type HomeHandler struct {
 	repository types.CogRepository
+	presenter  types.Presenter
 }
 
-func NewHomeHandler(repository types.CogRepository) *HomeHandler {
-	return &HomeHandler{repository: repository}
+func NewHomeHandler(repository types.CogRepository, presenter types.Presenter) *HomeHandler {
+	return &HomeHandler{
+		repository: repository,
+		presenter:  presenter,
+	}
 }
 
-func (hh *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
-	results, repositoryErr := hh.repository.Find(types.Criteria{})
+func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
+	results, repositoryErr := h.repository.Find(types.Criteria{})
 
 	if repositoryErr != nil {
 		return repositoryErr
@@ -33,7 +37,7 @@ func (hh *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 	bytes, jsonErr := json.Marshal(data)
 
 	if jsonErr != nil {
-		return types.EvtError{
+		return types.ApiError{
 			Msg:      jsonErr.Error(),
 			Function: "HomeHandler",
 			File:     "home.go",
@@ -46,7 +50,7 @@ func (hh *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 	_, writeErr := w.Write(bytes)
 
 	if writeErr != nil {
-		return types.EvtError{
+		return types.ApiError{
 			Msg:      writeErr.Error(),
 			Function: "HomeHandler",
 			File:     "home.go",
