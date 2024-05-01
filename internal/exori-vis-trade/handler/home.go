@@ -19,16 +19,22 @@ func NewHomeHandler(repository types.CogRepository) *HomeHandler {
 }
 
 func (hh *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
-	data := &types.ServerResponse{
-		Ok:   true,
-		Data: nil,
+	results, repositoryErr := hh.repository.Find(types.Criteria{})
+
+	if repositoryErr != nil {
+		return repositoryErr
 	}
 
-	bytes, err := json.Marshal(data)
+	data := &types.ServerResponse{
+		Ok:   true,
+		Data: results,
+	}
 
-	if err != nil {
-		return &types.EvtError{
-			Msg:      err.Error(),
+	bytes, jsonErr := json.Marshal(data)
+
+	if jsonErr != nil {
+		return types.EvtError{
+			Msg:      jsonErr.Error(),
 			Function: "HomeHandler",
 			File:     "home.go",
 		}
@@ -36,10 +42,12 @@ func (hh *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	_, errs := w.Write(bytes)
-	if errs != nil {
-		return &types.EvtError{
-			Msg:      errs.Error(),
+
+	_, writeErr := w.Write(bytes)
+
+	if writeErr != nil {
+		return types.EvtError{
+			Msg:      writeErr.Error(),
 			Function: "HomeHandler",
 			File:     "home.go",
 		}

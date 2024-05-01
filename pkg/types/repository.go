@@ -1,5 +1,5 @@
 package types
 
 type CogRepository interface {
-	Find(criteria Criteria) []CogSku
+	Find(criteria Criteria) ([]CogSku, error)
 }
