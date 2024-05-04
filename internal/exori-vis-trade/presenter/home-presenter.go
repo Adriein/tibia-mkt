@@ -19,7 +19,7 @@ func NewHomePresenter() *HomePresenter {
 
 func (p *HomePresenter) Format(data any) ([]byte, error) {
 	cogSkuList, ok := data.([]types.CogSku)
-	homeResponseList := make([]HomeResponseCogSku, len(cogSkuList))
+	var homeResponseList []HomeResponseCogSku
 
 	if !ok {
 		return nil, types.ApiError{
