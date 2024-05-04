@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"github.com/adriein/exori-vis-trade/pkg/types"
 	"net/http"
 )
@@ -29,19 +28,10 @@ func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 		return repositoryErr
 	}
 
-	data := &types.ServerResponse{
-		Ok:   true,
-		Data: results,
-	}
+	bytes, presenterErr := h.presenter.Format(results)
 
-	bytes, jsonErr := json.Marshal(data)
-
-	if jsonErr != nil {
-		return types.ApiError{
-			Msg:      jsonErr.Error(),
-			Function: "HomeHandler",
-			File:     "home.go",
-		}
+	if presenterErr != nil {
+		return presenterErr
 	}
 
 	w.Header().Set("Content-Type", "application/json")

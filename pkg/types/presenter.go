@@ -1,5 +1,5 @@
 package types
 
 type Presenter interface {
-	Format() ([]byte, error)
+	Format(data any) ([]byte, error)
 }

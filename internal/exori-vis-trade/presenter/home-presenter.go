@@ -3,34 +3,45 @@ package presenter
 import (
 	"encoding/json"
 	"github.com/adriein/exori-vis-trade/pkg/types"
+	"time"
 )
 
-type HomePresenter struct {
-	data any
+type HomeResponseCogSku struct {
+	Price int    `json:"price"`
+	Date  string `json:"date"`
 }
 
-func NewHomePresenter(data any) *HomePresenter {
-	return &HomePresenter{
-		data: data,
-	}
+type HomePresenter struct{}
+
+func NewHomePresenter() *HomePresenter {
+	return &HomePresenter{}
 }
 
-func (p *HomePresenter) Format() ([]byte, error) {
-	cogSkuList, ok := p.data.([]types.CogSku)
+func (p *HomePresenter) Format(data any) ([]byte, error) {
+	cogSkuList, ok := data.([]types.CogSku)
+	homeResponseList := make([]HomeResponseCogSku, len(cogSkuList))
 
 	if !ok {
 		return nil, types.ApiError{
-			Msg:      "Assertion Failed",
+			Msg:      "Assertion failed, data is not of type CogSku",
 			Function: "Format",
 			File:     "home-presenter.go",
 		}
 	}
 
 	for _, cogSku := range cogSkuList {
-
+		homeResponseList = append(homeResponseList, HomeResponseCogSku{
+			Price: cogSku.Price,
+			Date:  cogSku.Date.Format(time.DateOnly),
+		})
 	}
 
-	response, jsonErr := json.Marshal(p.data)
+	response := &types.ServerResponse{
+		Ok:   true,
+		Data: homeResponseList,
+	}
+
+	bytes, jsonErr := json.Marshal(response)
 
 	if jsonErr != nil {
 		return nil, types.ApiError{
@@ -40,5 +51,5 @@ func (p *HomePresenter) Format() ([]byte, error) {
 		}
 	}
 
-	return response, nil
+	return bytes, nil
 }
