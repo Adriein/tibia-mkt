@@ -3,7 +3,7 @@ package repository
 import (
 	"encoding/csv"
 	"fmt"
-	"github.com/adriein/exori-vis-trade/pkg/types"
+	"github.com/adriein/tibia-mkt/pkg/types"
 	"os"
 	"strconv"
 	"time"

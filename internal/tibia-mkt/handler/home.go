@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/adriein/exori-vis-trade/pkg/types"
+	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
 

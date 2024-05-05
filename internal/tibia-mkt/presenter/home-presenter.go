@@ -2,7 +2,7 @@ package presenter
 
 import (
 	"encoding/json"
-	"github.com/adriein/exori-vis-trade/pkg/types"
+	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
 )
 

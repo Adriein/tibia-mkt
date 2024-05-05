@@ -1,3 +1,3 @@
-module github.com/adriein/exori-vis-trade
+module github.com/adriein/tibia-mkt
 
 go 1.22.1

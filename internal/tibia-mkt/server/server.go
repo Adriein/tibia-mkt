@@ -2,28 +2,28 @@ package server
 
 import (
 	"errors"
-	"github.com/adriein/exori-vis-trade/pkg/middleware"
-	"github.com/adriein/exori-vis-trade/pkg/types"
+	"github.com/adriein/tibia-mkt/pkg/middleware"
+	"github.com/adriein/tibia-mkt/pkg/types"
 	"log"
 	"log/slog"
 	"net/http"
 )
 
-type ExoriVisTradeApiServer struct {
+type TibiaMktApiServer struct {
 	address string
 	router  *http.ServeMux
 }
 
-func New(address string) (*ExoriVisTradeApiServer, error) {
+func New(address string) (*TibiaMktApiServer, error) {
 	router := http.NewServeMux()
 
-	return &ExoriVisTradeApiServer{
+	return &TibiaMktApiServer{
 		address: address,
 		router:  router,
 	}, nil
 }
 
-func (s *ExoriVisTradeApiServer) Start() {
+func (s *TibiaMktApiServer) Start() {
 	v1 := http.NewServeMux()
 	v1.Handle("/api/v1/", http.StripPrefix("/api/v1", s.router))
 
@@ -36,7 +36,7 @@ func (s *ExoriVisTradeApiServer) Start() {
 		Handler: MuxMiddleWareChain.ApplyOn(v1),
 	}
 
-	slog.Info("Starting the ExoriVisTradeApiServer at " + s.address)
+	slog.Info("Starting the TibiaMktApiServer at " + s.address)
 
 	err := server.ListenAndServe()
 
@@ -47,11 +47,11 @@ func (s *ExoriVisTradeApiServer) Start() {
 	}
 }
 
-func (s *ExoriVisTradeApiServer) Route(url string, handler http.Handler) {
+func (s *TibiaMktApiServer) Route(url string, handler http.Handler) {
 	s.router.Handle(url, handler)
 }
 
-func (s *ExoriVisTradeApiServer) NewHandler(handler types.ExoriVisTradeHttpHandler) http.HandlerFunc {
+func (s *TibiaMktApiServer) NewHandler(handler types.TibiaMktHttpHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var appError types.ApiErrorInterface
 

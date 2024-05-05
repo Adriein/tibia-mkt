@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/adriein/exori-vis-trade/internal/exori-vis-trade/handler"
-	"github.com/adriein/exori-vis-trade/internal/exori-vis-trade/presenter"
-	"github.com/adriein/exori-vis-trade/internal/exori-vis-trade/repository"
-	"github.com/adriein/exori-vis-trade/internal/exori-vis-trade/server"
-	"github.com/adriein/exori-vis-trade/pkg/middleware"
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/handler"
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/presenter"
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/server"
+	"github.com/adriein/tibia-mkt/pkg/middleware"
 	"net/http"
 	"os"
 )
@@ -27,7 +27,7 @@ func main() {
 	api.Start()
 }
 
-func createHomeHandler(api *server.ExoriVisTradeApiServer) http.HandlerFunc {
+func createHomeHandler(api *server.TibiaMktApiServer) http.HandlerFunc {
 	csvSecuraCogRepository := repository.NewCsvSecuraCogRepository()
 	homePresenter := presenter.NewHomePresenter()
 
