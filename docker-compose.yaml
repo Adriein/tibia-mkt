@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  tibia_mkt_database:
+    container_name: tibia_mkt_database
+    image: postgres:${DATABASE_SERVER_VERSION}-alpine
+    user: ${DATABASE_USER}
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    volumes:
+      - tibia_mkt_database_data:/var/lib/postgresql/data:rw
+volumes:
+  tibia_mkt_database_data:
