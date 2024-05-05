@@ -13,14 +13,14 @@ run:         ## Start development web server.
 
 .PHONY: stop
 stop:        ## Stop development web server.
-	@docker-compose --env-file ./infrastructure/.env down
+	@cd ./infrastructure; docker-compose --env-file .env down
 
 .PHONY: clean
 clean:       ## Clearing existing data.
 	@echo "Clearing existing data"
-	@docker-compose down --volumes --env-file ./infrastructure/.env up
+	@cd ./infrastructure; docker-compose down --volumes --env-file .env up
 
 .PHONY: start-containers
 start-containers:
 	@echo "Starting app containers"
-	@docker-compose --env-file ./infrastructure/.env up
+	@cd ./infrastructure; docker-compose --env-file .env up
