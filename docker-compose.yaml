@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  tibia_mkt_api:
+    container_name: tibia_mkt_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
   tibia_mkt_database:
     container_name: tibia_mkt_database
     image: postgres:${DATABASE_SERVER_VERSION}-alpine

@@ -1,4 +1,4 @@
-include ./infrastructure/.env
+include .env
 
 CURRENT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 SHELL = /bin/sh
@@ -13,14 +13,14 @@ run:         ## Start development web server.
 
 .PHONY: stop
 stop:        ## Stop development web server.
-	@cd ./infrastructure; docker-compose --env-file .env down
+	@docker-compose --env-file .env down
 
 .PHONY: clean
 clean:       ## Clearing existing data.
 	@echo "Clearing existing data"
-	@cd ./infrastructure; docker-compose down --volumes --env-file .env up
+	@docker-compose down --volumes --env-file .env up
 
 .PHONY: start-containers
 start-containers:
 	@echo "Starting app containers"
-	@cd ./infrastructure; docker-compose --env-file .env up
+	@docker-compose --env-file .env up
