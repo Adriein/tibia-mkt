@@ -24,3 +24,18 @@ clean:       ## Clearing existing data.
 start-containers:
 	@echo "Starting app containers"
 	@docker-compose --env-file .env up
+
+.PHONY: create-migration
+create-migration:
+	@echo "Creating migrations"
+	@./migrate create -ext sql -dir database/migrations -seq $(name)
+
+.PHONY: migrate
+migrate:
+	@echo "Executing migrations"
+	@./migrate -database ${DATABASE_URL} -path database/migrations up
+
+.PHONY: rollback
+rollback:
+	@echo "Executing migrations"
+	@./migrate -database ${DATABASE_URL} -path database/migrations down
