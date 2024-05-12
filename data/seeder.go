@@ -12,6 +12,12 @@ func New(repository types.CogRepository) *Seeder {
 	}
 }
 
-func (s *Seeder) Execute() {
+func (s *Seeder) Execute() error {
+	results, repositoryErr := s.repository.Find(types.Criteria{})
 
+	if repositoryErr != nil {
+		return repositoryErr
+	}
+
+	return nil
 }

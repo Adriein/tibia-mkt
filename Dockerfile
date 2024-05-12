@@ -4,6 +4,8 @@ WORKDIR /var/www/tibia-mkt
 
 COPY . .
 
+RUN go mod download
+
 RUN go build -o bin/tibia-mkt-bin cmd/tibia-mkt/main.go
 
 RUN apk update && apk add curl tar bash

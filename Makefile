@@ -8,8 +8,13 @@ help:        ## Print available targets.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 .PHONY: run
-run:         ## Start development web server.
+run:         ## Start production web server.
 	@make start-containers
+
+.PHONY: dev
+dev:		## Start development database.
+	@echo "Starting app containers"
+	@docker-compose --env-file .env up tibia_mkt_database
 
 .PHONY: stop
 stop:        ## Stop development web server.

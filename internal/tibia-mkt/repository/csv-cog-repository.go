@@ -74,3 +74,7 @@ func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, 
 
 	return result, nil
 }
+
+func (c *CsvSecuraCogRepository) Save(entity types.CogSku) error {
+	return nil
+}
