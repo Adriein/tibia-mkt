@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/types"
+	"github.com/google/uuid"
 	"os"
 	"strconv"
 	"time"
@@ -67,14 +68,10 @@ func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, 
 			}
 		}
 
-		uuid, uuidErr := types.NewUuid()
-
-		if uuidErr != nil {
-			return nil, uuidErr
-		}
+		id := uuid.New()
 
 		result = append(result, types.CogSku{
-			Id:     uuid.String(),
+			Id:     id.String(),
 			Date:   date,
 			Price:  price,
 			World:  constants.WorldSecura,
