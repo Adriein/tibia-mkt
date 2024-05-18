@@ -8,13 +8,11 @@ import (
 
 type PgTibiaCoinRepository struct {
 	connection *sql.DB
-	table string
 }
 
 func NewPgTibiaCoinRepository(connection *sql.DB) *PgTibiaCoinRepository {
 	return &PgTibiaCoinRepository{
 		connection: connection,
-		table: "tibia_coin"
 	}
 }
 
@@ -23,8 +21,19 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 }
 
 func (r *PgTibiaCoinRepository) Save(entity types.CogSku) error {
-	var command = `INSERT INTO tibia_coin (id, world, date, price, action_type) VALUES ($1, $2, $3, $4, $5)`
+	var query = `INSERT INTO tibia_coin (id, world, date, price, action_type) VALUES ($1, $2, $3, $4, $5)`
 
-	r.connection.ExecContext()
+	result, err := r.connection.Exec(query, entity.Id, entity.World, entity.Date, entity.Price, entity.Action)
+
+	fmt.Println(result)
+
+	if err != nil {
+		return types.ApiError{
+			Msg:      err.Error(),
+			Function: "Save -> r.connection.Exec()",
+			File:     "pg-tibia-coin-repository.go",
+		}
+	}
+
 	return nil
 }

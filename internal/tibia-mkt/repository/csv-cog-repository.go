@@ -3,6 +3,7 @@ package repository
 import (
 	"encoding/csv"
 	"fmt"
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"os"
 	"strconv"
@@ -66,9 +67,18 @@ func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, 
 			}
 		}
 
+		uuid, uuidErr := types.NewUuid()
+
+		if uuidErr != nil {
+			return nil, uuidErr
+		}
+
 		result = append(result, types.CogSku{
-			Date:  date,
-			Price: price,
+			Id:     uuid.String(),
+			Date:   date,
+			Price:  price,
+			World:  constants.WorldSecura,
+			Action: constants.SellOperation,
 		})
 	}
 

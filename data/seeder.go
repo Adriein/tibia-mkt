@@ -3,20 +3,28 @@ package data
 import "github.com/adriein/tibia-mkt/pkg/types"
 
 type Seeder struct {
-	repository types.CogRepository
+	csvRepository types.CogRepository
+	pgRepository  types.CogRepository
 }
 
-func New(repository types.CogRepository) *Seeder {
+func New(csvRepository types.CogRepository, pgRepository types.CogRepository) *Seeder {
 	return &Seeder{
-		repository: repository,
+		csvRepository: csvRepository,
+		pgRepository:  pgRepository,
 	}
 }
 
 func (s *Seeder) Execute() error {
-	results, repositoryErr := s.repository.Find(types.Criteria{})
+	results, csvErr := s.csvRepository.Find(types.Criteria{})
 
-	if repositoryErr != nil {
-		return repositoryErr
+	if csvErr != nil {
+		return csvErr
+	}
+
+	for _, result := range results {
+		if pgErr := s.pgRepository.Save(result); pgErr != nil {
+			return pgErr
+		}
 	}
 
 	return nil
