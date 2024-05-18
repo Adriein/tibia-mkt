@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/types"
 )
 
@@ -23,9 +22,7 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 func (r *PgTibiaCoinRepository) Save(entity types.CogSku) error {
 	var query = `INSERT INTO tibia_coin (id, world, date, price, action_type) VALUES ($1, $2, $3, $4, $5)`
 
-	result, err := r.connection.Exec(query, entity.Id, entity.World, entity.Date, entity.Price, entity.Action)
-
-	fmt.Println(result)
+	_, err := r.connection.Exec(query, entity.Id, entity.World, entity.Date, entity.Price, entity.Action)
 
 	if err != nil {
 		return types.ApiError{

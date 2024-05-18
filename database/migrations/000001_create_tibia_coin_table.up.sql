@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS tibia_coin (
     world VARCHAR(20) NOT NULL,
     date VARCHAR(60) NOT NULL,
     price DECIMAL(15,2) NOT NULL,
-    action_type VARCHAR(3) -- Restrict values to 'BUY' or 'SELL'
+    action_type VARCHAR(4) -- Restrict values to 'BUY' or 'SELL'
 );
 
 CREATE INDEX IF NOT EXISTS idx_world ON tibia_coin(world);
