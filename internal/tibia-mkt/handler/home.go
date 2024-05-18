@@ -22,7 +22,11 @@ func NewHomeHandler(repository types.CogRepository, presenter types.Presenter) *
 }
 
 func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
-	results, repositoryErr := h.repository.Find(types.Criteria{})
+	var filters []types.Filter
+
+	filters = append(filters, types.Filter{Name: "world", Operand: "=", Value: "Secura"})
+
+	results, repositoryErr := h.repository.Find(types.Criteria{Filters: filters})
 
 	if repositoryErr != nil {
 		return repositoryErr

@@ -46,7 +46,7 @@ func main() {
 		middleware.NewAuthMiddleWare,
 	)
 
-	api.Route("/home", createHomeHandler(api))
+	api.Route("/home", createHomeHandler(api, database))
 	api.Route("/foo", fooMiddlewares.ApplyOn(api.NewHandler(handler.FooHandler)))
 	api.Route("/seed", createSeedHandler(api, database))
 
@@ -55,11 +55,11 @@ func main() {
 	defer database.Close()
 }
 
-func createHomeHandler(api *server.TibiaMktApiServer) http.HandlerFunc {
-	csvSecuraCogRepository := repository.NewCsvSecuraCogRepository()
+func createHomeHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
+	pgSecuraCogRepository := repository.NewPgTibiaCoinRepository(database)
 	homePresenter := presenter.NewHomePresenter()
 
-	home := handler.NewHomeHandler(csvSecuraCogRepository, homePresenter)
+	home := handler.NewHomeHandler(pgSecuraCogRepository, homePresenter)
 
 	return api.NewHandler(home.Handler)
 }

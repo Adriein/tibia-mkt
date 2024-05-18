@@ -7,5 +7,5 @@ type Filter struct {
 }
 
 type Criteria struct {
-	filters []Filter
+	Filters []Filter
 }
