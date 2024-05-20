@@ -2,9 +2,9 @@ package repository
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
+	"time"
 )
 
 type PgTibiaCoinRepository struct {
@@ -34,7 +34,7 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 
 	rows, queryErr := r.connection.Query(query)
 
-	fmt.Println(rows)
+	defer rows.Close()
 
 	if queryErr != nil {
 		return nil, types.ApiError{
@@ -44,13 +44,60 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 		}
 	}
 
-	return nil, nil
+	var (
+		id          string
+		world       string
+		date        string
+		price       float64
+		action_type string
+	)
+
+	var results []types.CogSku
+
+	for rows.Next() {
+		if scanErr := rows.Scan(&id, &world, &date, &price, &action_type); scanErr != nil {
+			return nil, types.ApiError{
+				Msg:      scanErr.Error(),
+				Function: "Find -> rows.Scan()",
+				File:     "pg-tibia-coin-repository.go",
+			}
+		}
+
+		intPrice := int(price)
+
+		parsedDate, timeParseErr := time.Parse(time.DateOnly, date)
+
+		if timeParseErr != nil {
+			return nil, types.ApiError{
+				Msg:      timeParseErr.Error(),
+				Function: "Find -> time.Parse()",
+				File:     "pg-tibia-coin-repository.go",
+			}
+		}
+
+		results = append(results, types.CogSku{
+			Id:     id,
+			Date:   parsedDate,
+			Price:  intPrice,
+			World:  world,
+			Action: action_type,
+		})
+	}
+
+	return results, nil
 }
 
 func (r *PgTibiaCoinRepository) Save(entity types.CogSku) error {
 	var query = `INSERT INTO tibia_coin (id, world, date, price, action_type) VALUES ($1, $2, $3, $4, $5)`
 
-	_, err := r.connection.Exec(query, entity.Id, entity.World, entity.Date, entity.Price, entity.Action)
+	_, err := r.connection.Exec(
+		query,
+		entity.Id,
+		entity.World,
+		entity.Date.Format(time.DateOnly),
+		entity.Price,
+		entity.Action,
+	)
 
 	if err != nil {
 		return types.ApiError{
