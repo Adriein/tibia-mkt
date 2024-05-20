@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"strings"
 )
@@ -21,7 +22,20 @@ func (c *CriteriaToSqlService) Transform(criteria types.Criteria) (string, error
 	sql := "SELECT * FROM" + " " + c.table + " WHERE "
 
 	for _, filter := range criteria.Filters {
-		clause := filter.Name + " " + filter.Operand + filter.Value
+		_, ok := filter.Value.(string)
+		if ok {
+			sqlStringValue := fmt.Sprintf("'%s'", filter.Value)
+
+			clause := filter.Name + " " + filter.Operand + " " + sqlStringValue
+
+			where = append(where, clause)
+
+			continue
+		}
+
+		sqlStringValue := fmt.Sprintf("%s", filter.Value)
+
+		clause := filter.Name + " " + filter.Operand + " " + sqlStringValue
 
 		where = append(where, clause)
 	}

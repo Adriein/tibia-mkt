@@ -3,7 +3,7 @@ package types
 type Filter struct {
 	Name    string
 	Operand string
-	Value   string
+	Value   any
 }
 
 type Criteria struct {
