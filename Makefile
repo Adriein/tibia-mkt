@@ -1,4 +1,4 @@
-include .env
+include ./server/.env
 
 CURRENT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 SHELL = /bin/sh
@@ -14,21 +14,21 @@ run:         ## Start production web server.
 .PHONY: dev
 dev:		## Start development database.
 	@echo "Starting app containers"
-	@docker-compose --env-file .env up tibia_mkt_database
+	@docker-compose --env-file ./server/.env up tibia_mkt_database
 
 .PHONY: stop
 stop:        ## Stop development web server.
-	@docker-compose --env-file .env down
+	@docker-compose --env-file ./server/.env down
 
 .PHONY: clean
 clean:       ## Clearing existing data.
 	@echo "Clearing existing data"
-	@docker-compose down --volumes --env-file .env up
+	@docker-compose down --volumes --env-file ./server/.env up
 
 .PHONY: start-containers
 start-containers:
 	@echo "Starting app containers"
-	@docker-compose --env-file .env up
+	@docker-compose --env-file ./server/.env up
 
 .PHONY: create-migration
 create-migration:
