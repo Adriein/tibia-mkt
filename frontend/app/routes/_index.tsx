@@ -4,8 +4,8 @@ import { ColorSchemeToggle } from "~/components/ColorSchemeToggle/ColorSchemeTog
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Mantine Remix App" },
-    { name: "description", content: "Welcome to Mantine!" },
+    { title: "Tibia Mkt" },
+    { name: "description", content: "Welcome to Tibia mkt!" },
   ];
 };
 
