@@ -45,17 +45,17 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 	}
 
 	var (
-		id          string
-		world       string
-		date        string
-		price       float64
-		action_type string
+		id         string
+		world      string
+		date       string
+		buy_price  float64
+		sell_price float64
 	)
 
 	var results []types.CogSku
 
 	for rows.Next() {
-		if scanErr := rows.Scan(&id, &world, &date, &price, &action_type); scanErr != nil {
+		if scanErr := rows.Scan(&id, &world, &date, &buy_price, &sell_price); scanErr != nil {
 			return nil, types.ApiError{
 				Msg:      scanErr.Error(),
 				Function: "Find -> rows.Scan()",
@@ -63,7 +63,8 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 			}
 		}
 
-		intPrice := int(price)
+		buyPrice := int(buy_price)
+		sellPrice := int(sell_price)
 
 		parsedDate, timeParseErr := time.Parse(time.DateOnly, date)
 
@@ -76,11 +77,11 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 		}
 
 		results = append(results, types.CogSku{
-			Id:     id,
-			Date:   parsedDate,
-			Price:  intPrice,
-			World:  world,
-			Action: action_type,
+			Id:        id,
+			Date:      parsedDate,
+			BuyPrice:  buyPrice,
+			SellPrice: sellPrice,
+			World:     world,
 		})
 	}
 
@@ -88,15 +89,15 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 }
 
 func (r *PgTibiaCoinRepository) Save(entity types.CogSku) error {
-	var query = `INSERT INTO tibia_coin (id, world, date, price, action_type) VALUES ($1, $2, $3, $4, $5)`
+	var query = `INSERT INTO tibia_coin (id, world, date, buy_price, sell_price) VALUES ($1, $2, $3, $4, $5)`
 
 	_, err := r.connection.Exec(
 		query,
 		entity.Id,
 		entity.World,
 		entity.Date.Format(time.DateOnly),
-		entity.Price,
-		entity.Action,
+		entity.BuyPrice,
+		entity.SellPrice,
 	)
 
 	if err != nil {

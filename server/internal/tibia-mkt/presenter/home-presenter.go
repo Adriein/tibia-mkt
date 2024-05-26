@@ -7,8 +7,10 @@ import (
 )
 
 type HomeResponseCogSku struct {
-	Price int    `json:"price"`
-	Date  string `json:"date"`
+	BuyPrice  int    `json:"buyPrice"`
+	SellPrice int    `json:"sellPrice"`
+	Date      string `json:"date"`
+	World     string `json:"world"`
 }
 
 type HomePresenter struct{}
@@ -31,8 +33,10 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 
 	for _, cogSku := range cogSkuList {
 		homeResponseList = append(homeResponseList, HomeResponseCogSku{
-			Price: cogSku.Price,
-			Date:  cogSku.Date.Format(time.DateOnly),
+			BuyPrice:  cogSku.BuyPrice,
+			SellPrice: cogSku.SellPrice,
+			Date:      cogSku.Date.Format(time.DateOnly),
+			World:     cogSku.World,
 		})
 	}
 

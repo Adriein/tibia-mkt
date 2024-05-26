@@ -71,11 +71,11 @@ func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, 
 		id := uuid.New()
 
 		result = append(result, types.CogSku{
-			Id:     id.String(),
-			Date:   date,
-			Price:  price,
-			World:  constants.WorldSecura,
-			Action: constants.SellOperation,
+			Id:        id.String(),
+			Date:      date,
+			BuyPrice:  price - 1000,
+			SellPrice: price,
+			World:     constants.WorldSecura,
 		})
 	}
 
