@@ -22,3 +22,11 @@ go.work
 .idea
 server/.env
 server/migrate
+
+node_modules
+
+/.cache
+/build
+.env
+.yarn/install-state.gz
+.DS_Store
