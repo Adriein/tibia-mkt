@@ -33,14 +33,14 @@ start-containers:
 .PHONY: create-migration
 create-migration:
 	@echo "Creating migrations"
-	@./migrate create -ext sql -dir database/migrations -seq $(name)
+	@cd ./server; ./migrate create -ext sql -dir database/migrations -seq $(name)
 
 .PHONY: migrate
 migrate:
 	@echo "Executing migrations"
-	@./migrate -database ${DATABASE_URL} -path database/migrations up
+	@cd ./server; ./migrate -database ${DATABASE_URL} -path database/migrations up
 
 .PHONY: rollback
 rollback:
 	@echo "Executing migrations"
-	@./migrate -database ${DATABASE_URL} -path database/migrations down
+	@cd ./server; ./migrate -database ${DATABASE_URL} -path database/migrations down
