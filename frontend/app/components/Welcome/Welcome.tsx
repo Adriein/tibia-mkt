@@ -1,18 +1,10 @@
 import { Title, Text, Anchor } from "@mantine/core";
 import classes from "./Welcome.module.css";
-import {LoaderFunctionArgs} from "@remix-run/node";
-
-export async function loader({ request, params }: LoaderFunctionArgs) {
-
-
-    return null;
-}
 
 export function Welcome() {
   return (
     <>
       <Title className={classes.title} ta="center" mt={100}>
-        Welcome to{" "}
         <Text
           inherit
           variant="gradient"
