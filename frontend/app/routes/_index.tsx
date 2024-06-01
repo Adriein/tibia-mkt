@@ -11,6 +11,8 @@ type HomeResponse = {
     data: TibiaCoinCog[]
 }
 
+const API_URL: string = `${process.env.API_PROTOCOL}://${process.env.API_URL}/home`;
+
 export const meta: MetaFunction = () => {
   return [
     { title: "Tibia Market" },
@@ -19,15 +21,15 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-    const req: Request = new Request(`http://${process.env.API_URL}/home`);
-    const response: Response = await fetch(req);
+    const nativeRequest: Request = new Request(API_URL);
+    const nativeResponse: Response = await fetch(nativeRequest);
 
-    const res: HomeResponse = await response.json() as HomeResponse;
+    const response: HomeResponse = await nativeResponse.json() as HomeResponse;
 
     return json({
-        ok: res.ok,
-        data: res.data
-    })
+        ok: response.ok,
+        data: response.data
+    });
 }
 
 export default function Index() {
@@ -35,8 +37,8 @@ export default function Index() {
 
   return (
     <div>
-      <CogPreview data={serverProps.data}/>
-      <ColorSchemeToggle />
+        <ColorSchemeToggle />
+        <CogPreview data={serverProps.data}/>
     </div>
   );
 }
