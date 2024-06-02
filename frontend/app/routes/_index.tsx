@@ -3,6 +3,7 @@ import { ColorSchemeToggle } from "~/components/ColorSchemeToggle/ColorSchemeTog
 import {LoaderFunctionArgs} from "@remix-run/node";
 import {json, useLoaderData} from "react-router";
 import {CogPreview} from "~/components/CogPreview/CogPreview";
+import {Grid, Container} from "@mantine/core";
 
 type TibiaCoinCog = {buyPrice: number, sellPrice: number, date: string, world: string}
 
@@ -36,9 +37,16 @@ export default function Index() {
   const serverProps = useLoaderData<typeof loader>();
 
   return (
-    <div>
-        <ColorSchemeToggle />
-        <CogPreview data={serverProps.data}/>
-    </div>
+      <Container fluid>
+          <Grid>
+              <Grid.Col span={12}>
+                  <h2>Tibia Mkt</h2>
+                  <ColorSchemeToggle />
+              </Grid.Col>
+              <Grid.Col span={12}>
+                  <CogPreview data={serverProps.data}/>
+              </Grid.Col>
+          </Grid>
+      </Container>
   );
 }
