@@ -1,0 +1,1 @@
+export type TibiaCoinCog = {buyPrice: number, sellPrice: number, date: string, world: string};

@@ -1,11 +1,10 @@
 import type { MetaFunction } from "@remix-run/node";
 import { ColorSchemeToggle } from "~/components/ColorSchemeToggle/ColorSchemeToggle";
-import {LoaderFunctionArgs} from "@remix-run/node";
-import {json, useLoaderData} from "react-router";
-import {CogPreview} from "~/components/CogPreview/CogPreview";
-import {Grid, Container} from "@mantine/core";
-
-type TibiaCoinCog = {buyPrice: number, sellPrice: number, date: string, world: string}
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { json, useLoaderData } from "react-router";
+import { CogPreview } from "~/components/CogPreview/CogPreview";
+import { Grid, Container } from "@mantine/core";
+import { TibiaCoinCog } from "~/shared/types";
 
 type HomeResponse = {
     ok: boolean;
@@ -21,7 +20,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs): Promise<Response> {
     const nativeRequest: Request = new Request(API_URL);
     const nativeResponse: Response = await fetch(nativeRequest);
 
