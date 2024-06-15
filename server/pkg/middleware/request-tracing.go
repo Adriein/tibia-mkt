@@ -29,7 +29,7 @@ func NewRequestTracingMiddleware(handler http.Handler) http.Handler {
 			r.Method,
 			r.RequestURI,
 			r.UserAgent(),
-			elapsed,
+			elapsed.Seconds(),
 		)
 
 		slog.Info(trace)
