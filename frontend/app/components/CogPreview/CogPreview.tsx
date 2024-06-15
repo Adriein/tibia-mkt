@@ -31,12 +31,6 @@ const xAxisTick = (data: TibiaCoinCog[]): string[] => {
     return result;
 }
 
-const yAxisTick = (data: TibiaCoinCog[]): number[] => {
-    const SHOW_NUMBERS: number[] = [30000, 35000, 40000, 45000, 50000];
-
-    return SHOW_NUMBERS;
-}
-
 export function CogPreview({ data }: CogPreviewProps) {
     return (
         <>
@@ -64,8 +58,7 @@ export function CogPreview({ data }: CogPreviewProps) {
                     ticks: xAxisTick(data.cogs)
                 }}
                 yAxisProps={{
-                    domain: [40000, 50000],
-                    ticks: yAxisTick(data.cogs)
+                    domain: [data.chartMetadata.yAxisTick.at(0), data.chartMetadata.yAxisTick.at(data.chartMetadata.yAxisTick.length - 1)],
                 }}
                 valueFormatter={yAxisNumberFormatter}
             />

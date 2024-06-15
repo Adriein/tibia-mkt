@@ -34,7 +34,7 @@ export async function loader({ request, params }: LoaderFunctionArgs): Promise<R
 
 export default function Index() {
   const serverProps = useLoaderData<typeof loader>();
-
+    console.log(serverProps)
   return (
       <Container fluid>
           <Grid>

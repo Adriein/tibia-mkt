@@ -35,8 +35,8 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 	var (
 		homeResponseList []HomeResponseCogSku
 		highestSellPrice = cogSkuList[0].SellPrice
-		lowestSellPrice  = cogSkuList[0].SellPrice
-		yAxisTick        []int
+		lowestBuyPrice   = cogSkuList[0].BuyPrice
+		yAxisDomain      []int
 	)
 
 	if !ok {
@@ -52,8 +52,8 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 			highestSellPrice = cogSku.SellPrice
 		}
 
-		if lowestSellPrice > cogSku.SellPrice {
-			lowestSellPrice = cogSku.SellPrice
+		if lowestBuyPrice > cogSku.SellPrice {
+			lowestBuyPrice = cogSku.BuyPrice
 		}
 
 		homeResponseList = append(homeResponseList, HomeResponseCogSku{
@@ -64,14 +64,14 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 		})
 	}
 
-	yAxisTick = append(yAxisTick, lowestSellPrice, highestSellPrice)
+	yAxisDomain = append(yAxisDomain, lowestBuyPrice, highestSellPrice)
 
 	response := &types.ServerResponse{
 		Ok: true,
 		Data: HomeResponse{
 			Cogs: homeResponseList,
 			Chart: ChartMetadata{
-				YAxisTick: yAxisTick,
+				YAxisTick: yAxisDomain,
 			},
 		},
 	}
