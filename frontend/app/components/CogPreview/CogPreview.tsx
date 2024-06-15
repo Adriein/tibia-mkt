@@ -1,8 +1,10 @@
 import { AreaChart } from '@mantine/charts';
-import {Badge, Flex, Space, Text, Title} from '@mantine/core';
+import {Anchor, Badge, Flex, Space, Text, Title} from '@mantine/core';
 import TibiaCoinGif from '~/assets/tibia-coin.gif';
 import { formatDate } from "~/shared/util";
 import { TibiaCoinCog } from "~/shared/types";
+
+const tibiaServer = (data: TibiaCoinCog[]): string => data[0].world;
 
 const xAxisDateFormatter = (value: string): string => formatDate(new Date(value));
 const yAxisNumberFormatter = (value: string): string => new Intl.NumberFormat('en-US').format(value);
@@ -36,8 +38,10 @@ export function CogPreview({data}) {
         <>
             <Flex align="center" gap="md">
                 <img src={TibiaCoinGif as string} alt="Tibia Coin"/>
-                <Title order={2}>Tibia Coin</Title>
-                <Badge color="indigo">Secura</Badge>
+                <Anchor href="https://tibia.fandom.com/wiki/Tibia_Coins" target="_blank">
+                    <Title order={2}>Tibia Coin</Title>
+                </Anchor>
+                <Badge color="indigo">{tibiaServer(data)}</Badge>
             </Flex>
             <Space h="xl" />
             <AreaChart
@@ -50,7 +54,7 @@ export function CogPreview({data}) {
                 ]}
                 curveType="linear"
                 legendProps={{verticalAlign: 'bottom'}}
-                xAxisProps={{tickFormatter: xAxisDateFormatter, ticks: xAxisTick(data)}}
+                xAxisProps={{interval: "preserveStartEnd", tickFormatter: xAxisDateFormatter, ticks: xAxisTick(data)}}
                 yAxisProps={{domain: [40000, 50000], ticks: yAxisTick(data)}}
                 valueFormatter={yAxisNumberFormatter}
             />
