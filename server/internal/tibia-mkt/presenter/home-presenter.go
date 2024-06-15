@@ -13,6 +13,16 @@ type HomeResponseCogSku struct {
 	World     string `json:"world"`
 }
 
+type ChartMetadata struct {
+	XAxisTick []string `json:"xAxisTick"`
+	YAxisTick []int    `json:"yAxisTick"`
+}
+
+type HomeResponse struct {
+	Cogs  []HomeResponseCogSku `json:"cogs"`
+	Chart ChartMetadata        `json:"chartMetadata"`
+}
+
 type HomePresenter struct{}
 
 func NewHomePresenter() *HomePresenter {
@@ -21,7 +31,13 @@ func NewHomePresenter() *HomePresenter {
 
 func (p *HomePresenter) Format(data any) ([]byte, error) {
 	cogSkuList, ok := data.([]types.CogSku)
-	var homeResponseList []HomeResponseCogSku
+
+	var (
+		homeResponseList []HomeResponseCogSku
+		highestSellPrice = cogSkuList[0].SellPrice
+		lowestSellPrice  = cogSkuList[0].SellPrice
+		yAxisTick        []int
+	)
 
 	if !ok {
 		return nil, types.ApiError{
@@ -32,6 +48,14 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 	}
 
 	for _, cogSku := range cogSkuList {
+		if highestSellPrice < cogSku.SellPrice {
+			highestSellPrice = cogSku.SellPrice
+		}
+
+		if lowestSellPrice > cogSku.SellPrice {
+			lowestSellPrice = cogSku.SellPrice
+		}
+
 		homeResponseList = append(homeResponseList, HomeResponseCogSku{
 			BuyPrice:  cogSku.BuyPrice,
 			SellPrice: cogSku.SellPrice,
@@ -40,9 +64,16 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 		})
 	}
 
+	yAxisTick = append(yAxisTick, lowestSellPrice, highestSellPrice)
+
 	response := &types.ServerResponse{
-		Ok:   true,
-		Data: homeResponseList,
+		Ok: true,
+		Data: HomeResponse{
+			Cogs: homeResponseList,
+			Chart: ChartMetadata{
+				YAxisTick: yAxisTick,
+			},
+		},
 	}
 
 	bytes, jsonErr := json.Marshal(response)

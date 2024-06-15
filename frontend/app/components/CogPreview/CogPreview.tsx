@@ -2,7 +2,11 @@ import { AreaChart } from '@mantine/charts';
 import {Anchor, Badge, Flex, Space, Text, Title} from '@mantine/core';
 import TibiaCoinGif from '~/assets/tibia-coin.gif';
 import { formatDate } from "~/shared/util";
-import { TibiaCoinCog } from "~/shared/types";
+import {HomePageData, TibiaCoinCog} from "~/shared/types";
+
+interface CogPreviewProps {
+    data: HomePageData
+}
 
 const tibiaServer = (data: TibiaCoinCog[]): string => data[0].world;
 
@@ -33,7 +37,7 @@ const yAxisTick = (data: TibiaCoinCog[]): number[] => {
     return SHOW_NUMBERS;
 }
 
-export function CogPreview({data}) {
+export function CogPreview({ data }: CogPreviewProps) {
     return (
         <>
             <Flex align="center" gap="md">
@@ -41,12 +45,12 @@ export function CogPreview({data}) {
                 <Anchor href="https://tibia.fandom.com/wiki/Tibia_Coins" target="_blank">
                     <Title order={2}>Tibia Coin</Title>
                 </Anchor>
-                <Badge color="indigo">{tibiaServer(data)}</Badge>
+                <Badge color="indigo">{tibiaServer(data.cogs)}</Badge>
             </Flex>
             <Space h="xl" />
             <AreaChart
                 h={400}
-                data={data}
+                data={data.cogs}
                 dataKey="date"
                 series={[
                     {name: 'buyPrice', label: "Buy price", color: 'indigo.6'},
@@ -54,8 +58,15 @@ export function CogPreview({data}) {
                 ]}
                 curveType="linear"
                 legendProps={{verticalAlign: 'bottom'}}
-                xAxisProps={{interval: "preserveStartEnd", tickFormatter: xAxisDateFormatter, ticks: xAxisTick(data)}}
-                yAxisProps={{domain: [40000, 50000], ticks: yAxisTick(data)}}
+                xAxisProps={{
+                    interval: "preserveStartEnd",
+                    tickFormatter: xAxisDateFormatter,
+                    ticks: xAxisTick(data.cogs)
+                }}
+                yAxisProps={{
+                    domain: [40000, 50000],
+                    ticks: yAxisTick(data.cogs)
+                }}
                 valueFormatter={yAxisNumberFormatter}
             />
         </>

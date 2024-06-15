@@ -4,11 +4,11 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "react-router";
 import { CogPreview } from "~/components/CogPreview/CogPreview";
 import { Grid, Container } from "@mantine/core";
-import { TibiaCoinCog } from "~/shared/types";
+import { HomePageData } from "~/shared/types";
 
 type HomeResponse = {
     ok: boolean;
-    data: TibiaCoinCog[]
+    data: HomePageData
 }
 
 const API_URL: string = `${process.env.API_PROTOCOL}://${process.env.API_URL}/home`;
