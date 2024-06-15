@@ -1,16 +1,11 @@
 import { AreaChart } from '@mantine/charts';
+import {Badge, Flex, Space, Text, Title} from '@mantine/core';
 import TibiaCoinGif from '~/assets/tibia-coin.gif';
 import { formatDate } from "~/shared/util";
 import { TibiaCoinCog } from "~/shared/types";
 
 const xAxisDateFormatter = (value: string): string => formatDate(new Date(value));
 const yAxisNumberFormatter = (value: string): string => new Intl.NumberFormat('en-US').format(value);
-
-const tooltipFormatter = (value, name, props) => {
-    console.log("V", value, "N", name, "P", props); // for debug
-
-    return [value, name, props]
-}
 
 const xAxisTick = (data: TibiaCoinCog[]): string[] => {
     const SHOW_DATES: string[] = ['01', '10', '20', '30', '31'];
@@ -30,12 +25,21 @@ const xAxisTick = (data: TibiaCoinCog[]): string[] => {
     return result;
 }
 
+const yAxisTick = (data: TibiaCoinCog[]): number[] => {
+    const SHOW_NUMBERS: number[] = [30000, 35000, 40000, 45000, 50000];
+
+    return SHOW_NUMBERS;
+}
+
 export function CogPreview({data}) {
     return (
         <>
-            <h3>Tibia Coin</h3>
-            <img src={TibiaCoinGif as string} alt="Tibia Coin"/>
-            <h4>Secura</h4>
+            <Flex align="center" gap="md">
+                <img src={TibiaCoinGif as string} alt="Tibia Coin"/>
+                <Title order={2}>Tibia Coin</Title>
+                <Badge color="indigo">Secura</Badge>
+            </Flex>
+            <Space h="xl" />
             <AreaChart
                 h={400}
                 data={data}
@@ -45,10 +49,9 @@ export function CogPreview({data}) {
                     {name: 'sellPrice', label: "Sell price", color: 'teal.6'},
                 ]}
                 curveType="linear"
-                withLegend
-                legendProps={{ verticalAlign: 'bottom' }}
-                xAxisProps={{ tickFormatter: xAxisDateFormatter, ticks: xAxisTick(data)}}
-                yAxisProps={{ domain: [40000, 50000], tickFormatter: yAxisNumberFormatter }}
+                legendProps={{verticalAlign: 'bottom'}}
+                xAxisProps={{tickFormatter: xAxisDateFormatter, ticks: xAxisTick(data)}}
+                yAxisProps={{domain: [40000, 50000], ticks: yAxisTick(data)}}
                 valueFormatter={yAxisNumberFormatter}
             />
         </>
