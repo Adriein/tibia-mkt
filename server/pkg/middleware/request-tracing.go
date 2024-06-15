@@ -25,11 +25,11 @@ func NewRequestTracingMiddleware(handler http.Handler) http.Handler {
 		elapsed := time.Since(start)
 
 		trace := fmt.Sprintf(
-			"Method=%s URI=%s UserAgent=%s Time=%dns",
+			"Method=%s URI=%s UserAgent=%s Time=%dms",
 			r.Method,
 			r.RequestURI,
 			r.UserAgent(),
-			elapsed.Seconds(),
+			elapsed.Milliseconds(),
 		)
 
 		slog.Info(trace)
