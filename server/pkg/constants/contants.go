@@ -1,11 +1,10 @@
 package constants
 
 const (
-	SellOperation = "SELL"
-	WorldSecura   = "Secura"
-	Day1          = "01"
-	Day10         = "10"
-	Day20         = "20"
-	Day30         = "30"
-	Day31         = "31"
+	WorldSecura = "Secura"
+	Day1        = "01"
+	Day10       = "10"
+	Day20       = "20"
+	Day30       = "30"
+	Day31       = "31"
 )
