@@ -39,17 +39,18 @@ export function CogPreview({ data }: CogPreviewProps) {
     return (
         <>
             <Flex align="center" gap="md">
-                <img src={TibiaCoinGif as string} alt="Tibia Coin"/>
                 <Anchor href="https://tibia.fandom.com/wiki/Tibia_Coins" target="_blank">
                     <Title order={2}>Tibia Coin</Title>
                 </Anchor>
+                <img src={TibiaCoinGif as string} alt="Tibia Coin"/>
                 <Badge color="indigo">{tibiaServer(data.cogs)}</Badge>
             </Flex>
-            <Space h="xl" />
+            <Space h="xl"/>
             <AreaChart
                 h={400}
                 data={data.cogs}
                 dataKey="date"
+                tooltipAnimationDuration={200}
                 series={[
                     {name: 'buyPrice', label: "Buy price", color: 'indigo.6'},
                     {name: 'sellPrice', label: "Sell price", color: 'teal.6'},

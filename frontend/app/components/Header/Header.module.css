@@ -1,0 +1,9 @@
+.header {
+    display: flex;
+    align-items: center;
+    padding-top: var(--mantine-spacing-md)
+}
+
+.title {
+    flex-grow: 1
+}

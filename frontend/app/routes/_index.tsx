@@ -3,8 +3,9 @@ import { ColorSchemeToggle } from "~/components/ColorSchemeToggle/ColorSchemeTog
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "react-router";
 import { CogPreview } from "~/components/CogPreview/CogPreview";
-import { Grid, Container } from "@mantine/core";
+import {Grid, Container, Flex, Title} from "@mantine/core";
 import { HomePageData } from "~/shared/types";
+import {Header} from "~/components/Header/Header";
 
 type HomeResponse = {
     ok: boolean;
@@ -37,10 +38,9 @@ export default function Index() {
     console.log(serverProps)
   return (
       <Container fluid>
-          <Grid>
+          <Grid gutter="xl">
               <Grid.Col span={12}>
-                  <h2>Tibia Mkt</h2>
-                  <ColorSchemeToggle />
+                  <Header/>
               </Grid.Col>
               <Grid.Col span={12}>
                   <CogPreview data={serverProps.data}/>
