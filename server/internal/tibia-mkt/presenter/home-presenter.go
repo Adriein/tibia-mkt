@@ -2,6 +2,7 @@ package presenter
 
 import (
 	"encoding/json"
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
 )
@@ -32,13 +33,6 @@ func NewHomePresenter() *HomePresenter {
 func (p *HomePresenter) Format(data any) ([]byte, error) {
 	cogSkuList, ok := data.([]types.CogSku)
 
-	var (
-		homeResponseList []HomeResponseCogSku
-		highestSellPrice = cogSkuList[0].SellPrice
-		lowestBuyPrice   = cogSkuList[0].BuyPrice
-		yAxisDomain      []int
-	)
-
 	if !ok {
 		return nil, types.ApiError{
 			Msg:      "Assertion failed, data is not of type CogSku",
@@ -46,6 +40,14 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 			File:     "home-presenter.go",
 		}
 	}
+
+	var (
+		homeResponseList []HomeResponseCogSku
+		highestSellPrice = cogSkuList[0].SellPrice
+		lowestBuyPrice   = cogSkuList[0].BuyPrice
+		yAxisDomain      []int
+		xAxisDomain      []string
+	)
 
 	for _, cogSku := range cogSkuList {
 		if highestSellPrice < cogSku.SellPrice {
@@ -66,12 +68,22 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 
 	yAxisDomain = append(yAxisDomain, lowestBuyPrice, highestSellPrice)
 
+	xAxisDomain = append(
+		xAxisDomain,
+		constants.Day1,
+		constants.Day10,
+		constants.Day20,
+		constants.Day30,
+		constants.Day31,
+	)
+
 	response := &types.ServerResponse{
 		Ok: true,
 		Data: HomeResponse{
 			Cogs: homeResponseList,
 			Chart: ChartMetadata{
 				YAxisTick: yAxisDomain,
+				XAxisTick: xAxisDomain,
 			},
 		},
 	}

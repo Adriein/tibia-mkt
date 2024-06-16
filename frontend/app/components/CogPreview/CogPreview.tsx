@@ -13,13 +13,17 @@ const tibiaServer = (data: TibiaCoinCog[]): string => data[0].world;
 const xAxisDateFormatter = (value: string): string => formatDate(new Date(value));
 const yAxisNumberFormatter = (value: string): string => new Intl.NumberFormat('en-US').format(value);
 
-const xAxisTick = (data: TibiaCoinCog[]): string[] => {
-    const SHOW_DATES: string[] = ['01', '10', '20', '30', '31'];
+const xAxisTick = (data: TibiaCoinCog[], xAxisDomain: string[]): string[] => {
+    const SHOW_DATES: string[] = xAxisDomain;
     const result: string[] = [];
 
     for (let i: number = 0; i < data.length; i++) {
         const point: TibiaCoinCog = data[i];
         const day: string = point.date.split("-")[2];
+
+        if (i == 0 || i == data.length - 1) {
+            result.push(point.date)
+        }
 
         if (!SHOW_DATES.includes(day)) {
             continue;
@@ -55,10 +59,10 @@ export function CogPreview({ data }: CogPreviewProps) {
                 xAxisProps={{
                     interval: "preserveStartEnd",
                     tickFormatter: xAxisDateFormatter,
-                    ticks: xAxisTick(data.cogs)
+                    ticks: xAxisTick(data.cogs, data.chartMetadata.xAxisTick)
                 }}
                 yAxisProps={{
-                    domain: [data.chartMetadata.yAxisTick.at(0), data.chartMetadata.yAxisTick.at(data.chartMetadata.yAxisTick.length - 1)],
+                    domain: data.chartMetadata.yAxisTick
                 }}
                 valueFormatter={yAxisNumberFormatter}
             />
