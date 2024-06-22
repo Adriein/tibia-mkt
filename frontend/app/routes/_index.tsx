@@ -1,5 +1,4 @@
 import type { MetaFunction } from "@remix-run/node";
-import { ColorSchemeToggle } from "~/components/ColorSchemeToggle/ColorSchemeToggle";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "react-router";
 import { CogPreview } from "~/components/CogPreview/CogPreview";
@@ -12,8 +11,6 @@ type HomeResponse = {
     data: HomePageData
 }
 
-const API_URL: string = `${process.env.API_PROTOCOL}://${process.env.API_URL}/home`;
-
 export const meta: MetaFunction = () => {
   return [
     { title: "Tibia Market" },
@@ -22,7 +19,7 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs): Promise<Response> {
-    const nativeRequest: Request = new Request(API_URL);
+    const nativeRequest: Request = new Request(`${process.env.API_PROTOCOL}://${process.env.API_URL}/home`);
     const nativeResponse: Response = await fetch(nativeRequest);
 
     const response: HomeResponse = await nativeResponse.json() as HomeResponse;
