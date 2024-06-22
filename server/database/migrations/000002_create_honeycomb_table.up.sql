@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS honeycomb (
     sell_price DECIMAL(15,2) NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_world ON honeycomb(world);
-CREATE INDEX IF NOT EXISTS idx_date ON honeycomb(date);
-CREATE INDEX IF NOT EXISTS idx_buy_price ON honeycomb(buy_price);
-CREATE INDEX IF NOT EXISTS idx_sell_price ON honeycomb(sell_price);
+CREATE INDEX IF NOT EXISTS idx_hc_world ON honeycomb(world);
+CREATE INDEX IF NOT EXISTS idx_hc_date ON honeycomb(date);
+CREATE INDEX IF NOT EXISTS idx_hc_buy_price ON honeycomb(buy_price);
+CREATE INDEX IF NOT EXISTS idx_hc_sell_price ON honeycomb(sell_price);

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS tibia_coin (
     sell_price DECIMAL(15,2) NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_world ON tibia_coin(world);
-CREATE INDEX IF NOT EXISTS idx_date ON tibia_coin(date);
-CREATE INDEX IF NOT EXISTS idx_buy_price ON tibia_coin(buy_price);
-CREATE INDEX IF NOT EXISTS idx_sell_price ON tibia_coin(sell_price);
+CREATE INDEX IF NOT EXISTS idx_tc_world ON tibia_coin(world);
+CREATE INDEX IF NOT EXISTS idx_tc_date ON tibia_coin(date);
+CREATE INDEX IF NOT EXISTS idx_tc_buy_price ON tibia_coin(buy_price);
+CREATE INDEX IF NOT EXISTS idx_tc_sell_price ON tibia_coin(sell_price);
