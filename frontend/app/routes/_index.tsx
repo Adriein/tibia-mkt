@@ -19,7 +19,9 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs): Promise<Response> {
-    const nativeRequest: Request = new Request(`${process.env.API_PROTOCOL}://${process.env.API_URL}/home`);
+    const nativeRequest: Request = new Request(
+        `${process.env.API_PROTOCOL}://${process.env.API_URL}/home?item=tibia-coin&item=honeycomb`
+    );
     const nativeResponse: Response = await fetch(nativeRequest);
 
     const response: HomeResponse = await nativeResponse.json() as HomeResponse;
