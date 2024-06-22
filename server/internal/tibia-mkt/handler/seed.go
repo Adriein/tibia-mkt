@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/adriein/tibia-mkt/data"
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
@@ -23,7 +23,7 @@ func NewSeedHandler(
 }
 
 func (h *SeedHandler) Handler(w http.ResponseWriter, _ *http.Request) error {
-	seeder := data.New(h.csvRepository, h.pgRepository)
+	seeder := service.NewSeeder(h.csvRepository, h.pgRepository)
 
 	if seederErr := seeder.Execute(); seederErr != nil {
 		w.Header().Set("Content-Type", "application/json")
