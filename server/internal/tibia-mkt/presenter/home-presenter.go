@@ -43,11 +43,16 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 
 	var (
 		homeResponseList []HomeResponseCogSku
-		highestSellPrice = cogSkuList[0].SellPrice
-		lowestBuyPrice   = cogSkuList[0].BuyPrice
+		highestSellPrice int
+		lowestBuyPrice   int
 		yAxisDomain      []int
 		xAxisDomain      []string
 	)
+
+	if len(cogSkuList) != 0 {
+		highestSellPrice = cogSkuList[0].SellPrice
+		lowestBuyPrice = cogSkuList[0].BuyPrice
+	}
 
 	for _, cogSku := range cogSkuList {
 		if highestSellPrice < cogSku.SellPrice {
@@ -76,6 +81,10 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 		constants.Day30,
 		constants.Day31,
 	)
+
+	if len(homeResponseList) == 0 {
+		homeResponseList = make([]HomeResponseCogSku, 0)
+	}
 
 	response := &types.ServerResponse{
 		Ok: true,

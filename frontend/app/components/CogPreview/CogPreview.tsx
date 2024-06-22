@@ -3,12 +3,13 @@ import {Anchor, Badge, Flex, Space, Text, Title} from '@mantine/core';
 import TibiaCoinGif from '~/assets/tibia-coin.gif';
 import { formatDate } from "~/shared/util";
 import {HomePageData, TibiaCoinCog} from "~/shared/types";
+import {DEFAULT_WORLD} from "~/shared/constants";
 
 interface CogPreviewProps {
     data: HomePageData
 }
 
-const tibiaServer = (data: TibiaCoinCog[]): string => data[0].world;
+const tibiaServer = (data: TibiaCoinCog[]): string => data?.length? data[0].world : DEFAULT_WORLD;
 
 const xAxisDateFormatter = (value: string): string => formatDate(new Date(value));
 const yAxisNumberFormatter = (value: string): string => new Intl.NumberFormat('en-US').format(value);

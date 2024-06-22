@@ -23,7 +23,7 @@ func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, 
 
 	path, _ := os.Getwd()
 
-	file, openErr := os.Open(fmt.Sprintf("%s/data/Secura COG's - TC.csv", path))
+	file, openErr := os.Open(fmt.Sprintf("%s/data/tc-cog.csv", path))
 
 	if openErr != nil {
 		return nil, types.ApiError{

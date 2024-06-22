@@ -22,7 +22,7 @@ func NewSeedHandler(
 	}
 }
 
-func (h *SeedHandler) Handler(w http.ResponseWriter, r *http.Request) error {
+func (h *SeedHandler) Handler(w http.ResponseWriter, _ *http.Request) error {
 	seeder := data.New(h.csvRepository, h.pgRepository)
 
 	if seederErr := seeder.Execute(); seederErr != nil {
