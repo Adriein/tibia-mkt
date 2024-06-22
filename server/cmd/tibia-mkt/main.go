@@ -66,7 +66,7 @@ func createHomeHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 
 func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
 	csvSecuraCogRepository := repository.NewCsvSecuraCogRepository()
-	pgCogRepository := repository.NewPgTibiaCoinRepository(database)
+	pgCogRepository := repository.NewPgHoneycombRepository(database)
 
 	seed := handler.NewSeedHandler(csvSecuraCogRepository, pgCogRepository)
 

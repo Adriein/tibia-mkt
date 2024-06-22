@@ -13,7 +13,7 @@ type PgHoneycombRepository struct {
 }
 
 func NewPgHoneycombRepository(connection *sql.DB) *PgHoneycombRepository {
-	transformer := service.NewCriteriaToSqlService("tibia_coin")
+	transformer := service.NewCriteriaToSqlService("honeycomb")
 
 	return &PgHoneycombRepository{
 		connection:  connection,
@@ -89,7 +89,7 @@ func (r *PgHoneycombRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 }
 
 func (r *PgHoneycombRepository) Save(entity types.CogSku) error {
-	var query = `INSERT INTO tibia_coin (id, world, date, buy_price, sell_price) VALUES ($1, $2, $3, $4, $5)`
+	var query = `INSERT INTO honeycomb (id, world, date, buy_price, sell_price) VALUES ($1, $2, $3, $4, $5)`
 
 	_, err := r.connection.Exec(
 		query,
