@@ -1,7 +1,8 @@
 import classes from "./CogPreview.module.css";
 import { AreaChart } from '@mantine/charts';
-import {Anchor, Badge, Card, Flex, Space, Text, Title} from '@mantine/core';
+import {Anchor, Badge, Card, ActionIcon, Space, Title, Image, Tooltip} from '@mantine/core';
 import TibiaCoinGif from '~/assets/tibia-coin.gif';
+import TibiaWikiIcon from '~/assets/tibia-wiki.png';
 import { formatDate } from "~/shared/util";
 import {HomePageData, TibiaCoinCog} from "~/shared/types";
 import {DEFAULT_WORLD} from "~/shared/constants";
@@ -43,12 +44,16 @@ export function CogPreview({ data }: CogPreviewProps) {
             <Card.Section withBorder inheritPadding py="xs">
                 <div className={classes.chartHeader}>
                     <div className={classes.worldBadge}>
-                        <Anchor href="https://tibia.fandom.com/wiki/Tibia_Coins" target="_blank">
-                            <Title order={2}>Tibia Coin</Title>
-                        </Anchor>
-                        <img src={TibiaCoinGif as string} alt="Tibia Coin"/>
+                        <Title order={2}>Tibia Coin</Title>
+                        <Image src={TibiaCoinGif as string} alt="Tibia Coin"/>
                     </div>
-
+                    <Tooltip label="Go to TibiaWiki" openDelay={300}>
+                        <Anchor href="https://tibia.fandom.com/wiki/Tibia_Coins" target="_blank">
+                            <ActionIcon variant="default" aria-label="Tibia Wiki">
+                                <Image src={TibiaWikiIcon as string} alt="Tibia Wiki" h={20} w={20}/>
+                            </ActionIcon>
+                        </Anchor>
+                    </Tooltip>
                     <Badge color="indigo">{tibiaServer(data.cogs)}</Badge>
                 </div>
             </Card.Section>
