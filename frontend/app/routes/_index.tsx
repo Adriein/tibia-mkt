@@ -18,7 +18,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader({ request, params }: LoaderFunctionArgs): Promise<Response> {
+export async function loader(_: LoaderFunctionArgs): Promise<Response> {
     const nativeRequest: Request = new Request(
         `${process.env.API_PROTOCOL}://${process.env.API_URL}/home?item=tibia-coin&item=honeycomb`
     );
@@ -34,7 +34,7 @@ export async function loader({ request, params }: LoaderFunctionArgs): Promise<R
 
 export default function Index() {
   const serverProps = useLoaderData<typeof loader>();
-    console.log(serverProps)
+
   return (
       <Container fluid>
           <Grid gutter="xl">
