@@ -1,5 +1,6 @@
+import classes from "./CogPreview.module.css";
 import { AreaChart } from '@mantine/charts';
-import {Anchor, Badge, Flex, Space, Text, Title} from '@mantine/core';
+import {Anchor, Badge, Card, Flex, Space, Text, Title} from '@mantine/core';
 import TibiaCoinGif from '~/assets/tibia-coin.gif';
 import { formatDate } from "~/shared/util";
 import {HomePageData, TibiaCoinCog} from "~/shared/types";
@@ -38,14 +39,19 @@ const xAxisTick = (data: TibiaCoinCog[], xAxisDomain: string[]): string[] => {
 
 export function CogPreview({ data }: CogPreviewProps) {
     return (
-        <>
-            <Flex align="center" gap="md">
-                <Anchor href="https://tibia.fandom.com/wiki/Tibia_Coins" target="_blank">
-                    <Title order={2}>Tibia Coin</Title>
-                </Anchor>
-                <img src={TibiaCoinGif as string} alt="Tibia Coin"/>
-                <Badge color="indigo">{tibiaServer(data.cogs)}</Badge>
-            </Flex>
+        <Card withBorder shadow="sm" radius="md">
+            <Card.Section withBorder inheritPadding py="xs">
+                <div className={classes.chartHeader}>
+                    <div className={classes.worldBadge}>
+                        <Anchor href="https://tibia.fandom.com/wiki/Tibia_Coins" target="_blank">
+                            <Title order={2}>Tibia Coin</Title>
+                        </Anchor>
+                        <img src={TibiaCoinGif as string} alt="Tibia Coin"/>
+                    </div>
+
+                    <Badge color="indigo">{tibiaServer(data.cogs)}</Badge>
+                </div>
+            </Card.Section>
             <Space h="xl"/>
             <AreaChart
                 h={400}
@@ -68,6 +74,6 @@ export function CogPreview({ data }: CogPreviewProps) {
                 }}
                 valueFormatter={yAxisNumberFormatter}
             />
-        </>
+        </Card>
     )
 }

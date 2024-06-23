@@ -1,0 +1,11 @@
+.chartHeader {
+    display: flex;
+    align-items: center;
+}
+
+.worldBadge {
+    display: flex;
+    align-items: center;
+    gap: var(--mantine-spacing-md);
+    flex-grow: 1
+}
