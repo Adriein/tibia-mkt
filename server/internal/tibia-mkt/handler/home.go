@@ -22,8 +22,13 @@ func NewHomeHandler(repository types.CogRepository, presenter types.Presenter) *
 }
 
 func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
-	queryParams := r.URL.Query().Get("item")
-	println(queryParams)
+	var params = make([]string, 0)
+	paramsMap := r.URL.Query()
+
+	if paramsMap.Has("item") {
+		params = paramsMap["item"]
+	}
+	println(params)
 	var filters []types.Filter
 
 	filters = append(filters, types.Filter{Name: "world", Operand: "=", Value: "Secura"})
