@@ -7,7 +7,9 @@ import (
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/presenter"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/server"
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
 	"github.com/adriein/tibia-mkt/pkg/middleware"
+	"github.com/adriein/tibia-mkt/pkg/types"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"log"
@@ -56,10 +58,16 @@ func main() {
 }
 
 func createHomeHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
-	pgSecuraCogRepository := repository.NewPgTibiaCoinRepository(database)
+	pgSecuraTibiaCoinCogRepository := repository.NewPgTibiaCoinRepository(database)
+	pgSecuraHoneycombCogRepository := repository.NewPgHoneycombRepository(database)
 	homePresenter := presenter.NewHomePresenter()
 
-	home := handler.NewHomeHandler(pgSecuraCogRepository, homePresenter)
+	var repositories []types.CogRepository
+	repositories = append(repositories, pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository)
+
+	factory := service.NewRepositoryFactory(repositories)
+
+	home := handler.NewHomeHandler(factory, homePresenter)
 
 	return api.NewHandler(home.Handler)
 }

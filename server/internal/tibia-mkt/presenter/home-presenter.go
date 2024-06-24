@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type HomeResponseCogSku struct {
+type CogSkuResponse struct {
 	BuyPrice  int    `json:"buyPrice"`
 	SellPrice int    `json:"sellPrice"`
 	Date      string `json:"date"`
@@ -20,8 +20,12 @@ type ChartMetadata struct {
 }
 
 type HomeResponse struct {
-	Cogs  []HomeResponseCogSku `json:"cogs"`
-	Chart ChartMetadata        `json:"chartMetadata"`
+	Cogs map[string]CogSkuChartResponse `json:"cogs"`
+}
+
+type CogSkuChartResponse struct {
+	Cog   []CogSkuResponse `json:"cog"`
+	Chart ChartMetadata    `json:"chartMetadata"`
 }
 
 type HomePresenter struct{}
@@ -31,70 +35,72 @@ func NewHomePresenter() *HomePresenter {
 }
 
 func (p *HomePresenter) Format(data any) ([]byte, error) {
-	cogSkuList, ok := data.([]types.CogSku)
+	cogSkuMatrix, ok := data.([][]types.CogSku)
 
 	if !ok {
 		return nil, types.ApiError{
-			Msg:      "Assertion failed, data is not of type CogSku",
+			Msg:      "Assertion failed, data is not a matrix of type CogSku",
 			Function: "Format",
 			File:     "home-presenter.go",
 		}
 	}
 
-	var (
-		homeResponseList []HomeResponseCogSku
-		highestSellPrice int
-		lowestBuyPrice   int
-		yAxisDomain      []int
-		xAxisDomain      []string
-	)
+	var homeResponseMap = make(map[string]CogSkuChartResponse)
 
-	if len(cogSkuList) != 0 {
+	for i := 0; i < len(cogSkuMatrix); i++ {
+		cogSkuList := cogSkuMatrix[i]
+
+		var (
+			cogSkuResponseList []CogSkuResponse
+			highestSellPrice   int
+			lowestBuyPrice     int
+			yAxisDomain        []int
+			xAxisDomain        []string
+		)
+
 		highestSellPrice = cogSkuList[0].SellPrice
 		lowestBuyPrice = cogSkuList[0].BuyPrice
-	}
 
-	for _, cogSku := range cogSkuList {
-		if highestSellPrice < cogSku.SellPrice {
-			highestSellPrice = cogSku.SellPrice
+		for _, cogSku := range cogSkuList {
+			if highestSellPrice < cogSku.SellPrice {
+				highestSellPrice = cogSku.SellPrice
+			}
+
+			if lowestBuyPrice > cogSku.SellPrice {
+				lowestBuyPrice = cogSku.BuyPrice
+			}
+
+			cogSkuResponseList = append(cogSkuResponseList, CogSkuResponse{
+				BuyPrice:  cogSku.BuyPrice,
+				SellPrice: cogSku.SellPrice,
+				Date:      cogSku.Date.Format(time.DateOnly),
+				World:     cogSku.World,
+			})
 		}
 
-		if lowestBuyPrice > cogSku.SellPrice {
-			lowestBuyPrice = cogSku.BuyPrice
-		}
+		yAxisDomain = append(yAxisDomain, lowestBuyPrice, highestSellPrice)
 
-		homeResponseList = append(homeResponseList, HomeResponseCogSku{
-			BuyPrice:  cogSku.BuyPrice,
-			SellPrice: cogSku.SellPrice,
-			Date:      cogSku.Date.Format(time.DateOnly),
-			World:     cogSku.World,
-		})
-	}
+		xAxisDomain = append(
+			xAxisDomain,
+			constants.Day1,
+			constants.Day10,
+			constants.Day20,
+			constants.Day30,
+			constants.Day31,
+		)
 
-	yAxisDomain = append(yAxisDomain, lowestBuyPrice, highestSellPrice)
-
-	xAxisDomain = append(
-		xAxisDomain,
-		constants.Day1,
-		constants.Day10,
-		constants.Day20,
-		constants.Day30,
-		constants.Day31,
-	)
-
-	if len(homeResponseList) == 0 {
-		homeResponseList = make([]HomeResponseCogSku, 0)
-	}
-
-	response := &types.ServerResponse{
-		Ok: true,
-		Data: HomeResponse{
-			Cogs: homeResponseList,
+		homeResponseMap[cogSkuList[0].ItemName] = CogSkuChartResponse{
+			Cog: cogSkuResponseList,
 			Chart: ChartMetadata{
 				YAxisTick: yAxisDomain,
 				XAxisTick: xAxisDomain,
 			},
-		},
+		}
+	}
+
+	response := &types.ServerResponse{
+		Ok:   true,
+		Data: homeResponseMap,
 	}
 
 	bytes, jsonErr := json.Marshal(response)

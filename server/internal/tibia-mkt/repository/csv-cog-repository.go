@@ -12,10 +12,13 @@ import (
 )
 
 type CsvSecuraCogRepository struct {
+	name string
 }
 
 func NewCsvSecuraCogRepository() *CsvSecuraCogRepository {
-	return &CsvSecuraCogRepository{}
+	return &CsvSecuraCogRepository{
+		name: "none",
+	}
 }
 
 func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, error) {
@@ -72,6 +75,7 @@ func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, 
 
 		result = append(result, types.CogSku{
 			Id:        id.String(),
+			ItemName:  constants.TibiaCoinEntity,
 			Date:      date,
 			BuyPrice:  price - 1000,
 			SellPrice: price,
@@ -84,4 +88,8 @@ func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, 
 
 func (c *CsvSecuraCogRepository) Save(entity types.CogSku) error {
 	return nil
+}
+
+func (c *CsvSecuraCogRepository) EntityName() string {
+	return c.name
 }

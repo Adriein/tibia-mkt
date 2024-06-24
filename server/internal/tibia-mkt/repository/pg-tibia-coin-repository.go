@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
@@ -10,6 +11,7 @@ import (
 type PgTibiaCoinRepository struct {
 	connection  *sql.DB
 	transformer *service.CriteriaToSqlService
+	name        string
 }
 
 func NewPgTibiaCoinRepository(connection *sql.DB) *PgTibiaCoinRepository {
@@ -18,6 +20,7 @@ func NewPgTibiaCoinRepository(connection *sql.DB) *PgTibiaCoinRepository {
 	return &PgTibiaCoinRepository{
 		connection:  connection,
 		transformer: transformer,
+		name:        constants.TibiaCoinEntity,
 	}
 }
 
@@ -78,6 +81,7 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 
 		results = append(results, types.CogSku{
 			Id:        id,
+			ItemName:  constants.TibiaCoinEntity,
 			Date:      parsedDate,
 			BuyPrice:  buyPrice,
 			SellPrice: sellPrice,
@@ -109,4 +113,8 @@ func (r *PgTibiaCoinRepository) Save(entity types.CogSku) error {
 	}
 
 	return nil
+}
+
+func (r *PgTibiaCoinRepository) EntityName() string {
+	return r.name
 }

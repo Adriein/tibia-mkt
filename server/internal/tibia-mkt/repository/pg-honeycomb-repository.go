@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
@@ -10,6 +11,7 @@ import (
 type PgHoneycombRepository struct {
 	connection  *sql.DB
 	transformer *service.CriteriaToSqlService
+	name        string
 }
 
 func NewPgHoneycombRepository(connection *sql.DB) *PgHoneycombRepository {
@@ -18,6 +20,7 @@ func NewPgHoneycombRepository(connection *sql.DB) *PgHoneycombRepository {
 	return &PgHoneycombRepository{
 		connection:  connection,
 		transformer: transformer,
+		name:        constants.HoneycombEntity,
 	}
 }
 
@@ -78,6 +81,7 @@ func (r *PgHoneycombRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 
 		results = append(results, types.CogSku{
 			Id:        id,
+			ItemName:  constants.HoneycombEntity,
 			Date:      parsedDate,
 			BuyPrice:  buyPrice,
 			SellPrice: sellPrice,
@@ -109,4 +113,8 @@ func (r *PgHoneycombRepository) Save(entity types.CogSku) error {
 	}
 
 	return nil
+}
+
+func (r *PgHoneycombRepository) EntityName() string {
+	return r.name
 }

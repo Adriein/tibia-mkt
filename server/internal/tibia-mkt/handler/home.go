@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
@@ -10,36 +11,53 @@ type HomeResponse struct {
 }
 
 type HomeHandler struct {
-	repository types.CogRepository
-	presenter  types.Presenter
+	repoFactory *service.RepositoryFactory
+	presenter   types.Presenter
 }
 
-func NewHomeHandler(repository types.CogRepository, presenter types.Presenter) *HomeHandler {
+func NewHomeHandler(factory *service.RepositoryFactory, presenter types.Presenter) *HomeHandler {
 	return &HomeHandler{
-		repository: repository,
-		presenter:  presenter,
+		repoFactory: factory,
+		presenter:   presenter,
 	}
 }
 
 func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
-	var params = make([]string, 0)
+	var repositoryResponseMatrix [][]types.CogSku
+
 	paramsMap := r.URL.Query()
 
-	if paramsMap.Has("item") {
-		params = paramsMap["item"]
-	}
-	println(params)
-	var filters []types.Filter
-
-	filters = append(filters, types.Filter{Name: "world", Operand: "=", Value: "Secura"})
-
-	results, repositoryErr := h.repository.Find(types.Criteria{Filters: filters})
-
-	if repositoryErr != nil {
-		return repositoryErr
+	if !paramsMap.Has("item") {
+		return types.ApiError{
+			Msg:      "No cog search params provided",
+			Function: "HomeHandler",
+			File:     "home.go",
+		}
 	}
 
-	bytes, presenterErr := h.presenter.Format(results)
+	params := paramsMap["item"]
+
+	for _, cog := range params {
+		repository := h.repoFactory.Get(cog)
+
+		var filters []types.Filter
+
+		filters = append(filters, types.Filter{Name: "world", Operand: "=", Value: "Secura"})
+
+		results, repositoryErr := repository.Find(types.Criteria{Filters: filters})
+
+		if repositoryErr != nil {
+			return repositoryErr
+		}
+
+		if len(results) == 0 {
+			continue
+		}
+
+		repositoryResponseMatrix = append(repositoryResponseMatrix, results)
+	}
+
+	bytes, presenterErr := h.presenter.Format(repositoryResponseMatrix)
 
 	if presenterErr != nil {
 		return presenterErr
