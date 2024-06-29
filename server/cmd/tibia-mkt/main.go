@@ -60,7 +60,10 @@ func main() {
 func createHomeHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
 	pgSecuraTibiaCoinCogRepository := repository.NewPgTibiaCoinRepository(database)
 	pgSecuraHoneycombCogRepository := repository.NewPgHoneycombRepository(database)
-	homePresenter := presenter.NewHomePresenter()
+
+	pgCogRepository := repository.NewPgCogRepository(database)
+
+	homePresenter := presenter.NewHomePresenter(pgCogRepository)
 
 	var repositories []types.CogRepository
 	repositories = append(repositories, pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository)

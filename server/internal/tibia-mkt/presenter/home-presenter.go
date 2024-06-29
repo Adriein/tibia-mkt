@@ -23,14 +23,19 @@ type HomeResponse struct {
 }
 
 type CogSkuChartResponse struct {
+	Wiki  string           `json:"wiki"`
 	Cog   []CogSkuResponse `json:"cog"`
 	Chart ChartMetadata    `json:"chartMetadata"`
 }
 
-type HomePresenter struct{}
+type HomePresenter struct {
+	cogRepository types.Repository
+}
 
-func NewHomePresenter() *HomePresenter {
-	return &HomePresenter{}
+func NewHomePresenter(repository types.Repository) *HomePresenter {
+	return &HomePresenter{
+		cogRepository: repository,
+	}
 }
 
 func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
@@ -88,8 +93,15 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 			constants.Day31,
 		)
 
+		cog, err := p.getWikiLink(cogSkuList[0].ItemName)
+
+		if err != nil {
+			return types.ServerResponse{}, err
+		}
+
 		homeResponseMap[cogSkuList[0].ItemName] = CogSkuChartResponse{
-			Cog: cogSkuResponseList,
+			Wiki: cog.Link,
+			Cog:  cogSkuResponseList,
 			Chart: ChartMetadata{
 				YAxisTick: yAxisDomain,
 				XAxisTick: xAxisDomain,
@@ -103,4 +115,24 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 	}
 
 	return response, nil
+}
+
+func (p *HomePresenter) getWikiLink(itemName string) (types.Cog, error) {
+	var filters []types.Filter
+
+	filters = append(filters, types.Filter{
+		Name:    "name",
+		Operand: "=",
+		Value:   itemName,
+	})
+
+	criteria := types.Criteria{Filters: filters}
+
+	result, err := p.cogRepository.FindOne(criteria)
+
+	if err != nil {
+		return types.Cog{}, err
+	}
+
+	return result, nil
 }

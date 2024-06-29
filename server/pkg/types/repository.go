@@ -5,3 +5,7 @@ type CogRepository interface {
 	Find(criteria Criteria) ([]CogSku, error)
 	Save(entity CogSku) error
 }
+
+type Repository interface {
+	FindOne(criteria Criteria) (Cog, error)
+}

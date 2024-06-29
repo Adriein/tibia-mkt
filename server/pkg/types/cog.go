@@ -10,3 +10,11 @@ type CogSku struct {
 	Date      time.Time
 	World     string
 }
+
+type Cog struct {
+	Id        string
+	Name      string
+	Link      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
