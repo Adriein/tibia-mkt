@@ -3,7 +3,7 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "react-router";
 import { CogPreview } from "~/components/CogPreview/CogPreview";
 import {Grid, Container} from "@mantine/core";
-import { HomePageData } from "~/shared/types";
+import {CogChart, HomePageData} from "~/shared/types";
 import {Header} from "~/components/Header/Header";
 
 type HomeResponse = {
@@ -33,7 +33,7 @@ export async function loader(_: LoaderFunctionArgs): Promise<Response> {
 }
 
 export default function Index() {
-  const serverProps = useLoaderData<typeof loader>();
+  const serverProps: HomeResponse = useLoaderData<typeof loader>() as HomeResponse;
 
   return (
       <Container fluid>
@@ -41,9 +41,15 @@ export default function Index() {
               <Grid.Col span={12}>
                   <Header/>
               </Grid.Col>
-              <Grid.Col span={12}>
-                  <CogPreview data={serverProps.data}/>
-              </Grid.Col>
+              {Object.keys(serverProps.data).map((cogName: string) => {
+                  const cog: CogChart = serverProps.data[cogName];
+
+                  return (
+                      <Grid.Col key={cogName} span={12}>
+                          <CogPreview name={cogName} data={cog}/>
+                      </Grid.Col>
+                  );
+              })}
           </Grid>
       </Container>
   );
