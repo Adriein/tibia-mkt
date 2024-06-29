@@ -16,7 +16,7 @@ func NewRequestTracingMiddleware(handler http.Handler) http.Handler {
 		r.Header.Add("traceId", id.String())
 
 		initialTrace := fmt.Sprintf(
-			"Received request: Method=%s URI=%s UserAgent=%s TraceId=%s",
+			"Request: Method=%s URI=%s UserAgent=%s TraceId=%s",
 			r.Method,
 			r.RequestURI,
 			r.UserAgent(),
@@ -30,7 +30,7 @@ func NewRequestTracingMiddleware(handler http.Handler) http.Handler {
 		elapsed := time.Since(start)
 
 		trace := fmt.Sprintf(
-			"Method=%s URI=%s UserAgent=%s Time=%dms TraceId=%s",
+			"Response: Method=%s URI=%s UserAgent=%s Time=%dms TraceId=%s",
 			r.Method,
 			r.RequestURI,
 			r.UserAgent(),
