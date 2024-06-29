@@ -2,7 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "react-router";
 import { CogPreview } from "~/components/CogPreview/CogPreview";
-import {Grid, Container, Flex, Title} from "@mantine/core";
+import {Grid, Container} from "@mantine/core";
 import { HomePageData } from "~/shared/types";
 import {Header} from "~/components/Header/Header";
 
