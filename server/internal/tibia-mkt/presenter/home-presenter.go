@@ -1,7 +1,6 @@
 package presenter
 
 import (
-	"encoding/json"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
@@ -34,11 +33,11 @@ func NewHomePresenter() *HomePresenter {
 	return &HomePresenter{}
 }
 
-func (p *HomePresenter) Format(data any) ([]byte, error) {
+func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 	cogSkuMatrix, ok := data.([][]types.CogSku)
 
 	if !ok {
-		return nil, types.ApiError{
+		return types.ServerResponse{}, types.ApiError{
 			Msg:      "Assertion failed, data is not a matrix of type CogSku",
 			Function: "Format",
 			File:     "home-presenter.go",
@@ -98,20 +97,10 @@ func (p *HomePresenter) Format(data any) ([]byte, error) {
 		}
 	}
 
-	response := &types.ServerResponse{
+	response := types.ServerResponse{
 		Ok:   true,
 		Data: homeResponseMap,
 	}
 
-	bytes, jsonErr := json.Marshal(response)
-
-	if jsonErr != nil {
-		return nil, types.ApiError{
-			Msg:      jsonErr.Error(),
-			Function: "Format",
-			File:     "home-presenter.go",
-		}
-	}
-
-	return bytes, nil
+	return response, nil
 }

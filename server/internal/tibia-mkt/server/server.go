@@ -2,11 +2,14 @@ package server
 
 import (
 	"errors"
+	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/middleware"
+	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"log"
 	"log/slog"
 	"net/http"
+	"os"
 )
 
 type TibiaMktApiServer struct {
@@ -56,7 +59,24 @@ func (s *TibiaMktApiServer) NewHandler(handler types.TibiaMktHttpHandler) http.H
 		var appError types.ApiErrorInterface
 
 		if err := handler(w, r); errors.As(err, &appError) {
-			log.Fatal(appError.Error())
+			if appError.IsDomain() {
+				response := types.ServerResponse{
+					Ok:    false,
+					Error: appError.PresentableError(),
+				}
+
+				if encodeErr := service.Encode[types.ServerResponse](w, http.StatusOK, response); encodeErr != nil {
+					log.Fatal(encodeErr.Error())
+				}
+
+				slog.Warn(fmt.Sprintf("%s TraceId=%s", appError.Error(), r.Header.Get("traceId")))
+
+				return
+			}
+
+			slog.Error(fmt.Sprintf("%s TraceId=%s", appError.Error(), r.Header.Get("traceId")))
+
+			os.Exit(1)
 		}
 	}
 }

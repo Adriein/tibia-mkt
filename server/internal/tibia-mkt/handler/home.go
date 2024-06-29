@@ -1,7 +1,8 @@
 package handler
 
 import (
-	"github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
+	"github.com/adriein/tibia-mkt/pkg/constants"
+	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
@@ -29,9 +30,10 @@ func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 
 	if !paramsMap.Has("item") {
 		return types.ApiError{
-			Msg:      "No cog search params provided",
+			Msg:      constants.NoCogSearchParamProvided,
 			Function: "HomeHandler",
 			File:     "home.go",
+			Domain:   true,
 		}
 	}
 
@@ -57,23 +59,14 @@ func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 		repositoryResponseMatrix = append(repositoryResponseMatrix, results)
 	}
 
-	bytes, presenterErr := h.presenter.Format(repositoryResponseMatrix)
+	response, presenterErr := h.presenter.Format(repositoryResponseMatrix)
 
 	if presenterErr != nil {
 		return presenterErr
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	_, writeErr := w.Write(bytes)
-
-	if writeErr != nil {
-		return types.ApiError{
-			Msg:      writeErr.Error(),
-			Function: "HomeHandler",
-			File:     "home.go",
-		}
+	if err := service.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
+		return err
 	}
 
 	return nil

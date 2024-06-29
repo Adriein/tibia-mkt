@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
+	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )

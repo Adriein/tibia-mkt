@@ -5,12 +5,14 @@ import "fmt"
 type ApiErrorInterface interface {
 	Error() string
 	IsDomain() bool
+	PresentableError() string
 }
 
 type ApiError struct {
 	Msg      string
 	Function string
 	File     string
+	Domain   bool
 }
 
 func (e ApiError) Error() string {
@@ -18,5 +20,9 @@ func (e ApiError) Error() string {
 }
 
 func (e ApiError) IsDomain() bool {
-	return false
+	return e.Domain
+}
+
+func (e ApiError) PresentableError() string {
+	return fmt.Sprintf("%s", e.Msg)
 }

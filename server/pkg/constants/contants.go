@@ -14,3 +14,9 @@ const (
 	Day30 = "30"
 	Day31 = "31"
 )
+
+// Errors
+
+const (
+	NoCogSearchParamProvided = "NO_COG_SEARCH_PARAM_PROVIDED"
+)
