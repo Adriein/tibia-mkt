@@ -86,8 +86,8 @@ func (r *PgCogRepository) Save(entity types.Cog) error {
 		entity.Id,
 		entity.Name,
 		entity.Link,
-		entity.CreatedAt,
-		entity.UpdatedAt,
+		entity.CreatedAt.Format(time.DateTime),
+		entity.UpdatedAt.Format(time.DateTime),
 	)
 
 	if err != nil {

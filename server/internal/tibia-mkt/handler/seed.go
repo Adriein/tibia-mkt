@@ -65,8 +65,8 @@ func (h *SeedHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 			Id:        id.String(),
 			Name:      item.Name,
 			Link:      item.Wiki,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
+			CreatedAt: time.Now().UTC(),
+			UpdatedAt: time.Now().UTC(),
 		}
 
 		if saveErr := h.cogRepository.Save(cog); saveErr != nil {
