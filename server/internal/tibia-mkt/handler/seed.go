@@ -40,34 +40,19 @@ func (h *SeedHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 	var request SeedRequest
 
 	if decodeErr := json.NewDecoder(r.Body).Decode(&request); decodeErr != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusInternalServerError)
-
-		response := &types.ServerResponse{
+		response := types.ServerResponse{
 			Ok: false,
 		}
 
-		bytes, jsonErr := json.Marshal(response)
-
-		if jsonErr != nil {
-			return types.ApiError{
-				Msg:      jsonErr.Error(),
-				Function: "Handler",
-				File:     "seed.go",
-			}
+		if err := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); err != nil {
+			return err
 		}
 
-		_, writeErr := w.Write(bytes)
-
-		if writeErr != nil {
-			return types.ApiError{
-				Msg:      writeErr.Error(),
-				Function: "Handler",
-				File:     "seed.go",
-			}
+		return types.ApiError{
+			Msg:      decodeErr.Error(),
+			Function: "Handler",
+			File:     "seed.go",
 		}
-
-		return decodeErr
 	}
 
 	for _, item := range request.Items {
@@ -85,6 +70,14 @@ func (h *SeedHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 		}
 
 		if saveErr := h.cogRepository.Save(cog); saveErr != nil {
+			response := types.ServerResponse{
+				Ok: false,
+			}
+
+			if err := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); err != nil {
+				return err
+			}
+
 			return types.ApiError{
 				Msg:      saveErr.Error(),
 				Function: "Handler",
@@ -93,62 +86,24 @@ func (h *SeedHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 		}
 
 		if seederErr := seeder.Execute(item.Name); seederErr != nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusInternalServerError)
-
-			response := &types.ServerResponse{
+			response := types.ServerResponse{
 				Ok: false,
 			}
 
-			bytes, jsonErr := json.Marshal(response)
-
-			if jsonErr != nil {
-				return types.ApiError{
-					Msg:      jsonErr.Error(),
-					Function: "Handler",
-					File:     "seed.go",
-				}
-			}
-
-			_, writeErr := w.Write(bytes)
-
-			if writeErr != nil {
-				return types.ApiError{
-					Msg:      writeErr.Error(),
-					Function: "Handler",
-					File:     "seed.go",
-				}
+			if err := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); err != nil {
+				return err
 			}
 
 			return seederErr
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	response := &types.ServerResponse{
+	response := types.ServerResponse{
 		Ok: true,
 	}
 
-	bytes, jsonErr := json.Marshal(response)
-
-	if jsonErr != nil {
-		return types.ApiError{
-			Msg:      jsonErr.Error(),
-			Function: "Handler",
-			File:     "seed.go",
-		}
-	}
-
-	_, writeErr := w.Write(bytes)
-
-	if writeErr != nil {
-		return types.ApiError{
-			Msg:      writeErr.Error(),
-			Function: "Handler",
-			File:     "seed.go",
-		}
+	if err := service.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
+		return err
 	}
 
 	return nil
