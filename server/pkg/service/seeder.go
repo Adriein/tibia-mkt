@@ -14,8 +14,12 @@ func NewSeeder(csvRepository types.CogRepository, pgRepository types.CogReposito
 	}
 }
 
-func (s *Seeder) Execute() error {
-	results, csvErr := s.csvRepository.Find(types.Criteria{})
+func (s *Seeder) Execute(item string) error {
+	var filters []types.Filter
+
+	filters = append(filters, types.Filter{Name: item, Operand: "=", Value: item})
+
+	results, csvErr := s.csvRepository.Find(types.Criteria{Filters: filters})
 
 	if csvErr != nil {
 		return csvErr

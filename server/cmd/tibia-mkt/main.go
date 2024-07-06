@@ -48,9 +48,9 @@ func main() {
 		middleware.NewAuthMiddleWare,
 	)
 
-	api.Route("/home", createHomeHandler(api, database))
-	api.Route("/foo", fooMiddlewares.ApplyOn(api.NewHandler(handler.FooHandler)))
-	api.Route("/seed", createSeedHandler(api, database))
+	api.Route("GET /home", createHomeHandler(api, database))
+	api.Route("GET /foo", fooMiddlewares.ApplyOn(api.NewHandler(handler.FooHandler)))
+	api.Route("POST /seed", createSeedHandler(api, database))
 
 	api.Start()
 
@@ -65,8 +65,7 @@ func createHomeHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 
 	homePresenter := presenter.NewHomePresenter(pgCogRepository)
 
-	var repositories []types.CogRepository
-	repositories = append(repositories, pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository)
+	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
 
 	factory := service.NewRepositoryFactory(repositories)
 
@@ -77,9 +76,15 @@ func createHomeHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 
 func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
 	csvSecuraCogRepository := repository.NewCsvSecuraCogRepository()
-	pgCogRepository := repository.NewPgHoneycombRepository(database)
+	pgSecuraTibiaCoinCogRepository := repository.NewPgTibiaCoinRepository(database)
+	pgSecuraHoneycombCogRepository := repository.NewPgHoneycombRepository(database)
+	pgCogRepository := repository.NewPgCogRepository(database)
 
-	seed := handler.NewSeedHandler(csvSecuraCogRepository, pgCogRepository)
+	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
+
+	factory := service.NewRepositoryFactory(repositories)
+
+	seed := handler.NewSeedHandler(csvSecuraCogRepository, factory, pgCogRepository)
 
 	return api.NewHandler(seed.Handler)
 }
