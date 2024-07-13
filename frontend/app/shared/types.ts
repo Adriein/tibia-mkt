@@ -2,6 +2,6 @@ export type Cog = { buyPrice: number, sellPrice: number, date: string, world: st
 
 export type ChartMetadata = {  yAxisTick: number[], xAxisTick: string[] }
 
-export type CogChart = { wiki: string, cog: Cog[], chartMetadata: ChartMetadata }
+export type CogChart = { wiki: string, cog: Cog[], chartMetadata: ChartMetadata, pagePosition: number }
 
 export type HomePageData = { [key: string]: CogChart }

@@ -18,3 +18,10 @@ type Cog struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type CogConfig struct {
+	CogId    string
+	Position int8
+	Columns  int8
+	Rows     int8
+}

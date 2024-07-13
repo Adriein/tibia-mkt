@@ -7,10 +7,6 @@ import (
 	"net/http"
 )
 
-type HomeResponse struct {
-	SecuraTibiaCoin types.CogSku `json:"securaTibiaCoin"`
-}
-
 type HomeHandler struct {
 	repoFactory *service.RepositoryFactory
 	presenter   types.Presenter

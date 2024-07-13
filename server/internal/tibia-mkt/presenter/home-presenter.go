@@ -23,9 +23,10 @@ type HomeResponse struct {
 }
 
 type CogSkuChartResponse struct {
-	Wiki  string           `json:"wiki"`
-	Cog   []CogSkuResponse `json:"cog"`
-	Chart ChartMetadata    `json:"chartMetadata"`
+	Wiki         string           `json:"wiki"`
+	Cog          []CogSkuResponse `json:"cog"`
+	Chart        ChartMetadata    `json:"chartMetadata"`
+	PagePosition int8             `json:"pagePosition"`
 }
 
 type HomePresenter struct {
@@ -95,6 +96,8 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 
 		cog, err := p.getWikiLink(cogSkuList[0].ItemName)
 
+		pageConfig := p.getPagePosition(cog)
+
 		if err != nil {
 			return types.ServerResponse{}, err
 		}
@@ -106,6 +109,7 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 				YAxisTick: yAxisDomain,
 				XAxisTick: xAxisDomain,
 			},
+			PagePosition: pageConfig.Position,
 		}
 	}
 
@@ -135,4 +139,25 @@ func (p *HomePresenter) getWikiLink(itemName string) (types.Cog, error) {
 	}
 
 	return result, nil
+}
+
+func (p *HomePresenter) getPagePosition(item types.Cog) types.CogConfig {
+	switch item.Name {
+	case constants.TibiaCoinEntity:
+		return types.CogConfig{
+			CogId:    item.Id,
+			Position: 1,
+			Columns:  12,
+			Rows:     1,
+		}
+	case constants.HoneycombEntity:
+		return types.CogConfig{
+			CogId:    item.Id,
+			Position: 2,
+			Columns:  6,
+			Rows:     1,
+		}
+	default:
+		return types.CogConfig{}
+	}
 }

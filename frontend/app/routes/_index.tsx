@@ -26,9 +26,24 @@ export async function loader(_: LoaderFunctionArgs): Promise<Response> {
 
     const response: HomeResponse = await nativeResponse.json() as HomeResponse;
 
+    const cogOrderMap: Map<number, string> = Object.keys(response.data)
+        .reduce((result: Map<number, string>, cogName: string) => {
+            const cog: CogChart = response.data[cogName];
+
+            return result.set(cog.pagePosition, cogName);
+        }, new Map<number, string>());
+
+    let result: HomePageData = {};
+
+    for (let i: number = 0; i < Object.keys(response.data).length; i++) {
+        const cogName:string = cogOrderMap.get(i + 1);
+
+        result = {...result, [cogName]: response.data[cogName]};
+    }
+
     return json({
         ok: response.ok,
-        data: response.data
+        data: result
     });
 }
 
