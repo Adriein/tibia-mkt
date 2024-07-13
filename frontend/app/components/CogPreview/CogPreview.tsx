@@ -8,6 +8,7 @@ import {DEFAULT_WORLD} from "~/shared/constants";
 
 interface CogPreviewProps {
     name: string;
+    wikiLink: string;
     data: CogChart;
 }
 
@@ -38,7 +39,7 @@ const xAxisTick = (data: Cog[], xAxisDomain: string[]): string[] => {
     return result;
 }
 
-export function CogPreview({ name, data }: CogPreviewProps) {
+export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
     return (
         <Card withBorder shadow="sm" radius="md">
             <Card.Section withBorder inheritPadding py="xs">
@@ -48,7 +49,7 @@ export function CogPreview({ name, data }: CogPreviewProps) {
                         <Image src={gif(name)} alt="Tibia Coin"/>
                     </div>
                     <Tooltip label="Go to TibiaWiki" openDelay={300}>
-                        <Anchor href="https://tibia.fandom.com/wiki/Tibia_Coins" target="_blank">
+                        <Anchor href={wikiLink} target="_blank">
                             <ActionIcon variant="default" aria-label="Tibia Wiki">
                                 <Image src={TibiaWikiIcon as string} alt="Tibia Wiki" h={20} w={20}/>
                             </ActionIcon>

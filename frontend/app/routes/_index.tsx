@@ -46,7 +46,7 @@ export default function Index() {
 
                   return (
                       <Grid.Col key={cogName} span={12}>
-                          <CogPreview name={cogName} data={cog}/>
+                          <CogPreview name={cogName} wikiLink={cog.wiki} data={cog}/>
                       </Grid.Col>
                   );
               })}
