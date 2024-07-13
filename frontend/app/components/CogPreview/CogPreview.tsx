@@ -3,7 +3,7 @@ import { AreaChart } from '@mantine/charts';
 import {Anchor, Badge, Card, ActionIcon, Space, Title, Image, Tooltip} from '@mantine/core';
 import TibiaWikiIcon from '~/assets/tibia-wiki.png';
 import {formatDate, gif, beautifyCamelCase} from "~/shared/util";
-import {Cog, CogChart} from "~/shared/types";
+import {Cog, CogChart, YAxisTick} from "~/shared/types";
 import {DEFAULT_WORLD} from "~/shared/constants";
 
 interface CogPreviewProps {
@@ -76,8 +76,9 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
                     ticks: xAxisTick(data.cog, data.chartMetadata.xAxisTick)
                 }}
                 yAxisProps={{
-                    domain: data.chartMetadata.yAxisTick
+                    domain: data.chartMetadata.yAxisTick.map((tick: YAxisTick) => tick.price)
                 }}
+                referenceLines={data.chartMetadata.yAxisTick.map((tick: YAxisTick) => ({ x: tick.date}))}
                 valueFormatter={yAxisNumberFormatter}
             />
         </Card>

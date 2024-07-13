@@ -13,9 +13,14 @@ type CogSkuResponse struct {
 	World     string `json:"world"`
 }
 
+type YAxisTick struct {
+	Price int    `json:"price"`
+	Date  string `json:"date"`
+}
+
 type ChartMetadata struct {
-	XAxisTick []string `json:"xAxisTick"`
-	YAxisTick []int    `json:"yAxisTick"`
+	XAxisTick []string    `json:"xAxisTick"`
+	YAxisTick []YAxisTick `json:"yAxisTick"`
 }
 
 type HomeResponse struct {
@@ -57,22 +62,24 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 
 		var (
 			cogSkuResponseList []CogSkuResponse
-			highestSellPrice   int
-			lowestBuyPrice     int
-			yAxisDomain        []int
+			highestSellPrice   YAxisTick
+			lowestBuyPrice     YAxisTick
+			yAxisDomain        []YAxisTick
 			xAxisDomain        []string
 		)
 
-		highestSellPrice = cogSkuList[0].SellPrice
-		lowestBuyPrice = cogSkuList[0].BuyPrice
+		highestSellPrice = YAxisTick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
+		lowestBuyPrice = YAxisTick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
 
 		for _, cogSku := range cogSkuList {
-			if highestSellPrice < cogSku.SellPrice {
-				highestSellPrice = cogSku.SellPrice
+			if highestSellPrice.Price < cogSku.SellPrice {
+				highestSellPrice.Price = cogSku.SellPrice
+				highestSellPrice.Date = cogSku.Date.Format(time.DateOnly)
 			}
 
-			if lowestBuyPrice > cogSku.SellPrice {
-				lowestBuyPrice = cogSku.BuyPrice
+			if lowestBuyPrice.Price > cogSku.BuyPrice {
+				lowestBuyPrice.Price = cogSku.BuyPrice
+				lowestBuyPrice.Date = cogSku.Date.Format(time.DateOnly)
 			}
 
 			cogSkuResponseList = append(cogSkuResponseList, CogSkuResponse{
