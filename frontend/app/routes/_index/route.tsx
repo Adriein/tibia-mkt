@@ -12,10 +12,10 @@ type HomeResponse = {
 }
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: "Tibia Market" },
-    { name: "description", content: "Welcome to Tibia mkt!" },
-  ];
+    return [
+        { title: "Tibia Market" },
+        { name: "description", content: "Welcome to Tibia mkt!" },
+    ];
 };
 
 export async function loader(_: LoaderFunctionArgs): Promise<Response> {
@@ -48,24 +48,24 @@ export async function loader(_: LoaderFunctionArgs): Promise<Response> {
 }
 
 export default function Index() {
-  const serverProps: HomeResponse = useLoaderData<typeof loader>() as HomeResponse;
+    const serverProps: HomeResponse = useLoaderData<typeof loader>() as HomeResponse;
 
-  return (
-      <Container fluid>
-          <Grid gutter="xl">
-              <Grid.Col span={12}>
-                  <Header/>
-              </Grid.Col>
-              {Object.keys(serverProps.data).map((cogName: string) => {
-                  const cog: CogChart = serverProps.data[cogName];
+    return (
+        <Container fluid>
+            <Grid gutter="xl">
+                <Grid.Col span={12}>
+                    <Header/>
+                </Grid.Col>
+                {Object.keys(serverProps.data).map((cogName: string) => {
+                    const cog: CogChart = serverProps.data[cogName];
 
-                  return (
-                      <Grid.Col key={cogName} span={12}>
-                          <CogPreview name={cogName} wikiLink={cog.wiki} data={cog}/>
-                      </Grid.Col>
-                  );
-              })}
-          </Grid>
-      </Container>
-  );
+                    return (
+                        <Grid.Col key={cogName} span={12}>
+                            <CogPreview name={cogName} wikiLink={cog.wiki} data={cog}/>
+                        </Grid.Col>
+                    );
+                })}
+            </Grid>
+        </Container>
+    );
 }

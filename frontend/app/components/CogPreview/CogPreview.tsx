@@ -1,11 +1,12 @@
 import classes from "./CogPreview.module.css";
 import {AreaChart} from '@mantine/charts';
-import {Anchor, Badge, Card, ActionIcon, Space, Title, Image, Tooltip} from '@mantine/core';
+import {Anchor, Badge, Card, ActionIcon, Space, Title, Image, Tooltip, NavLink} from '@mantine/core';
 import TibiaWikiIcon from '~/assets/tibia-wiki.png';
 import {formatDate, gif, beautifyCamelCase} from "~/shared/util";
 import {Cog, CogChart, YAxisTick} from "~/shared/types";
 import {DEFAULT_WORLD} from "~/shared/constants";
 import {IconEye} from '@tabler/icons-react';
+import {NavigateFunction, useNavigate} from "react-router";
 
 interface CogPreviewProps {
     name: string;
@@ -41,6 +42,8 @@ const xAxisTick = (data: Cog[], xAxisDomain: string[]): string[] => {
 }
 
 export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
+    const navigate: NavigateFunction = useNavigate();
+
     return (
         <Card withBorder shadow="sm" radius="md">
             <Card.Section withBorder inheritPadding py="xs">
@@ -50,7 +53,7 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
                         <Image src={gif(name)} alt="Tibia Coin"/>
                     </div>
                     <Tooltip label="Details" openDelay={300}>
-                        <ActionIcon variant="default" aria-label="Details">
+                        <ActionIcon variant="default" aria-label="Details" onClick={() => navigate(`/${name}/detail`)}>
                             <IconEye className={classes.eyeIconButton} />
                         </ActionIcon>
                     </Tooltip>
