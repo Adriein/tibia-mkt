@@ -25,3 +25,11 @@ export const beautifyCamelCase = (camelCaseWord: string): string => {
 
     return firstLetter + word.substring(1, word.length);
 }
+
+export const camelCaseToSnakeCase = (camelCaseWord: string) => {
+    return camelCaseWord.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
+}
+
+export const snakeCaseToCamelCase = (snakeCaseWord: string) => {
+    return snakeCaseWord.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+}

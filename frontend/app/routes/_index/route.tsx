@@ -5,6 +5,7 @@ import { CogPreview } from "~/components/CogPreview/CogPreview";
 import {Grid, Container} from "@mantine/core";
 import {CogChart, HomePageData} from "~/shared/types";
 import {Header} from "~/components/Header/Header";
+import {Outlet} from "@remix-run/react";
 
 type HomeResponse = {
     ok: boolean;
@@ -36,7 +37,7 @@ export async function loader(_: LoaderFunctionArgs): Promise<Response> {
     let result: HomePageData = {};
 
     for (let i: number = 0; i < Object.keys(response.data).length; i++) {
-        const cogName:string = cogOrderMap.get(i + 1);
+        const cogName: string = cogOrderMap.get(i + 1)!;
 
         result = {...result, [cogName]: response.data[cogName]};
     }

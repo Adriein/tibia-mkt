@@ -2,7 +2,7 @@ import classes from "./CogPreview.module.css";
 import {AreaChart} from '@mantine/charts';
 import {Anchor, Badge, Card, ActionIcon, Space, Title, Image, Tooltip, NavLink} from '@mantine/core';
 import TibiaWikiIcon from '~/assets/tibia-wiki.png';
-import {formatDate, gif, beautifyCamelCase} from "~/shared/util";
+import {formatDate, gif, beautifyCamelCase, camelCaseToSnakeCase} from "~/shared/util";
 import {Cog, CogChart, YAxisTick} from "~/shared/types";
 import {DEFAULT_WORLD} from "~/shared/constants";
 import {IconEye} from '@tabler/icons-react';
@@ -53,7 +53,11 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
                         <Image src={gif(name)} alt="Tibia Coin"/>
                     </div>
                     <Tooltip label="Details" openDelay={300}>
-                        <ActionIcon variant="default" aria-label="Details" onClick={() => navigate(`/${name}/detail`)}>
+                        <ActionIcon
+                            variant="default"
+                            aria-label="Details"
+                            onClick={() => navigate(`/${camelCaseToSnakeCase(name)}/detail`)}
+                        >
                             <IconEye className={classes.eyeIconButton} />
                         </ActionIcon>
                     </Tooltip>
