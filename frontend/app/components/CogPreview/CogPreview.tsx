@@ -1,10 +1,11 @@
 import classes from "./CogPreview.module.css";
-import { AreaChart } from '@mantine/charts';
+import {AreaChart} from '@mantine/charts';
 import {Anchor, Badge, Card, ActionIcon, Space, Title, Image, Tooltip} from '@mantine/core';
 import TibiaWikiIcon from '~/assets/tibia-wiki.png';
 import {formatDate, gif, beautifyCamelCase} from "~/shared/util";
 import {Cog, CogChart, YAxisTick} from "~/shared/types";
 import {DEFAULT_WORLD} from "~/shared/constants";
+import {IconEye} from '@tabler/icons-react';
 
 interface CogPreviewProps {
     name: string;
@@ -48,6 +49,11 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
                         <Title order={2}>{beautifyCamelCase(name)}</Title>
                         <Image src={gif(name)} alt="Tibia Coin"/>
                     </div>
+                    <Tooltip label="Details" openDelay={300}>
+                        <ActionIcon variant="default" aria-label="Details">
+                            <IconEye className={classes.eyeIconButton} />
+                        </ActionIcon>
+                    </Tooltip>
                     <Tooltip label="Go to TibiaWiki" openDelay={300}>
                         <Anchor href={wikiLink} target="_blank">
                             <ActionIcon variant="default" aria-label="Tibia Wiki">
@@ -60,7 +66,8 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
             </Card.Section>
             <Space h="xl"/>
             <AreaChart
-                h={400}
+                withLegend
+                h={450}
                 data={data.cog}
                 dataKey="date"
                 tooltipAnimationDuration={200}
@@ -78,7 +85,6 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
                 yAxisProps={{
                     domain: data.chartMetadata.yAxisTick.map((tick: YAxisTick) => tick.price)
                 }}
-                referenceLines={data.chartMetadata.yAxisTick.map((tick: YAxisTick) => ({ x: tick.date}))}
                 valueFormatter={yAxisNumberFormatter}
             />
         </Card>

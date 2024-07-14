@@ -13,14 +13,20 @@ type CogSkuResponse struct {
 	World     string `json:"world"`
 }
 
-type YAxisTick struct {
+type Tick struct {
 	Price int    `json:"price"`
 	Date  string `json:"date"`
 }
 
-type ChartMetadata struct {
-	XAxisTick []string    `json:"xAxisTick"`
-	YAxisTick []YAxisTick `json:"yAxisTick"`
+type CogAverage struct {
+	OfferType string `json:"offerType"`
+	Average   int    `json:"average"`
+}
+
+type ChartMetadataResponse struct {
+	XAxisTick     []string     `json:"xAxisTick"`
+	YAxisTick     []Tick       `json:"yAxisTick"`
+	ReferenceLine []CogAverage `json:"referenceLine"`
 }
 
 type HomeResponse struct {
@@ -28,10 +34,10 @@ type HomeResponse struct {
 }
 
 type CogSkuChartResponse struct {
-	Wiki         string           `json:"wiki"`
-	Cog          []CogSkuResponse `json:"cog"`
-	Chart        ChartMetadata    `json:"chartMetadata"`
-	PagePosition int8             `json:"pagePosition"`
+	Wiki         string                `json:"wiki"`
+	Cog          []CogSkuResponse      `json:"cog"`
+	Chart        ChartMetadataResponse `json:"chartMetadata"`
+	PagePosition int8                  `json:"pagePosition"`
 }
 
 type HomePresenter struct {
@@ -61,17 +67,23 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 		cogSkuList := cogSkuMatrix[i]
 
 		var (
+			buyOfferTotal      int
+			sellOfferTotal     int
 			cogSkuResponseList []CogSkuResponse
-			highestSellPrice   YAxisTick
-			lowestBuyPrice     YAxisTick
-			yAxisDomain        []YAxisTick
+			highestSellPrice   Tick
+			lowestBuyPrice     Tick
+			yAxisDomain        []Tick
 			xAxisDomain        []string
+			average            []CogAverage
 		)
 
-		highestSellPrice = YAxisTick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
-		lowestBuyPrice = YAxisTick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
+		highestSellPrice = Tick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
+		lowestBuyPrice = Tick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
 
 		for _, cogSku := range cogSkuList {
+			buyOfferTotal = buyOfferTotal + cogSku.BuyPrice
+			sellOfferTotal = sellOfferTotal + cogSku.SellPrice
+
 			if highestSellPrice.Price < cogSku.SellPrice {
 				highestSellPrice.Price = cogSku.SellPrice
 				highestSellPrice.Date = cogSku.Date.Format(time.DateOnly)
@@ -109,12 +121,35 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 			return types.ServerResponse{}, err
 		}
 
+		if len(cogSkuList) <= 0 {
+
+			homeResponseMap[cogSkuList[0].ItemName] = CogSkuChartResponse{
+				Wiki: cog.Link,
+				Cog:  cogSkuResponseList,
+				Chart: ChartMetadataResponse{
+					YAxisTick:     yAxisDomain,
+					XAxisTick:     xAxisDomain,
+					ReferenceLine: make([]CogAverage, 0),
+				},
+				PagePosition: pageConfig.Position,
+			}
+
+			continue
+		}
+
+		average = append(
+			average,
+			CogAverage{OfferType: constants.BuyOfferType, Average: p.calculateAverage(buyOfferTotal, len(cogSkuList))},
+			CogAverage{OfferType: constants.SellOfferType, Average: p.calculateAverage(sellOfferTotal, len(cogSkuList))},
+		)
+
 		homeResponseMap[cogSkuList[0].ItemName] = CogSkuChartResponse{
 			Wiki: cog.Link,
 			Cog:  cogSkuResponseList,
-			Chart: ChartMetadata{
-				YAxisTick: yAxisDomain,
-				XAxisTick: xAxisDomain,
+			Chart: ChartMetadataResponse{
+				YAxisTick:     yAxisDomain,
+				XAxisTick:     xAxisDomain,
+				ReferenceLine: average,
 			},
 			PagePosition: pageConfig.Position,
 		}
@@ -167,4 +202,12 @@ func (p *HomePresenter) getPagePosition(item types.Cog) types.CogConfig {
 	default:
 		return types.CogConfig{}
 	}
+}
+
+func (p *HomePresenter) calculateAverage(totalSumCog int, totalNumCog int) int {
+	if totalNumCog == 0 {
+		return 0
+	}
+
+	return totalSumCog / totalNumCog
 }

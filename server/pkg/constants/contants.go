@@ -15,6 +15,11 @@ const (
 	Day31 = "31"
 )
 
+const (
+	SellOfferType = "SELL_OFFER"
+	BuyOfferType  = "BUY_OFFER"
+)
+
 // Errors
 
 const (
