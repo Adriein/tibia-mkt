@@ -25,3 +25,9 @@ type CogConfig struct {
 	Columns  int8
 	Rows     int8
 }
+
+type CogInterval struct {
+	Name string
+	From time.Time
+	To   time.Time
+}
