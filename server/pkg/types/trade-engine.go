@@ -21,5 +21,5 @@ type TradeEngineResult struct {
 }
 
 type TradeEngineAlgorithm interface {
-	Apply() error
+	Apply([]CogSku) error
 }

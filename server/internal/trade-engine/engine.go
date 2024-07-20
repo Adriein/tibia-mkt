@@ -25,7 +25,13 @@ func (te *TradeEngine) Execute(interval types.CogInterval) (types.TradeEngineRes
 		return types.TradeEngineResult{}, retrieveCogsErr
 	}
 
-	algorithm.Apply()
+	err := algorithm.Apply(cogs)
+
+	if err != nil {
+		return types.TradeEngineResult{}, err
+	}
+
+	return types.TradeEngineResult{}, nil
 }
 
 func (te *TradeEngine) retrieveCogInInterval(interval types.CogInterval) ([]types.CogSku, error) {
