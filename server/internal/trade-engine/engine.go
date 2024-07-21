@@ -25,7 +25,9 @@ func (te *TradeEngine) Execute(interval types.CogInterval) (types.TradeEngineRes
 		return types.TradeEngineResult{}, retrieveCogsErr
 	}
 
-	err := algorithm.Apply(cogs)
+	result, err := algorithm.Apply(cogs)
+
+	print(result)
 
 	if err != nil {
 		return types.TradeEngineResult{}, err

@@ -20,6 +20,6 @@ type TradeEngineResult struct {
 	Operations           []TradeEngineOperation
 }
 
-type TradeEngineAlgorithm interface {
-	Apply([]CogSku) error
+type TradeEngineAlgorithm[T any] interface {
+	Apply([]CogSku) (T, error)
 }
