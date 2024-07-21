@@ -12,7 +12,7 @@ type KeyValue struct {
 }
 
 type BestSellValue struct {
-	config trade_engine.TradeEngineConfig
+	config *trade_engine.TradeEngineConfig
 }
 
 type SellOfferFrequency struct {
@@ -23,6 +23,10 @@ type SellOfferFrequency struct {
 type BestSellValueResult struct {
 	HistoricAveragePrice int
 	SellOfferFrequency   []SellOfferFrequency
+}
+
+func NewBestSellValueAlgorithm(config *trade_engine.TradeEngineConfig) *BestSellValue {
+	return &BestSellValue{config: config}
 }
 
 func (bsv *BestSellValue) Apply(cogs []types.CogSku) (BestSellValueResult, error) {

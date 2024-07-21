@@ -37,8 +37,6 @@ func (r *PgHoneycombRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 
 	rows, queryErr := r.connection.Query(query)
 
-	defer rows.Close()
-
 	if queryErr != nil {
 		return nil, types.ApiError{
 			Msg:      queryErr.Error(),
@@ -46,6 +44,8 @@ func (r *PgHoneycombRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 			File:     "pg-honeycomb-repository.go",
 		}
 	}
+
+	defer rows.Close()
 
 	var (
 		id         string

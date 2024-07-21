@@ -7,6 +7,8 @@ import (
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/presenter"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/server"
+	"github.com/adriein/tibia-mkt/internal/trade-engine"
+	"github.com/adriein/tibia-mkt/internal/trade-engine/trade-algorithm"
 	"github.com/adriein/tibia-mkt/pkg/middleware"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
@@ -49,6 +51,7 @@ func main() {
 	)
 
 	api.Route("GET /home", createHomeHandler(api, database))
+	api.Route("GET /trade-engine", tradeEngineHandler(api, database))
 	api.Route("GET /foo", fooMiddlewares.ApplyOn(api.NewHandler(handler.FooHandler)))
 	api.Route("POST /seed", createSeedHandler(api, database))
 
@@ -87,4 +90,27 @@ func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 	seed := handler.NewSeedHandler(csvSecuraCogRepository, factory, pgCogRepository)
 
 	return api.NewHandler(seed.Handler)
+}
+
+func tradeEngineHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
+	pgSecuraTibiaCoinCogRepository := repository.NewPgTibiaCoinRepository(database)
+	pgSecuraHoneycombCogRepository := repository.NewPgHoneycombRepository(database)
+
+	pgCogRepository := repository.NewPgCogRepository(database)
+
+	homePresenter := presenter.NewHomePresenter(pgCogRepository)
+
+	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
+
+	factory := service.NewRepositoryFactory(repositories)
+
+	config := trade_engine.NewConfig()
+
+	algorithm := trade_algorithm.NewBestSellValueAlgorithm(config)
+
+	engine := trade_engine.NewTradeEngine[trade_algorithm.BestSellValueResult](factory, config, algorithm)
+
+	engineHandler := handler.NewTradeEngineHandler(engine, homePresenter)
+
+	return api.NewHandler(engineHandler.Handler)
 }

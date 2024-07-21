@@ -1,33 +1,39 @@
 package trade_engine
 
 import (
+	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 )
 
-type TradeEngine struct {
+type TradeEngine[T any] struct {
 	config            *TradeEngineConfig
-	repositoryFactory service.RepositoryFactory
+	repositoryFactory *service.RepositoryFactory
+	algorithm         types.TradeEngineAlgorithm[T]
 }
 
-func NewTradeEngine(factory service.RepositoryFactory, config *TradeEngineConfig) *TradeEngine {
-	return &TradeEngine{
+func NewTradeEngine[T any](
+	factory *service.RepositoryFactory,
+	config *TradeEngineConfig,
+	algorithm types.TradeEngineAlgorithm[T],
+) *TradeEngine[T] {
+	return &TradeEngine[T]{
 		config:            config,
 		repositoryFactory: factory,
+		algorithm:         algorithm,
 	}
 }
 
-func (te *TradeEngine) Execute(interval types.CogInterval) (types.TradeEngineResult, error) {
-	algorithm := te.config.Algorithm
+func (te *TradeEngine[T]) Execute(interval types.CogInterval) (types.TradeEngineResult, error) {
 	cogs, retrieveCogsErr := te.retrieveCogInInterval(interval)
 
 	if retrieveCogsErr != nil {
 		return types.TradeEngineResult{}, retrieveCogsErr
 	}
 
-	result, err := algorithm.Apply(cogs)
+	result, err := te.algorithm.Apply(cogs)
 
-	print(result)
+	fmt.Println(result)
 
 	if err != nil {
 		return types.TradeEngineResult{}, err
@@ -36,7 +42,7 @@ func (te *TradeEngine) Execute(interval types.CogInterval) (types.TradeEngineRes
 	return types.TradeEngineResult{}, nil
 }
 
-func (te *TradeEngine) retrieveCogInInterval(interval types.CogInterval) ([]types.CogSku, error) {
+func (te *TradeEngine[T]) retrieveCogInInterval(interval types.CogInterval) ([]types.CogSku, error) {
 	var filters []types.Filter
 
 	filters = append(
