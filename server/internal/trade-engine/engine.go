@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
+	"time"
 )
 
 type TradeEngine[T any] struct {
@@ -47,8 +48,8 @@ func (te *TradeEngine[T]) retrieveCogInInterval(interval types.CogInterval) ([]t
 
 	filters = append(
 		filters,
-		types.Filter{Name: "date", Operand: ">=", Value: interval.From},
-		types.Filter{Name: "date", Operand: "<=", Value: interval.To},
+		types.Filter{Name: "date", Operand: ">=", Value: interval.From.Format(time.DateOnly)},
+		types.Filter{Name: "date", Operand: "<=", Value: interval.To.Format(time.DateOnly)},
 	)
 
 	criteria := types.Criteria{Filters: filters}
