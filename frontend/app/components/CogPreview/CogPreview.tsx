@@ -7,6 +7,7 @@ import {Cog, CogChart, YAxisTick} from "~/shared/types";
 import {DEFAULT_WORLD} from "~/shared/constants";
 import {IconEye} from '@tabler/icons-react';
 import {NavigateFunction, useNavigate} from "react-router";
+import {xAxisDateFormatter, xAxisTick, yAxisNumberFormatter} from "~/shared/chart-util";
 
 interface CogPreviewProps {
     name: string;
@@ -15,31 +16,6 @@ interface CogPreviewProps {
 }
 
 const tibiaServer = (data: Cog[]): string => data?.length? data[0].world : DEFAULT_WORLD;
-
-const xAxisDateFormatter = (value: string): string => formatDate(new Date(value));
-const yAxisNumberFormatter = (value: string): string => new Intl.NumberFormat('en-US').format(value);
-
-const xAxisTick = (data: Cog[], xAxisDomain: string[]): string[] => {
-    const SHOW_DATES: string[] = xAxisDomain;
-    const result: string[] = [];
-
-    for (let i: number = 0; i < data.length; i++) {
-        const point: Cog = data[i];
-        const day: string = point.date.split("-")[2];
-
-        if (i == 0 || i == data.length - 1) {
-            result.push(point.date)
-        }
-
-        if (!SHOW_DATES.includes(day)) {
-            continue;
-        }
-
-        result.push(point.date)
-    }
-
-    return result;
-}
 
 export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
     const navigate: NavigateFunction = useNavigate();
