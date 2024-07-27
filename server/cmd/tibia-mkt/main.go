@@ -51,6 +51,7 @@ func main() {
 	)
 
 	api.Route("GET /home", createHomeHandler(api, database))
+	api.Route("GET /detail", createDetailHandler(api, database))
 	api.Route("POST /trade-engine", tradeEngineHandler(api, database))
 	api.Route("GET /foo", fooMiddlewares.ApplyOn(api.NewHandler(handler.FooHandler)))
 	api.Route("POST /seed", createSeedHandler(api, database))
@@ -113,4 +114,21 @@ func tradeEngineHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Ha
 	engineHandler := handler.NewTradeEngineHandler(engine, homePresenter)
 
 	return api.NewHandler(engineHandler.Handler)
+}
+
+func createDetailHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
+	pgSecuraTibiaCoinCogRepository := repository.NewPgTibiaCoinRepository(database)
+	pgSecuraHoneycombCogRepository := repository.NewPgHoneycombRepository(database)
+
+	pgCogRepository := repository.NewPgCogRepository(database)
+
+	homePresenter := presenter.NewHomePresenter(pgCogRepository)
+
+	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
+
+	factory := service.NewRepositoryFactory(repositories)
+
+	detail := handler.NewDetailHandler(factory, homePresenter)
+
+	return api.NewHandler(detail.Handler)
 }

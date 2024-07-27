@@ -79,8 +79,8 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
                 dataKey="date"
                 tooltipAnimationDuration={200}
                 series={[
-                    {name: 'buyPrice', label: "Buy price", color: 'indigo.6'},
-                    {name: 'sellPrice', label: "Sell price", color: 'teal.6'},
+                    {name: 'sellOffer', label: "Sell Offer", color: 'teal.6'},
+                    {name: 'buyOffer', label: "Buy Offer", color: 'indigo.6'},
                 ]}
                 curveType="linear"
                 legendProps={{verticalAlign: 'bottom'}}

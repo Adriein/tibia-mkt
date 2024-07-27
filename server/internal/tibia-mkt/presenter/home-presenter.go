@@ -7,8 +7,8 @@ import (
 )
 
 type CogSkuResponse struct {
-	BuyPrice  int    `json:"buyPrice"`
-	SellPrice int    `json:"sellPrice"`
+	BuyOffer  int    `json:"buyOffer"`
+	SellOffer int    `json:"sellOffer"`
 	Date      string `json:"date"`
 	World     string `json:"world"`
 }
@@ -95,8 +95,8 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 			}
 
 			cogSkuResponseList = append(cogSkuResponseList, CogSkuResponse{
-				BuyPrice:  cogSku.BuyPrice,
-				SellPrice: cogSku.SellPrice,
+				BuyOffer:  cogSku.BuyPrice,
+				SellOffer: cogSku.SellPrice,
 				Date:      cogSku.Date.Format(time.DateOnly),
 				World:     cogSku.World,
 			})

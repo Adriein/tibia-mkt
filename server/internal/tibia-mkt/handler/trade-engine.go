@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/adriein/tibia-mkt/internal/trade-engine"
-	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
@@ -68,7 +67,7 @@ func (h *TradeEngineHandler[T]) Handler(w http.ResponseWriter, r *http.Request) 
 		return tradeEngineErr
 	}
 
-	response, presenterErr := h.presenter.Format(result)
+	/* response, presenterErr := h.presenter.Format(result)
 
 	if presenterErr != nil {
 		response := types.ServerResponse{
@@ -81,6 +80,11 @@ func (h *TradeEngineHandler[T]) Handler(w http.ResponseWriter, r *http.Request) 
 		}
 
 		return presenterErr
+	}*/
+
+	response := types.ServerResponse{
+		Ok:   true,
+		Data: result,
 	}
 
 	if err := service.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
