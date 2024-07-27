@@ -24,8 +24,8 @@ func NewTradeEngineHandler[T any](
 }
 
 func (h *TradeEngineHandler[T]) Handler(w http.ResponseWriter, _ *http.Request) error {
-	date1, _ := time.Parse(time.DateOnly, "2023-12-12")
-	date2, _ := time.Parse(time.DateOnly, "2024-07-21")
+	date1, _ := time.Parse(time.DateOnly, "2023-11-07")
+	date2, _ := time.Parse(time.DateOnly, "2024-07-22")
 
 	result, _ := h.engine.Execute(types.CogInterval{Name: "honeycomb", From: date1, To: date2})
 

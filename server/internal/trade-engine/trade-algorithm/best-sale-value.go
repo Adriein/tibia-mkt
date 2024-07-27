@@ -16,8 +16,9 @@ type BestSellValue struct {
 }
 
 type SellOfferFrequency struct {
-	Price     int
-	Frequency float64
+	Price       int
+	Occurrences int
+	Frequency   float64
 }
 
 type BestSellValueResult struct {
@@ -60,7 +61,10 @@ func (bsv *BestSellValue) Apply(cogs []types.CogSku) (BestSellValueResult, error
 	for _, keyValue := range sortedKeyValue {
 		frequency := float64(keyValue.Value) / float64(len(cogs))
 
-		frequencyResults = append(frequencyResults, SellOfferFrequency{Price: keyValue.Key, Frequency: frequency})
+		frequencyResults = append(
+			frequencyResults,
+			SellOfferFrequency{Price: keyValue.Key, Occurrences: keyValue.Value, Frequency: frequency},
+		)
 	}
 
 	result := BestSellValueResult{
