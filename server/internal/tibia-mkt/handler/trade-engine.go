@@ -32,14 +32,6 @@ func (h *TradeEngineHandler[T]) Handler(w http.ResponseWriter, r *http.Request) 
 	tradeEngineRequest, decodeErr := service.Decode[TradeEngineRequest](r)
 
 	if decodeErr != nil {
-		response := types.ServerResponse{
-			Ok: false,
-		}
-
-		if err := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); err != nil {
-			return err
-		}
-
 		return types.ApiError{
 			Msg:      decodeErr.Error(),
 			Function: "Handler",
@@ -56,14 +48,6 @@ func (h *TradeEngineHandler[T]) Handler(w http.ResponseWriter, r *http.Request) 
 	)
 
 	if tradeEngineErr != nil {
-		response := types.ServerResponse{
-			Ok: false,
-		}
-
-		if err := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); err != nil {
-			return err
-		}
-
 		return tradeEngineErr
 	}
 

@@ -6,27 +6,9 @@ import (
 	"time"
 )
 
-type CogSkuResponse struct {
-	BuyOffer  int    `json:"buyOffer"`
-	SellOffer int    `json:"sellOffer"`
-	Date      string `json:"date"`
-	World     string `json:"world"`
-}
-
-type Tick struct {
-	Price int    `json:"price"`
-	Date  string `json:"date"`
-}
-
-type CogAverage struct {
-	OfferType string `json:"offerType"`
-	Average   int    `json:"average"`
-}
-
 type ChartMetadataResponse struct {
-	XAxisTick     []string     `json:"xAxisTick"`
-	YAxisTick     []Tick       `json:"yAxisTick"`
-	ReferenceLine []CogAverage `json:"referenceLine"`
+	XAxisTick []string     `json:"xAxisTick"`
+	YAxisTick []types.Tick `json:"yAxisTick"`
 }
 
 type HomeResponse struct {
@@ -34,10 +16,10 @@ type HomeResponse struct {
 }
 
 type CogSkuChartResponse struct {
-	Wiki         string                `json:"wiki"`
-	Cog          []CogSkuResponse      `json:"cog"`
-	Chart        ChartMetadataResponse `json:"chartMetadata"`
-	PagePosition int8                  `json:"pagePosition"`
+	Wiki         string                 `json:"wiki"`
+	Cog          []types.CogSkuResponse `json:"cog"`
+	Chart        ChartMetadataResponse  `json:"chartMetadata"`
+	PagePosition int8                   `json:"pagePosition"`
 }
 
 type HomePresenter struct {
@@ -69,16 +51,15 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 		var (
 			buyOfferTotal      int
 			sellOfferTotal     int
-			cogSkuResponseList []CogSkuResponse
-			highestSellPrice   Tick
-			lowestBuyPrice     Tick
-			yAxisDomain        []Tick
+			cogSkuResponseList []types.CogSkuResponse
+			highestSellPrice   types.Tick
+			lowestBuyPrice     types.Tick
+			yAxisDomain        []types.Tick
 			xAxisDomain        []string
-			average            []CogAverage
 		)
 
-		highestSellPrice = Tick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
-		lowestBuyPrice = Tick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
+		highestSellPrice = types.Tick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
+		lowestBuyPrice = types.Tick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
 
 		for _, cogSku := range cogSkuList {
 			buyOfferTotal = buyOfferTotal + cogSku.BuyPrice
@@ -94,7 +75,7 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 				lowestBuyPrice.Date = cogSku.Date.Format(time.DateOnly)
 			}
 
-			cogSkuResponseList = append(cogSkuResponseList, CogSkuResponse{
+			cogSkuResponseList = append(cogSkuResponseList, types.CogSkuResponse{
 				BuyOffer:  cogSku.BuyPrice,
 				SellOffer: cogSku.SellPrice,
 				Date:      cogSku.Date.Format(time.DateOnly),
@@ -127,9 +108,8 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 				Wiki: cog.Link,
 				Cog:  cogSkuResponseList,
 				Chart: ChartMetadataResponse{
-					YAxisTick:     yAxisDomain,
-					XAxisTick:     xAxisDomain,
-					ReferenceLine: make([]CogAverage, 0),
+					YAxisTick: yAxisDomain,
+					XAxisTick: xAxisDomain,
 				},
 				PagePosition: pageConfig.Position,
 			}
@@ -137,19 +117,12 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 			continue
 		}
 
-		average = append(
-			average,
-			CogAverage{OfferType: constants.BuyOfferType, Average: p.calculateAverage(buyOfferTotal, len(cogSkuList))},
-			CogAverage{OfferType: constants.SellOfferType, Average: p.calculateAverage(sellOfferTotal, len(cogSkuList))},
-		)
-
 		homeResponseMap[cogSkuList[0].ItemName] = CogSkuChartResponse{
 			Wiki: cog.Link,
 			Cog:  cogSkuResponseList,
 			Chart: ChartMetadataResponse{
-				YAxisTick:     yAxisDomain,
-				XAxisTick:     xAxisDomain,
-				ReferenceLine: average,
+				YAxisTick: yAxisDomain,
+				XAxisTick: xAxisDomain,
 			},
 			PagePosition: pageConfig.Position,
 		}
@@ -168,7 +141,7 @@ func (p *HomePresenter) getWikiLink(itemName string) (types.Cog, error) {
 
 	filters = append(filters, types.Filter{
 		Name:    "name",
-		Operand: "=",
+		Operand: constants.Equal,
 		Value:   itemName,
 	})
 
@@ -202,12 +175,4 @@ func (p *HomePresenter) getPagePosition(item types.Cog) types.CogConfig {
 	default:
 		return types.CogConfig{}
 	}
-}
-
-func (p *HomePresenter) calculateAverage(totalSumCog int, totalNumCog int) int {
-	if totalNumCog == 0 {
-		return 0
-	}
-
-	return totalSumCog / totalNumCog
 }

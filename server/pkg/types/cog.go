@@ -31,3 +31,10 @@ type CogInterval struct {
 	From string
 	To   string
 }
+
+type CogSkuResponse struct {
+	BuyOffer  int    `json:"buyOffer"`
+	SellOffer int    `json:"sellOffer"`
+	Date      string `json:"date"`
+	World     string `json:"world"`
+}

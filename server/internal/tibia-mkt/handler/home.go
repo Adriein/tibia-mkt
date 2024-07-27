@@ -40,7 +40,7 @@ func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 
 		var filters []types.Filter
 
-		filters = append(filters, types.Filter{Name: "world", Operand: "=", Value: "Secura"})
+		filters = append(filters, types.Filter{Name: "world", Operand: constants.Equal, Value: "Secura"})
 
 		results, repositoryErr := repository.Find(types.Criteria{Filters: filters})
 

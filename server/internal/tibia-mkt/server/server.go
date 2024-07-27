@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"fmt"
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/middleware"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
@@ -71,6 +72,15 @@ func (s *TibiaMktApiServer) NewHandler(handler types.TibiaMktHttpHandler) http.H
 				slog.Warn(fmt.Sprintf("%s TraceId=%s", appError.Error(), r.Header.Get("traceId")))
 
 				return
+			}
+
+			response := types.ServerResponse{
+				Ok:    false,
+				Error: constants.ServerGenericError,
+			}
+
+			if encodeErr := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); encodeErr != nil {
+				log.Fatal(encodeErr.Error())
 			}
 
 			slog.Error(fmt.Sprintf("%s TraceId=%s", appError.Error(), r.Header.Get("traceId")))

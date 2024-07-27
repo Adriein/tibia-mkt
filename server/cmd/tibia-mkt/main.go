@@ -122,13 +122,13 @@ func createDetailHandler(api *server.TibiaMktApiServer, database *sql.DB) http.H
 
 	pgCogRepository := repository.NewPgCogRepository(database)
 
-	homePresenter := presenter.NewHomePresenter(pgCogRepository)
+	homePresenter := presenter.NewDetailPresenter()
 
 	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
 
 	factory := service.NewRepositoryFactory(repositories)
 
-	detail := handler.NewDetailHandler(factory, homePresenter)
+	detail := handler.NewDetailHandler(pgCogRepository, factory, homePresenter)
 
 	return api.NewHandler(detail.Handler)
 }
