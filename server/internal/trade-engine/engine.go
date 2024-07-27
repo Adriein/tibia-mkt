@@ -1,7 +1,7 @@
 package trade_engine
 
 import (
-	"fmt"
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
@@ -32,9 +32,7 @@ func (te *TradeEngine[T]) Execute(interval types.CogInterval) (types.TradeEngine
 		return types.TradeEngineResult{}, retrieveCogsErr
 	}
 
-	result, err := te.algorithm.Apply(cogs)
-
-	fmt.Println(result)
+	_, err := te.algorithm.Apply(cogs)
 
 	if err != nil {
 		return types.TradeEngineResult{}, err
@@ -48,8 +46,8 @@ func (te *TradeEngine[T]) retrieveCogInInterval(interval types.CogInterval) ([]t
 
 	filters = append(
 		filters,
-		types.Filter{Name: "date", Operand: ">=", Value: interval.From.Format(time.DateOnly)},
-		types.Filter{Name: "date", Operand: "<=", Value: interval.To.Format(time.DateOnly)},
+		types.Filter{Name: "date", Operand: constants.GreaterThanOrEqual, Value: interval.From.Format(time.DateOnly)},
+		types.Filter{Name: "date", Operand: constants.LessThanOrEqual, Value: interval.To.Format(time.DateOnly)},
 	)
 
 	criteria := types.Criteria{Filters: filters}

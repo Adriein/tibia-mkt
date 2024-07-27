@@ -20,6 +20,14 @@ const (
 	BuyOfferType  = "BUY_OFFER"
 )
 
+// Criteria
+
+const (
+	Equal              = "="
+	GreaterThanOrEqual = ">="
+	LessThanOrEqual    = "<="
+)
+
 // Errors
 
 const (
