@@ -28,6 +28,6 @@ type CogConfig struct {
 
 type CogInterval struct {
 	Name string
-	From time.Time
-	To   time.Time
+	From string
+	To   string
 }

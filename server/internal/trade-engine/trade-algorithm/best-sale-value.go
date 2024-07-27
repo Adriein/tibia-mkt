@@ -16,14 +16,14 @@ type BestSellValue struct {
 }
 
 type SellOfferFrequency struct {
-	Price       int
-	Occurrences int
-	Frequency   float64
+	Price       int     `json:"price"`
+	Occurrences int     `json:"occurrences"`
+	Frequency   float64 `json:"frequency"`
 }
 
 type BestSellValueResult struct {
-	HistoricAveragePrice int
-	SellOfferFrequency   []SellOfferFrequency
+	HistoricAveragePrice int                  `json:"historicAveragePrice"`
+	SellOfferFrequency   []SellOfferFrequency `json:"sellOfferFrequency"`
 }
 
 func NewBestSellValueAlgorithm(config *trade_engine.TradeEngineConfig) *BestSellValue {

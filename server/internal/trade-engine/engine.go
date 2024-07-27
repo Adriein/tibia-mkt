@@ -4,7 +4,6 @@ import (
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
-	"time"
 )
 
 type TradeEngine[T any] struct {
@@ -25,20 +24,21 @@ func NewTradeEngine[T any](
 	}
 }
 
-func (te *TradeEngine[T]) Execute(interval types.CogInterval) (types.TradeEngineResult, error) {
+func (te *TradeEngine[T]) Execute(interval types.CogInterval) (T, error) {
+	var failedResponse T
 	cogs, retrieveCogsErr := te.retrieveCogInInterval(interval)
 
 	if retrieveCogsErr != nil {
-		return types.TradeEngineResult{}, retrieveCogsErr
+		return failedResponse, retrieveCogsErr
 	}
 
-	_, err := te.algorithm.Apply(cogs)
+	result, err := te.algorithm.Apply(cogs)
 
 	if err != nil {
-		return types.TradeEngineResult{}, err
+		return failedResponse, err
 	}
 
-	return types.TradeEngineResult{}, nil
+	return result, nil
 }
 
 func (te *TradeEngine[T]) retrieveCogInInterval(interval types.CogInterval) ([]types.CogSku, error) {
@@ -46,8 +46,8 @@ func (te *TradeEngine[T]) retrieveCogInInterval(interval types.CogInterval) ([]t
 
 	filters = append(
 		filters,
-		types.Filter{Name: "date", Operand: constants.GreaterThanOrEqual, Value: interval.From.Format(time.DateOnly)},
-		types.Filter{Name: "date", Operand: constants.LessThanOrEqual, Value: interval.To.Format(time.DateOnly)},
+		types.Filter{Name: "date", Operand: constants.GreaterThanOrEqual, Value: interval.From},
+		types.Filter{Name: "date", Operand: constants.LessThanOrEqual, Value: interval.To},
 	)
 
 	criteria := types.Criteria{Filters: filters}

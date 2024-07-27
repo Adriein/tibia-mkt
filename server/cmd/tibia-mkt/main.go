@@ -51,7 +51,7 @@ func main() {
 	)
 
 	api.Route("GET /home", createHomeHandler(api, database))
-	api.Route("GET /trade-engine", tradeEngineHandler(api, database))
+	api.Route("POST /trade-engine", tradeEngineHandler(api, database))
 	api.Route("GET /foo", fooMiddlewares.ApplyOn(api.NewHandler(handler.FooHandler)))
 	api.Route("POST /seed", createSeedHandler(api, database))
 

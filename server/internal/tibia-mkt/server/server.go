@@ -9,7 +9,6 @@ import (
 	"log"
 	"log/slog"
 	"net/http"
-	"os"
 )
 
 type TibiaMktApiServer struct {
@@ -75,8 +74,6 @@ func (s *TibiaMktApiServer) NewHandler(handler types.TibiaMktHttpHandler) http.H
 			}
 
 			slog.Error(fmt.Sprintf("%s TraceId=%s", appError.Error(), r.Header.Get("traceId")))
-
-			os.Exit(1)
 		}
 	}
 }
