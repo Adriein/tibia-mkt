@@ -1,8 +1,8 @@
 import classes from "./CogPreview.module.css";
 import {AreaChart} from '@mantine/charts';
-import {Anchor, Badge, Card, ActionIcon, Space, Title, Image, Tooltip, NavLink} from '@mantine/core';
+import {Anchor, Badge, Card, ActionIcon, Space, Title, Image, Tooltip} from '@mantine/core';
 import TibiaWikiIcon from '~/assets/tibia-wiki.png';
-import {formatDate, gif, beautifyCamelCase, camelCaseToSnakeCase} from "~/shared/util";
+import {gif, beautifyCamelCase, camelCaseToSnakeCase} from "~/shared/util";
 import {Cog, CogChart, YAxisTick} from "~/shared/types";
 import {DEFAULT_WORLD} from "~/shared/constants";
 import {IconEye} from '@tabler/icons-react';
