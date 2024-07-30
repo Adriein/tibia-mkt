@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   tibia_mkt_api:
     container_name: tibia_mkt_api
