@@ -3,7 +3,7 @@ import {Cog} from "~/shared/types";
 
 export const xAxisDateFormatter = (value: string): string => formatDate(new Date(value));
 
-export const yAxisNumberFormatter = (value: string): string => new Intl.NumberFormat('en-US').format(value);
+export const yAxisNumberFormatter = (value: number): string => new Intl.NumberFormat('en-US').format(value);
 
 export const xAxisTick = (data: Cog[], xAxisDomain: string[]): string[] => {
     const SHOW_DATES: string[] = xAxisDomain;

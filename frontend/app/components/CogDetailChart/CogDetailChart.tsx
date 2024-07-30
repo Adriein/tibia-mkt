@@ -7,12 +7,12 @@ interface CogDetailChartProps {
     data: DetailPageData;
 }
 
-const TIMELINE: string[] = ['Last Week', 'Last Month', 'Last 3 Months', 'Last 6 Months', 'Last Year', "All Series"];
+const TIME_INTERVAL: string[] = ['Last Week', 'Last Month', 'Last 3 Months', 'Last 6 Months', 'Last Year', "All Series"];
 
 export function CogDetailChart({ data }: CogDetailChartProps) {
     return (
         <>
-            <SegmentedControl mb="lg" withItemsBorders={false} data={TIMELINE} />
+            <SegmentedControl mb="lg" withItemsBorders={false} data={TIME_INTERVAL} />
             <Card withBorder radius="md" mb="lg">
                 <Card.Section withBorder inheritPadding py="xs">
                     <Group justify="space-between">
@@ -25,7 +25,6 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
                         data={data.cog}
                         dataKey="date"
                         series={[{name: 'sellOffer', label: "Sell Offer", color: 'teal.6'}]}
-                        areaChartProps={{ syncId: 'groceries' }}
                         xAxisProps={{
                             interval: "preserveStartEnd",
                             tickFormatter: xAxisDateFormatter,
@@ -35,7 +34,7 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
                             domain: data.sellOfferChart.yAxisTick.map((tick: YAxisTick) => tick.price)
                         }}
                         valueFormatter={yAxisNumberFormatter}
-                        lineChartProps={{ syncId: 'groceries' }}
+                        lineChartProps={{ syncId: 'offer' }}
                     />
                 </Card.Section>
             </Card>
@@ -50,7 +49,6 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
                         h={180}
                         data={data.cog}
                         dataKey="date"
-                        areaChartProps={{ syncId: 'groceries' }}
                         series={[{name: 'buyOffer', label: "Buy Offer", color: 'indigo.6'}]}
                         xAxisProps={{
                             interval: "preserveStartEnd",
@@ -61,7 +59,7 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
                             domain: data.buyOfferChart.yAxisTick.map((tick: YAxisTick) => tick.price)
                         }}
                         valueFormatter={yAxisNumberFormatter}
-                        lineChartProps={{ syncId: 'groceries' }}
+                        lineChartProps={{ syncId: 'offer' }}
                     />
                 </Card.Section>
             </Card>
