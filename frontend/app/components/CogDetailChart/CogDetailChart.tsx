@@ -86,6 +86,9 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
                             domain: data.sellOfferChart.yAxisTick.map((tick: YAxisTick) => tick.price)
                         }}
                         valueFormatter={yAxisNumberFormatter}
+                        referenceLines={[
+                            { y: data.sellOfferChart.referenceLine.average, label: 'Avg price', color: 'red.6' },
+                        ]}
                         lineChartProps={{ syncId: 'offer' }}
                     />
                 </Card.Section>
@@ -107,6 +110,9 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
                             domain: data.buyOfferChart.yAxisTick.map((tick: YAxisTick) => tick.price)
                         }}
                         valueFormatter={yAxisNumberFormatter}
+                        referenceLines={[
+                            { y: data.buyOfferChart.referenceLine.average, label: 'Avg price', color: 'red.6' },
+                        ]}
                         lineChartProps={{ syncId: 'offer' }}
                     />
                 </Card.Section>

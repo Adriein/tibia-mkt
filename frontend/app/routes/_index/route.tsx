@@ -5,7 +5,6 @@ import { CogPreview } from "~/components/CogPreview/CogPreview";
 import {Grid, Container} from "@mantine/core";
 import {CogChart, HomePageData} from "~/shared/types";
 import {Header} from "~/components/Header/Header";
-import {Outlet} from "@remix-run/react";
 
 type HomeResponse = {
     ok: boolean;
@@ -19,7 +18,7 @@ export const meta: MetaFunction = () => {
     ];
 };
 
-export async function loader(_: LoaderFunctionArgs): Promise<Response> {
+export async function loader(): Promise<Response> {
     const nativeRequest: Request = new Request(
         `${process.env.API_PROTOCOL}://${process.env.API_URL}/home?item=tibiaCoin&item=honeycomb`
     );
@@ -49,7 +48,7 @@ export async function loader(_: LoaderFunctionArgs): Promise<Response> {
 }
 
 export default function Index() {
-    const serverProps: HomeResponse = useLoaderData<typeof loader>() as HomeResponse;
+    const serverProps: HomeResponse = useLoaderData() as HomeResponse;
 
     return (
         <Container fluid>
