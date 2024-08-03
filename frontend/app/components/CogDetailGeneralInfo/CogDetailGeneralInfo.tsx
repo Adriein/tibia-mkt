@@ -1,8 +1,8 @@
 import {Card, Group, Text} from "@mantine/core";
-import {TradeEngine} from "~/shared/types";
+import {TradeEngineDetailPageData} from "~/shared/types";
 
 interface CogDetailGeneralInfoProps {
-    data: TradeEngine;
+    data: TradeEngineDetailPageData;
 }
 
 export function CogDetailGeneralInfo({ data }: CogDetailGeneralInfoProps) {
