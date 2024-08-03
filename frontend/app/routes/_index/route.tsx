@@ -1,5 +1,4 @@
 import type { MetaFunction } from "@remix-run/node";
-import { LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "react-router";
 import { CogPreview } from "~/components/CogPreview/CogPreview";
 import {Grid, Container} from "@mantine/core";
