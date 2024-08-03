@@ -3,12 +3,13 @@ import {Cog, DetailPageData, YAxisTick} from "~/shared/types";
 import {LineChart} from "@mantine/charts";
 import {Card, Group, SegmentedControl, Text} from '@mantine/core';
 import {useEffect, useState} from "react";
+import type {XAxisProps} from "recharts";
 
 interface CogDetailChartProps {
     data: DetailPageData;
 }
 
-const TIME_INTERVAL: string[] = ['Last Week', 'Last Month', 'Last 3 Months', 'Last 6 Months', 'Last Year', "All Series"];
+const TIME_INTERVAL: string[] = ['Last Week', 'Last Month', 'Last 3 Months', 'Last 6 Months', 'Last Year'];
 
 const TIME_INTERVAL_DIC: Record<string, number> = {
     'Last Week': 7,
@@ -16,8 +17,24 @@ const TIME_INTERVAL_DIC: Record<string, number> = {
     'Last 3 Months': 90,
     'Last 6 Months': 180,
     'Last Year': 365,
-    'All Series': 0,
 };
+
+const showCompleteXAxis = (timeInterval: string): boolean => timeInterval === 'Last Week' || timeInterval === 'Last Month';
+
+const mountXAxisProps = (timeInterval: string, data: DetailPageData): Omit<XAxisProps, 'ref'> => {
+    if(showCompleteXAxis(timeInterval)) {
+        return {
+            interval: "preserveStartEnd",
+            tickFormatter: xAxisDateFormatter
+        };
+    }
+
+    return {
+        interval: "preserveStartEnd",
+        tickFormatter: xAxisDateFormatter,
+        ticks: xAxisTick(data.cog, data.sellOfferChart.xAxisTick)
+    };
+}
 
 export function CogDetailChart({ data }: CogDetailChartProps) {
     const [timeInterval, setTimeInterval] = useState<string>('Last Week');
@@ -26,16 +43,12 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
     useEffect(() => {
         const chartData: Cog[] = data.cog;
 
+        const delta: number = chartData.length - TIME_INTERVAL_DIC[timeInterval];
+
         const result: Cog[] = [];
 
-        for (let i: number = 0; i < chartData.length; i++) {
-            if (TIME_INTERVAL_DIC[timeInterval] === 0) {
-                result.push(...data.cog);
-
-                break;
-            }
-
-            if (TIME_INTERVAL_DIC[timeInterval] === i + 1) {
+        for (let i: number = chartData.length - 1; i >= 0; i--) {
+            if (i === delta) {
                 result.push(chartData[i]);
 
                 break;
@@ -44,7 +57,7 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
             result.push(chartData[i]);
         }
 
-        setCogs(result);
+        setCogs(result.reverse());
     }, [timeInterval, data.cog]);
 
     return (
@@ -68,11 +81,7 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
                         data={cogs}
                         dataKey="date"
                         series={[{name: 'sellOffer', label: "Sell Offer", color: 'teal.6'}]}
-                        xAxisProps={{
-                            interval: "preserveStartEnd",
-                            tickFormatter: xAxisDateFormatter,
-                            ticks: xAxisTick(data.cog, data.sellOfferChart.xAxisTick)
-                        }}
+                        xAxisProps={mountXAxisProps(timeInterval, data)}
                         yAxisProps={{
                             domain: data.sellOfferChart.yAxisTick.map((tick: YAxisTick) => tick.price)
                         }}
@@ -93,11 +102,7 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
                         data={cogs}
                         dataKey="date"
                         series={[{name: 'buyOffer', label: "Buy Offer", color: 'indigo.6'}]}
-                        xAxisProps={{
-                            interval: "preserveStartEnd",
-                            tickFormatter: xAxisDateFormatter,
-                            ticks: xAxisTick(data.cog, data.buyOfferChart.xAxisTick)
-                        }}
+                        xAxisProps={mountXAxisProps(timeInterval, data)}
                         yAxisProps={{
                             domain: data.buyOfferChart.yAxisTick.map((tick: YAxisTick) => tick.price)
                         }}
