@@ -3,10 +3,11 @@ import {Accordion, Container, Grid, rem} from "@mantine/core";
 import {Header} from "~/components/Header/Header";
 import {LoaderFunctionArgs} from "@remix-run/node";
 import {DetailPageData, RemixMetaFunc, TradeEngineDetailPageData} from "~/shared/types";
-import {json, useLoaderData} from "react-router";
+import {json, useLoaderData, useParams} from "react-router";
 import {CogDetailChart} from "~/components/CogDetailChart/CogDetailChart";
 import {IconChartDotsFilled, IconInfoCircle, IconRobot} from '@tabler/icons-react';
 import {CogDetailGeneralInfo} from "~/components/CogDetailGeneralInfo/CogDetailGeneralInfo";
+import { Params } from "@remix-run/react";
 
 type DetailApiResponse = {
     ok: boolean,
@@ -64,6 +65,8 @@ export async function loader({ params }: LoaderFunctionArgs): Promise<Response> 
 
 export default function CogDetail() {
     const serverProps: DetailPageResponse = useLoaderData() as DetailPageResponse;
+    const params = useParams() as {item: string};
+
     return (
         <Container fluid>
             <Grid gutter="xl">
@@ -99,7 +102,10 @@ export default function CogDetail() {
                                 General Info
                             </Accordion.Control>
                             <Accordion.Panel>
-                                <CogDetailGeneralInfo data={serverProps.data.tradeEngine}/>
+                                <CogDetailGeneralInfo
+                                    item={beautifyCamelCase(snakeCaseToCamelCase(params.item))}
+                                    data={serverProps.data.tradeEngine}
+                                />
                             </Accordion.Panel>
                         </Accordion.Item>
                         <Accordion.Item value="ai-trading-bot">
