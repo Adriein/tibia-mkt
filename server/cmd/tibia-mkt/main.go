@@ -106,8 +106,9 @@ func tradeEngineHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Ha
 	factory := service.NewRepositoryFactory(repositories)
 
 	config := trade_engine.NewConfig()
+	prob := service.NewProbHelper()
 
-	algorithm := trade_algorithm.NewBestSellValueAlgorithm(config)
+	algorithm := trade_algorithm.NewBestSellValueAlgorithm(config, prob)
 
 	engine := trade_engine.NewTradeEngine[trade_algorithm.BestSellValueResult](factory, config, algorithm)
 

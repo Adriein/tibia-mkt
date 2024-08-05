@@ -2,6 +2,7 @@ package trade_algorithm
 
 import (
 	"github.com/adriein/tibia-mkt/internal/trade-engine"
+	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"sort"
 )
@@ -13,6 +14,7 @@ type KeyValue struct {
 
 type BestSellValue struct {
 	config *trade_engine.TradeEngineConfig
+	prob   *service.ProbHelper
 }
 
 type SellOfferFrequency struct {
@@ -22,27 +24,28 @@ type SellOfferFrequency struct {
 }
 
 type BestSellValueResult struct {
-	HistoricAveragePrice int                  `json:"historicAveragePrice"`
-	SellOfferFrequency   []SellOfferFrequency `json:"sellOfferFrequency"`
+	Mean               int                  `json:"mean"`
+	StdDeviation       float64              `json:"stdDeviation"`
+	SellOfferFrequency []SellOfferFrequency `json:"sellOfferFrequency"`
 }
 
-func NewBestSellValueAlgorithm(config *trade_engine.TradeEngineConfig) *BestSellValue {
-	return &BestSellValue{config: config}
+func NewBestSellValueAlgorithm(config *trade_engine.TradeEngineConfig, prob *service.ProbHelper) *BestSellValue {
+	return &BestSellValue{config: config, prob: prob}
 }
 
 func (bsv *BestSellValue) Apply(cogs []types.CogSku) (BestSellValueResult, error) {
 	var (
-		totalCogSellPrice int
-		frequencyResults  []SellOfferFrequency
+		frequencyResults []SellOfferFrequency
 	)
 
 	offerFrequencyMap := make(map[int]int)
+	prices := make([]int, len(cogs))
 
 	for i := 0; i < len(cogs); i++ {
-		totalCogSellPrice = totalCogSellPrice + cogs[i].SellPrice
+		prices[i] = cogs[i].SellPrice
 	}
 
-	historicAverage := totalCogSellPrice / len(cogs)
+	historicAverage := int(bsv.prob.Mean(prices))
 
 	for i := 0; i < len(cogs); i++ {
 		appearance := offerFrequencyMap[cogs[i].SellPrice]
@@ -68,8 +71,9 @@ func (bsv *BestSellValue) Apply(cogs []types.CogSku) (BestSellValueResult, error
 	}
 
 	result := BestSellValueResult{
-		HistoricAveragePrice: historicAverage,
-		SellOfferFrequency:   frequencyResults,
+		Mean:               historicAverage,
+		StdDeviation:       bsv.prob.StdDeviation(prices),
+		SellOfferFrequency: frequencyResults,
 	}
 
 	return result, nil
