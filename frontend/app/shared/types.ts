@@ -21,6 +21,6 @@ export type DetailPageData = {
 
 export type RemixMetaFunc = {params: { item: string }};
 
-export type SellOfferFrequency = { price: number, occurrences: 4, frequency: number }
+export type SellOfferFrequency = { range: string, occurrences: number, frequency: number }
 
-export type TradeEngineDetailPageData = { historicAveragePrice: number, sellOfferFrequency: SellOfferFrequency[]}
+export type TradeEngineDetailPageData = { mean: number, stdDeviation: number, sellOfferFrequency: SellOfferFrequency[]}
