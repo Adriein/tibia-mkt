@@ -74,22 +74,7 @@ export default function CogDetail() {
                     <Header/>
                 </Grid.Col>
                 <Grid.Col span={12}>
-                    <Accordion variant="contained" defaultValue="chart">
-                        <Accordion.Item value="chart">
-                            <Accordion.Control icon={
-                                <IconChartDotsFilled
-                                    style={{
-                                        width: rem(20),
-                                        height: rem(20)
-                                    }}
-                                />
-                            }>
-                                Chart
-                            </Accordion.Control>
-                            <Accordion.Panel>
-                                <CogDetailChart data={serverProps.data.detail}/>
-                            </Accordion.Panel>
-                        </Accordion.Item>
+                    <Accordion variant="contained" defaultValue="general-info">
                         <Accordion.Item value="general-info">
                             <Accordion.Control icon={
                                 <IconInfoCircle
@@ -106,6 +91,21 @@ export default function CogDetail() {
                                     item={beautifyCamelCase(snakeCaseToCamelCase(params.item))}
                                     data={serverProps.data.tradeEngine}
                                 />
+                            </Accordion.Panel>
+                        </Accordion.Item>
+                        <Accordion.Item value="chart">
+                            <Accordion.Control icon={
+                                <IconChartDotsFilled
+                                    style={{
+                                        width: rem(20),
+                                        height: rem(20)
+                                    }}
+                                />
+                            }>
+                                Chart
+                            </Accordion.Control>
+                            <Accordion.Panel>
+                                <CogDetailChart data={serverProps.data.detail}/>
                             </Accordion.Panel>
                         </Accordion.Item>
                         <Accordion.Item value="ai-trading-bot">

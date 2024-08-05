@@ -37,7 +37,7 @@ const mountXAxisProps = (timeInterval: string, data: DetailPageData): Omit<XAxis
 }
 
 export function CogDetailChart({ data }: CogDetailChartProps) {
-    const [timeInterval, setTimeInterval] = useState<string>('Last Week');
+    const [timeInterval, setTimeInterval] = useState<string>('Last 3 Months');
     const [cogs, setCogs] = useState<Cog[]>([]);
 
     useEffect(() => {

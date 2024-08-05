@@ -35,13 +35,21 @@ export function CogDetailGeneralInfo({ item, data }: CogDetailGeneralInfoProps) 
                 </Group>
             </Card.Section>
             <Card.Section withBorder inheritPadding py="xs">
-                <Text size="xl" fw={700}>Mean: {data.mean} gp</Text>
-                <Text size="xl" fw={700}>
-                    Standard Deviation: {new Intl.NumberFormat('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                }).format(data.stdDeviation)} gp
-                </Text>
+                <Group justify="center">
+                    <Card padding="lg" radius="md" withBorder>
+                        <Text size="xl" fw={700}>Mean</Text>
+                        <Text size="xl" fw={700}>{data.mean} gp</Text>
+                    </Card>
+                    <Card padding="lg" radius="md" withBorder>
+                        <Text size="xl" fw={700}>Standard Deviation</Text>
+                        <Text size="xl" fw={700}>
+                            {new Intl.NumberFormat('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            }).format(data.stdDeviation)} gp
+                        </Text>
+                    </Card>
+                </Group>
 
             </Card.Section>
             <Card.Section withBorder inheritPadding py="xs">
