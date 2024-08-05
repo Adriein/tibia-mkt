@@ -1,6 +1,7 @@
 package trade_algorithm
 
 import (
+	"fmt"
 	"github.com/adriein/tibia-mkt/internal/trade-engine"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
@@ -8,7 +9,7 @@ import (
 )
 
 type KeyValue struct {
-	Key   int
+	Key   string
 	Value int
 }
 
@@ -18,7 +19,7 @@ type BestSellValue struct {
 }
 
 type SellOfferFrequency struct {
-	Price       int     `json:"price"`
+	Range       string  `json:"range"`
 	Occurrences int     `json:"occurrences"`
 	Frequency   float64 `json:"frequency"`
 }
@@ -38,40 +39,33 @@ func (bsv *BestSellValue) Apply(cogs []types.CogSku) (BestSellValueResult, error
 		frequencyResults []SellOfferFrequency
 	)
 
-	offerFrequencyMap := make(map[int]int)
+	priceRanges := make(map[string]int)
 	prices := make([]int, len(cogs))
 
 	for i := 0; i < len(cogs); i++ {
 		prices[i] = cogs[i].SellPrice
+
+		rangeStart := (cogs[i].SellPrice / 100) * 100
+		rangeEnd := rangeStart + 99
+
+		rangeStr := fmt.Sprintf("%d-%d", rangeStart, rangeEnd)
+
+		priceRanges[rangeStr]++
 	}
 
-	historicAverage := int(bsv.prob.Mean(prices))
-
-	for i := 0; i < len(cogs); i++ {
-		appearance := offerFrequencyMap[cogs[i].SellPrice]
-
-		if appearance > 0 {
-			offerFrequencyMap[cogs[i].SellPrice] = appearance + 1
-
-			continue
-		}
-
-		offerFrequencyMap[cogs[i].SellPrice] = 1
-	}
-
-	sortedKeyValue := bsv.sortFrequencyMap(offerFrequencyMap)[0:4]
+	sortedKeyValue := bsv.sortFrequencyMap(priceRanges)
 
 	for _, keyValue := range sortedKeyValue {
 		frequency := float64(keyValue.Value) / float64(len(cogs))
 
 		frequencyResults = append(
 			frequencyResults,
-			SellOfferFrequency{Price: keyValue.Key, Occurrences: keyValue.Value, Frequency: frequency},
+			SellOfferFrequency{Range: keyValue.Key, Occurrences: keyValue.Value, Frequency: frequency},
 		)
 	}
 
 	result := BestSellValueResult{
-		Mean:               historicAverage,
+		Mean:               int(bsv.prob.Mean(prices)),
 		StdDeviation:       bsv.prob.StdDeviation(prices),
 		SellOfferFrequency: frequencyResults,
 	}
@@ -79,14 +73,14 @@ func (bsv *BestSellValue) Apply(cogs []types.CogSku) (BestSellValueResult, error
 	return result, nil
 }
 
-func (bsv *BestSellValue) sortFrequencyMap(offerFrequencyMap map[int]int) []KeyValue {
+func (bsv *BestSellValue) sortFrequencyMap(priceRanges map[string]int) []KeyValue {
 	var result []KeyValue
-	for k, v := range offerFrequencyMap {
+	for k, v := range priceRanges {
 		result = append(result, KeyValue{Key: k, Value: v})
 	}
 
 	sort.Slice(result, func(i int, j int) bool {
-		return result[i].Value > result[j].Value
+		return result[i].Key < result[j].Key
 	})
 
 	return result
