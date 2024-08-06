@@ -32,6 +32,10 @@ export function CogDetailGeneralInfo({ item, data }: CogDetailGeneralInfoProps) 
         <>
             <Group justify="center" mb="md">
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
+                    <Text size="xl" fw={700}>All time series</Text>
+                    <Text size="xl" fw={700}>300 data points</Text>
+                </Card>
+                <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>Mean</Text>
                     <Text size="xl" fw={700}>{data.mean} gp</Text>
                 </Card>
