@@ -1,6 +1,7 @@
 import {Card, Group, Text} from "@mantine/core";
 import {SellOfferFrequency, TradeEngineDetailPageData} from "~/shared/types";
 import {BarChart} from "@mantine/charts";
+import classes from "./CogDetailGeneralInfo.module.css";
 
 type SellOfferFrequencyBarChartTick = {frequency: string, range: string}
 
@@ -29,18 +30,30 @@ const sellOfferFrequencyBarChart = (data: SellOfferFrequency[]): SellOfferFreque
 export function CogDetailGeneralInfo({ item, data }: CogDetailGeneralInfoProps) {
     return (
         <>
-            <Group justify="center">
-                <Card padding="lg" radius="md" withBorder>
+            <Group justify="center" mb="md">
+                <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>Mean</Text>
                     <Text size="xl" fw={700}>{data.mean} gp</Text>
                 </Card>
-                <Card padding="lg" radius="md" withBorder>
+                <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>Standard Deviation</Text>
                     <Text size="xl" fw={700}>
                         {new Intl.NumberFormat('en-US', {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                         }).format(data.stdDeviation)} gp
+                    </Text>
+                </Card>
+                <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
+                    <Text size="xl" fw={700}>Est. total dropped</Text>
+                    <Text size="xl" fw={700}>
+                        {new Intl.NumberFormat('en-US').format(500)}
+                    </Text>
+                </Card>
+                <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
+                    <Text size="xl" fw={700}>Dropped by</Text>
+                    <Text size="xl" fw={700}>
+                        Wasp, Bear
                     </Text>
                 </Card>
             </Group>
