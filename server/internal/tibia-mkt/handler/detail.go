@@ -26,8 +26,9 @@ func NewDetailHandler(
 }
 
 type DetailHandlerPresenterInput struct {
-	Wiki string
-	Cog  []types.CogSku
+	Wiki      string
+	Cog       []types.CogSku
+	Creatures []types.CogCreature
 }
 
 func (h *DetailHandler) Handler(w http.ResponseWriter, r *http.Request) error {
@@ -44,10 +45,10 @@ func (h *DetailHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 
 	cog := paramsMap["item"][0]
 
-	cogDetail, wikiLinkErr := h.getWikiLink(cog)
+	cogDetail, cogErr := h.getCogInformation(cog)
 
-	if wikiLinkErr != nil {
-		return wikiLinkErr
+	if cogErr != nil {
+		return cogErr
 	}
 
 	repository := h.repoFactory.Get(cog)
@@ -62,7 +63,11 @@ func (h *DetailHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 		return repositoryErr
 	}
 
-	response, presenterErr := h.presenter.Format(DetailHandlerPresenterInput{Wiki: cogDetail.Link, Cog: results})
+	response, presenterErr := h.presenter.Format(DetailHandlerPresenterInput{
+		Wiki:      cogDetail.Link,
+		Cog:       results,
+		Creatures: cogDetail.Creatures,
+	})
 
 	if presenterErr != nil {
 		return presenterErr
@@ -75,7 +80,7 @@ func (h *DetailHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (h *DetailHandler) getWikiLink(itemName string) (types.Cog, error) {
+func (h *DetailHandler) getCogInformation(itemName string) (types.Cog, error) {
 	var filters []types.Filter
 
 	filters = append(filters, types.Filter{

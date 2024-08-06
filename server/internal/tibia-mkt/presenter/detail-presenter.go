@@ -20,6 +20,7 @@ type DetailChartMetadataResponse struct {
 
 type DetailResponse struct {
 	Wiki           string                      `json:"wiki"`
+	Creatures      []types.CogCreature         `json:"creatures"`
 	Cog            []types.CogSkuResponse      `json:"cog"`
 	SellOfferChart DetailChartMetadataResponse `json:"sellOfferChart"`
 	BuyOfferChart  DetailChartMetadataResponse `json:"buyOfferChart"`
@@ -117,8 +118,9 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 	)
 
 	result := DetailResponse{
-		Wiki: input.Wiki,
-		Cog:  cogSkuResponseList,
+		Wiki:      input.Wiki,
+		Creatures: input.Creatures,
+		Cog:       cogSkuResponseList,
 		SellOfferChart: DetailChartMetadataResponse{
 			YAxisTick: sellOfferYAxisDomain,
 			XAxisTick: sellOfferXAxisDomain,

@@ -12,8 +12,8 @@ type CogSku struct {
 }
 
 type CogCreature struct {
-	Name     string
-	DropRate float64
+	Name     string  `json:"name"`
+	DropRate float64 `json:"dropRate"`
 }
 
 type Cog struct {
