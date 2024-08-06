@@ -10,8 +10,14 @@ import (
 )
 
 type SeedGood struct {
-	Name string `json:"name"`
-	Wiki string `json:"wiki"`
+	Name      string      `json:"name"`
+	Wiki      string      `json:"wiki"`
+	Creatures []Creatures `json:"creatures"`
+}
+
+type Creatures struct {
+	Name     string  `json:"name"`
+	DropRate float64 `json:"dropRate"`
 }
 
 type SeedRequest struct {
@@ -40,14 +46,6 @@ func (h *SeedHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 	var request SeedRequest
 
 	if decodeErr := json.NewDecoder(r.Body).Decode(&request); decodeErr != nil {
-		response := types.ServerResponse{
-			Ok: false,
-		}
-
-		if err := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); err != nil {
-			return err
-		}
-
 		return types.ApiError{
 			Msg:      decodeErr.Error(),
 			Function: "Handler",
@@ -61,39 +59,26 @@ func (h *SeedHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 
 		id := uuid.New()
 
+		creatures := make([]types.CogCreature, len(item.Creatures))
+
+		for index, creature := range item.Creatures {
+			creatures[index] = types.CogCreature{Name: creature.Name, DropRate: creature.DropRate}
+		}
+
 		cog := types.Cog{
 			Id:        id.String(),
 			Name:      item.Name,
 			Link:      item.Wiki,
+			Creatures: creatures,
 			CreatedAt: time.Now().UTC(),
 			UpdatedAt: time.Now().UTC(),
 		}
 
 		if saveErr := h.cogRepository.Save(cog); saveErr != nil {
-			response := types.ServerResponse{
-				Ok: false,
-			}
-
-			if err := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); err != nil {
-				return err
-			}
-
-			return types.ApiError{
-				Msg:      saveErr.Error(),
-				Function: "Handler",
-				File:     "seed.go",
-			}
+			return saveErr
 		}
 
 		if seederErr := seeder.Execute(item.Name); seederErr != nil {
-			response := types.ServerResponse{
-				Ok: false,
-			}
-
-			if err := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); err != nil {
-				return err
-			}
-
 			return seederErr
 		}
 	}

@@ -28,46 +28,40 @@ const sellOfferFrequencyBarChart = (data: SellOfferFrequency[]): SellOfferFreque
 
 export function CogDetailGeneralInfo({ item, data }: CogDetailGeneralInfoProps) {
     return (
-        <Card withBorder shadow="sm" radius="md">
-            <Card.Section withBorder inheritPadding py="xs">
-                <Group justify="space-between">
-                    <Text fw={500}>{item} Insights</Text>
-                </Group>
-            </Card.Section>
-            <Card.Section withBorder inheritPadding py="xs">
-                <Group justify="center">
-                    <Card padding="lg" radius="md" withBorder>
-                        <Text size="xl" fw={700}>Mean</Text>
-                        <Text size="xl" fw={700}>{data.mean} gp</Text>
-                    </Card>
-                    <Card padding="lg" radius="md" withBorder>
-                        <Text size="xl" fw={700}>Standard Deviation</Text>
-                        <Text size="xl" fw={700}>
-                            {new Intl.NumberFormat('en-US', {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            }).format(data.stdDeviation)} gp
-                        </Text>
-                    </Card>
-                </Group>
-
-            </Card.Section>
-            <Card.Section withBorder inheritPadding py="xs">
-                <Group justify="space-between">
-                    <Text fw={500}>Segmented price frequency</Text>
-                </Group>
-            </Card.Section>
-            <Card.Section withBorder inheritPadding py="xl">
-                <BarChart
-                    h={300}
-                    data={sellOfferFrequencyBarChart(data.sellOfferFrequency)}
-                    dataKey="range"
-                    series={[
-                        { name: 'frequency', color: 'violet.6' },
-                    ]}
-                    tickLine="y"
-                />
-            </Card.Section>
-        </Card>
+        <>
+            <Group justify="center">
+                <Card padding="lg" radius="md" withBorder>
+                    <Text size="xl" fw={700}>Mean</Text>
+                    <Text size="xl" fw={700}>{data.mean} gp</Text>
+                </Card>
+                <Card padding="lg" radius="md" withBorder>
+                    <Text size="xl" fw={700}>Standard Deviation</Text>
+                    <Text size="xl" fw={700}>
+                        {new Intl.NumberFormat('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        }).format(data.stdDeviation)} gp
+                    </Text>
+                </Card>
+            </Group>
+            <Card withBorder shadow="sm" radius="md">
+                <Card.Section withBorder inheritPadding py="xs">
+                    <Group justify="space-between">
+                        <Text fw={500}>Segmented price frequency</Text>
+                    </Group>
+                </Card.Section>
+                <Card.Section withBorder inheritPadding py="xl">
+                    <BarChart
+                        h={300}
+                        data={sellOfferFrequencyBarChart(data.sellOfferFrequency)}
+                        dataKey="range"
+                        series={[
+                            { name: 'frequency', color: 'teal.6' },
+                        ]}
+                        tickLine="y"
+                    />
+                </Card.Section>
+            </Card>
+        </>
     );
 }

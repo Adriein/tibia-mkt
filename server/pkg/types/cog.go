@@ -11,10 +11,16 @@ type CogSku struct {
 	World     string
 }
 
+type CogCreature struct {
+	Name     string
+	DropRate float64
+}
+
 type Cog struct {
 	Id        string
 	Name      string
 	Link      string
+	Creatures []CogCreature
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

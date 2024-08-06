@@ -24,3 +24,23 @@ func Decode[T any](r *http.Request) (T, error) {
 	}
 	return v, nil
 }
+
+func JsonEncode[T any](v T) ([]byte, error) {
+	encoded, err := json.Marshal(v)
+
+	if err != nil {
+		return nil, fmt.Errorf("encode json: %w", err)
+	}
+
+	return encoded, nil
+}
+
+func JsonDecode[T any](data []byte) (T, error) {
+	var v T
+
+	if err := json.Unmarshal(data, &v); err != nil {
+		return v, fmt.Errorf("decode json: %w", err)
+	}
+
+	return v, nil
+}

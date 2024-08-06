@@ -36,11 +36,12 @@ func (r *PgCogRepository) FindOne(criteria types.Criteria) (types.Cog, error) {
 		id         string
 		name       string
 		link       string
+		creatures  []byte
 		created_at string
 		updated_at string
 	)
 
-	if scanErr := r.connection.QueryRow(query).Scan(&id, &name, &link, &created_at, &updated_at); scanErr != nil {
+	if scanErr := r.connection.QueryRow(query).Scan(&id, &name, &link, &creatures, &created_at, &updated_at); scanErr != nil {
 		return types.Cog{}, types.ApiError{
 			Msg:      scanErr.Error(),
 			Function: "FindOne -> rows.Scan()",
@@ -69,23 +70,45 @@ func (r *PgCogRepository) FindOne(criteria types.Criteria) (types.Cog, error) {
 		}
 	}
 
+	decodedCreatures, decodeError := service.JsonDecode[[]types.CogCreature](creatures)
+
+	if decodeError != nil {
+		return types.Cog{}, types.ApiError{
+			Msg:      decodeError.Error(),
+			Function: "FindOne -> service.JsonDecode()",
+			File:     "pg-cog-repository.go",
+		}
+	}
+
 	return types.Cog{
 		Id:        id,
 		Name:      name,
 		Link:      link,
+		Creatures: decodedCreatures,
 		CreatedAt: parsedCreatedAt,
 		UpdatedAt: parsedUpdatedAt,
 	}, nil
 }
 
 func (r *PgCogRepository) Save(entity types.Cog) error {
-	var query = `INSERT INTO cog (id, name, link, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)`
+	var query = `INSERT INTO cog (id, name, link, creatures, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`
+
+	encodedCreatures, jsonEncodeErr := service.JsonEncode(entity.Creatures)
+
+	if jsonEncodeErr != nil {
+		return types.ApiError{
+			Msg:      jsonEncodeErr.Error(),
+			Function: "Save -> service.JsonEncode()",
+			File:     "pg-cog-repository.go",
+		}
+	}
 
 	_, err := r.connection.Exec(
 		query,
 		entity.Id,
 		entity.Name,
 		entity.Link,
+		encodedCreatures,
 		entity.CreatedAt.Format(time.DateTime),
 		entity.UpdatedAt.Format(time.DateTime),
 	)
