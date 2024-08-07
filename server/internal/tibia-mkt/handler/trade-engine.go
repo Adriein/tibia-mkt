@@ -29,7 +29,7 @@ func NewTradeEngineHandler[T any](
 }
 
 func (h *TradeEngineHandler[T]) Handler(w http.ResponseWriter, r *http.Request) error {
-	tradeEngineRequest, decodeErr := service.Decode[TradeEngineRequest](r)
+	tradeEngineRequest, decodeErr := service.Decode[TradeEngineRequest](r.Body)
 
 	if decodeErr != nil {
 		return types.ApiError{

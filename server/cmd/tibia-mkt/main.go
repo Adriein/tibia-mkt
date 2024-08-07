@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"github.com/adriein/tibia-mkt/internal/cron"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/handler"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/presenter"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
@@ -46,14 +47,15 @@ func main() {
 		log.Fatal(dbConnErr.Error())
 	}
 
-	fooMiddlewares := middleware.NewMiddlewareChain(
+	cronMiddlewares := middleware.NewMiddlewareChain(
 		middleware.NewAuthMiddleWare,
 	)
 
 	api.Route("GET /home", createHomeHandler(api, database))
 	api.Route("GET /detail", createDetailHandler(api, database))
+	api.Route("GET /kill-statistics-cron", cronMiddlewares.ApplyOn(createKillStatisticsHandler(api, database)))
+
 	api.Route("POST /trade-engine", tradeEngineHandler(api, database))
-	api.Route("GET /foo", fooMiddlewares.ApplyOn(api.NewHandler(handler.FooHandler)))
 	api.Route("POST /seed", createSeedHandler(api, database))
 
 	api.Start()
@@ -132,4 +134,14 @@ func createDetailHandler(api *server.TibiaMktApiServer, database *sql.DB) http.H
 	detail := handler.NewDetailHandler(pgCogRepository, factory, homePresenter)
 
 	return api.NewHandler(detail.Handler)
+}
+
+func createKillStatisticsHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
+	pgCogRepository := repository.NewPgCogRepository(database)
+
+	command := cron.NewKillStatisticsCron()
+
+	killStatistics := handler.NewKillStatisticsHandler(command, pgCogRepository)
+
+	return api.NewHandler(killStatistics.Handler)
 }

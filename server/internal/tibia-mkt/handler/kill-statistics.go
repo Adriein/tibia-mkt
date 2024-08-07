@@ -50,7 +50,7 @@ func (h *KillStatisticsHandler) getTibiaMktTrackedCogs() ([]types.Cog, error) {
 	result, err := h.cogRepository.Find(criteria)
 
 	if err != nil {
-		return types.Cog{}, err
+		return nil, err
 	}
 
 	return result, nil

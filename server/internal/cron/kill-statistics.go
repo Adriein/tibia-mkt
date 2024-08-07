@@ -65,7 +65,7 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) error {
 
 	defer response.Body.Close()
 
-	parsedResponse, decodeErr := service.Decode[TibiaApiKillStatisticsResponse](request)
+	parsedResponse, decodeErr := service.Decode[TibiaApiKillStatisticsResponse](response.Body)
 
 	if decodeErr != nil {
 		return types.ApiError{
