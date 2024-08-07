@@ -21,6 +21,92 @@ func NewPgCogRepository(connection *sql.DB) *PgCogRepository {
 	}
 }
 
+func (r *PgCogRepository) Find(criteria types.Criteria) ([]types.Cog, error) {
+	query, err := r.transformer.Transform(criteria)
+
+	if err != nil {
+		return nil, types.ApiError{
+			Msg:      err.Error(),
+			Function: "Find -> r.transformer.Transform()",
+			File:     "pg-cog-repository.go",
+		}
+	}
+
+	rows, queryErr := r.connection.Query(query)
+
+	if queryErr != nil {
+		return nil, types.ApiError{
+			Msg:      queryErr.Error(),
+			Function: "Find -> r.connection.Query()",
+			File:     "pg-cog-repository.go",
+		}
+	}
+
+	defer rows.Close()
+
+	var (
+		id         string
+		name       string
+		link       string
+		creatures  []byte
+		created_at string
+		updated_at string
+	)
+
+	var results []types.Cog
+
+	for rows.Next() {
+		if scanErr := rows.Scan(&id, &name, &link, &creatures, &created_at, &updated_at); scanErr != nil {
+			return nil, types.ApiError{
+				Msg:      scanErr.Error(),
+				Function: "Find -> rows.Scan()",
+				File:     "pg-cog-repository.go",
+			}
+		}
+
+		parsedCreatedAt, createdAtParseErr := time.Parse(time.DateTime, created_at)
+
+		if createdAtParseErr != nil {
+			return nil, types.ApiError{
+				Msg:      createdAtParseErr.Error(),
+				Function: "Find -> time.Parse()",
+				File:     "pg-cog-repository.go",
+			}
+		}
+
+		parsedUpdatedAt, updatedAtParseErr := time.Parse(time.DateTime, updated_at)
+
+		if updatedAtParseErr != nil {
+			return nil, types.ApiError{
+				Msg:      updatedAtParseErr.Error(),
+				Function: "Find -> time.Parse()",
+				File:     "pg-cog-repository.go",
+			}
+		}
+
+		decodedCreatures, decodeError := service.JsonDecode[[]types.CogCreature](creatures)
+
+		if decodeError != nil {
+			return nil, types.ApiError{
+				Msg:      decodeError.Error(),
+				Function: "Find -> service.JsonDecode()",
+				File:     "pg-cog-repository.go",
+			}
+		}
+
+		results = append(results, types.Cog{
+			Id:        id,
+			Name:      name,
+			Link:      link,
+			Creatures: decodedCreatures,
+			CreatedAt: parsedCreatedAt,
+			UpdatedAt: parsedUpdatedAt,
+		})
+	}
+
+	return results, nil
+}
+
 func (r *PgCogRepository) FindOne(criteria types.Criteria) (types.Cog, error) {
 	query, err := r.transformer.Transform(criteria)
 

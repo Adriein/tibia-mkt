@@ -17,6 +17,10 @@ func NewCriteriaToSqlService(table string) *CriteriaToSqlService {
 }
 
 func (c *CriteriaToSqlService) Transform(criteria types.Criteria) (string, error) {
+	if len(criteria.Filters) == 0 {
+		return "SELECT * FROM" + " " + c.table, nil
+	}
+
 	var where []string
 
 	sql := "SELECT * FROM" + " " + c.table + " WHERE "

@@ -7,6 +7,7 @@ type CogRepository interface {
 }
 
 type Repository interface {
+	Find(criteria Criteria) ([]Cog, error)
 	FindOne(criteria Criteria) (Cog, error)
 	Save(entity Cog) error
 }
