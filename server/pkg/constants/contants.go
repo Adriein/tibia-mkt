@@ -34,3 +34,11 @@ const (
 	ServerGenericError       = "SERVER_ERROR"
 	NoCogSearchParamProvided = "NO_COG_SEARCH_PARAM_PROVIDED"
 )
+
+// External API
+
+const (
+	TibiaDataApiBaseUrl           string = "https://api.tibiadata.com"
+	TibiaDataApiVersion           string = "v4"
+	TibiaDataApiKillStatisticsUrl string = "killstatistics"
+)
