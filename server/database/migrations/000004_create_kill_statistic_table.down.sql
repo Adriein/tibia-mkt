@@ -1,0 +1,1 @@
+DROP TABLE kill_statistic_cron;

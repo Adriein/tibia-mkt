@@ -6,6 +6,7 @@ import (
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
+	"strings"
 )
 
 type KillStatisticsCron struct{}
@@ -48,7 +49,7 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) error {
 		return types.ApiError{
 			Msg:      requestCreationError.Error(),
 			Function: "Execute -> http.NewRequest()",
-			File:     "main.go",
+			File:     "kill-statistics.go",
 		}
 	}
 
@@ -59,7 +60,7 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) error {
 		return types.ApiError{
 			Msg:      requestError.Error(),
 			Function: "Execute -> client.Do()",
-			File:     "main.go",
+			File:     "kill-statistics.go",
 		}
 	}
 
@@ -70,12 +71,32 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) error {
 	if decodeErr != nil {
 		return types.ApiError{
 			Msg:      decodeErr.Error(),
-			Function: "Execute -> service.Decode",
-			File:     "main.go",
+			Function: "Execute -> service.Decode()",
+			File:     "kill-statistics.go",
 		}
 	}
 
-	fmt.Println(parsedResponse)
+	hashTable := make(map[string]int)
+
+	for _, statistic := range parsedResponse.KillStatistics.Entries {
+		hashTable[statistic.Race] = statistic.LastDayKilled
+	}
+
+	for _, cog := range cogs {
+		for _, creature := range cog.Creatures {
+			name := kc.pluralize(creature.Name)
+
+			killStatistic := hashTable[name]
+		}
+	}
 
 	return nil
+}
+
+func (kc *KillStatisticsCron) pluralize(creatureName string) string {
+	creatureName = strings.ToLower(creatureName)
+
+	creatureName += "s"
+
+	return creatureName
 }
