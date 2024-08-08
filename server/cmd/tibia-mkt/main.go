@@ -138,10 +138,11 @@ func createDetailHandler(api *server.TibiaMktApiServer, database *sql.DB) http.H
 
 func createKillStatisticsHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
 	pgCogRepository := repository.NewPgCogRepository(database)
+	pgKillStatisticRepository := repository.NewPgKillStatisticRepository(database)
 
 	command := cron.NewKillStatisticsCron()
 
-	killStatistics := handler.NewKillStatisticsHandler(command, pgCogRepository)
+	killStatistics := handler.NewKillStatisticsHandler(command, pgCogRepository, pgKillStatisticRepository)
 
 	return api.NewHandler(killStatistics.Handler)
 }

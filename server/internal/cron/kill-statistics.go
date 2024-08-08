@@ -5,8 +5,10 @@ import (
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
+	"github.com/google/uuid"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type KillStatisticsCron struct{}
@@ -32,7 +34,7 @@ func NewKillStatisticsCron() *KillStatisticsCron {
 	return &KillStatisticsCron{}
 }
 
-func (kc *KillStatisticsCron) Execute(cogs []types.Cog) error {
+func (kc *KillStatisticsCron) Execute(cogs []types.Cog) ([]types.KillStatistic, error) {
 	request, requestCreationError := http.NewRequest(
 		http.MethodGet,
 		fmt.Sprintf(
@@ -46,7 +48,7 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) error {
 	)
 
 	if requestCreationError != nil {
-		return types.ApiError{
+		return nil, types.ApiError{
 			Msg:      requestCreationError.Error(),
 			Function: "Execute -> http.NewRequest()",
 			File:     "kill-statistics.go",
@@ -57,7 +59,7 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) error {
 	response, requestError := client.Do(request)
 
 	if requestError != nil {
-		return types.ApiError{
+		return nil, types.ApiError{
 			Msg:      requestError.Error(),
 			Function: "Execute -> client.Do()",
 			File:     "kill-statistics.go",
@@ -69,7 +71,7 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) error {
 	parsedResponse, decodeErr := service.Decode[TibiaApiKillStatisticsResponse](response.Body)
 
 	if decodeErr != nil {
-		return types.ApiError{
+		return nil, types.ApiError{
 			Msg:      decodeErr.Error(),
 			Function: "Execute -> service.Decode()",
 			File:     "kill-statistics.go",
@@ -78,19 +80,33 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) error {
 
 	hashTable := make(map[string]int)
 
+	var result []types.KillStatistic
+
 	for _, statistic := range parsedResponse.KillStatistics.Entries {
 		hashTable[statistic.Race] = statistic.LastDayKilled
 	}
 
 	for _, cog := range cogs {
 		for _, creature := range cog.Creatures {
+			id := uuid.New()
+
 			name := kc.pluralize(creature.Name)
 
 			killStatistic := hashTable[name]
+
+			result = append(result, types.KillStatistic{
+				Id:           id.String(),
+				CreatureName: creature.Name,
+				AmountKilled: killStatistic,
+				DropRate:     creature.DropRate,
+				ExecutedBy:   "tibia-mkt",
+				CreatedAt:    time.Now().UTC().Format(time.DateTime),
+				UpdatedAt:    time.Now().UTC().Format(time.DateTime),
+			})
 		}
 	}
 
-	return nil
+	return result, nil
 }
 
 func (kc *KillStatisticsCron) pluralize(creatureName string) string {
