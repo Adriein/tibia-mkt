@@ -27,13 +27,13 @@ type SeedRequest struct {
 type SeedHandler struct {
 	csvRepository     types.CogRepository
 	repositoryFactory *service.RepositoryFactory
-	cogRepository     types.Repository
+	cogRepository     types.Repository[types.Cog]
 }
 
 func NewSeedHandler(
 	csvRepository types.CogRepository,
 	repositoryFactory *service.RepositoryFactory,
-	cogRepository types.Repository,
+	cogRepository types.Repository[types.Cog],
 ) *SeedHandler {
 	return &SeedHandler{
 		csvRepository:     csvRepository,

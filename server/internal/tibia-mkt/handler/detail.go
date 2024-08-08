@@ -8,13 +8,13 @@ import (
 )
 
 type DetailHandler struct {
-	cogRepository types.Repository
+	cogRepository types.Repository[types.Cog]
 	repoFactory   *service.RepositoryFactory
 	presenter     types.Presenter
 }
 
 func NewDetailHandler(
-	cogRepository types.Repository,
+	cogRepository types.Repository[types.Cog],
 	factory *service.RepositoryFactory,
 	presenter types.Presenter,
 ) *DetailHandler {

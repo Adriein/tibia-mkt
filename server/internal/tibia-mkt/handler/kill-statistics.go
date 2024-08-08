@@ -9,12 +9,12 @@ import (
 
 type KillStatisticsHandler struct {
 	cron          *cron.KillStatisticsCron
-	cogRepository types.Repository
+	cogRepository types.Repository[types.KillStatistic]
 }
 
 func NewKillStatisticsHandler(
 	cron *cron.KillStatisticsCron,
-	cogRepository types.Repository,
+	cogRepository types.Repository[types.KillStatistic],
 ) *KillStatisticsHandler {
 	return &KillStatisticsHandler{
 		cron:          cron,

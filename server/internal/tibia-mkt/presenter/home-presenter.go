@@ -23,10 +23,10 @@ type CogSkuChartResponse struct {
 }
 
 type HomePresenter struct {
-	cogRepository types.Repository
+	cogRepository types.Repository[types.Cog]
 }
 
-func NewHomePresenter(repository types.Repository) *HomePresenter {
+func NewHomePresenter(repository types.Repository[types.Cog]) *HomePresenter {
 	return &HomePresenter{
 		cogRepository: repository,
 	}
