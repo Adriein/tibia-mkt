@@ -78,7 +78,7 @@ func (r *PgKillStatisticRepository) FindOne(criteria types.Criteria) (types.Kill
 }
 
 func (r *PgKillStatisticRepository) Save(entity types.KillStatistic) error {
-	var query = `INSERT INTO kill_statistic_cron (id, creature_name, amount_killed, drop_rate, executed_by, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`
+	var query = `INSERT INTO kill_statistic_cron (id, creature_name, amount_killed, drop_rate, executed_by, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
 	_, err := r.connection.Exec(
 		query,
