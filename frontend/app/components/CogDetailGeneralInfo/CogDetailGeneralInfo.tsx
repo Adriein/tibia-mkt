@@ -7,6 +7,7 @@ type SellOfferFrequencyBarChartTick = {frequency: string, range: string}
 
 interface CogDetailGeneralInfoProps {
     item: string;
+    totalData: number;
     data: TradeEngineDetailPageData;
 }
 
@@ -27,13 +28,13 @@ const sellOfferFrequencyBarChart = (data: SellOfferFrequency[]): SellOfferFreque
     return result;
 }
 
-export function CogDetailGeneralInfo({ item, data }: CogDetailGeneralInfoProps) {
+export function CogDetailGeneralInfo({ item, totalData, data }: CogDetailGeneralInfoProps) {
     return (
         <>
             <Group justify="center" mb="md">
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>All time series</Text>
-                    <Text size="xl" fw={700}>300 data points</Text>
+                    <Text size="xl" fw={700}>{totalData} data points</Text>
                 </Card>
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>Mean</Text>

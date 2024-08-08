@@ -21,11 +21,69 @@ func NewPgKillStatisticRepository(connection *sql.DB) *PgKillStatisticRepository
 }
 
 func (r *PgKillStatisticRepository) Find(criteria types.Criteria) ([]types.KillStatistic, error) {
-	return nil, types.ApiError{
-		Msg:      "Not implemented yet",
-		Function: "Find -> r.transformer.Transform()",
-		File:     "pg-kill-statistic-repository.go",
+	query, err := r.transformer.Transform(criteria)
+
+	if err != nil {
+		return nil, types.ApiError{
+			Msg:      err.Error(),
+			Function: "Find -> r.transformer.Transform()",
+			File:     "pg-kill-statistic-repository.go",
+		}
 	}
+
+	rows, queryErr := r.connection.Query(query)
+
+	if queryErr != nil {
+		return nil, types.ApiError{
+			Msg:      queryErr.Error(),
+			Function: "Find -> r.connection.Query()",
+			File:     "pg-kill-statistic-repository.go",
+		}
+	}
+
+	defer rows.Close()
+
+	var (
+		id            string
+		creature_name string
+		amount_killed int
+		drop_rate     float64
+		executed_by   string
+		created_at    string
+		updated_at    string
+	)
+
+	var results []types.KillStatistic
+
+	for rows.Next() {
+		if scanErr := rows.Scan(
+			&id,
+			&creature_name,
+			&amount_killed,
+			&drop_rate,
+			&executed_by,
+			&created_at,
+			&updated_at,
+		); scanErr != nil {
+			return nil, types.ApiError{
+				Msg:      scanErr.Error(),
+				Function: "Find -> rows.Scan()",
+				File:     "pg-kill-statistic-repository.go",
+			}
+		}
+
+		results = append(results, types.KillStatistic{
+			Id:           id,
+			CreatureName: creature_name,
+			AmountKilled: amount_killed,
+			DropRate:     drop_rate,
+			ExecutedBy:   executed_by,
+			CreatedAt:    created_at,
+			UpdatedAt:    updated_at,
+		})
+	}
+
+	return results, nil
 }
 
 func (r *PgKillStatisticRepository) FindOne(criteria types.Criteria) (types.KillStatistic, error) {

@@ -12,8 +12,11 @@ export type CogChart = { wiki: string, cog: Cog[], chartMetadata: ChartMetadata,
 
 export type HomePageData = { [key: string]: CogChart }
 
+export type DetailCreatures = {name: string, dropRate: number, killStatistic: number}
+
 export type DetailPageData = {
     wiki: string,
+    creatures: DetailCreatures[],
     cog: Cog[],
     sellOfferChart: DetailChartMetadata,
     buyOfferChart: DetailChartMetadata

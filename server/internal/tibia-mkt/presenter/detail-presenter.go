@@ -19,11 +19,11 @@ type DetailChartMetadataResponse struct {
 }
 
 type DetailResponse struct {
-	Wiki           string                      `json:"wiki"`
-	Creatures      []types.CogCreature         `json:"creatures"`
-	Cog            []types.CogSkuResponse      `json:"cog"`
-	SellOfferChart DetailChartMetadataResponse `json:"sellOfferChart"`
-	BuyOfferChart  DetailChartMetadataResponse `json:"buyOfferChart"`
+	Wiki           string                        `json:"wiki"`
+	Creatures      []types.CreatureKillStatistic `json:"creatures"`
+	Cog            []types.CogSkuResponse        `json:"cog"`
+	SellOfferChart DetailChartMetadataResponse   `json:"sellOfferChart"`
+	BuyOfferChart  DetailChartMetadataResponse   `json:"buyOfferChart"`
 }
 
 type DetailPresenter struct{}

@@ -8,27 +8,30 @@ import (
 )
 
 type DetailHandler struct {
-	cogRepository types.Repository[types.Cog]
-	repoFactory   *service.RepositoryFactory
-	presenter     types.Presenter
+	cogRepository           types.Repository[types.Cog]
+	killStatisticRepository types.Repository[types.KillStatistic]
+	repoFactory             *service.RepositoryFactory
+	presenter               types.Presenter
 }
 
 func NewDetailHandler(
 	cogRepository types.Repository[types.Cog],
+	killStatisticRepository types.Repository[types.KillStatistic],
 	factory *service.RepositoryFactory,
 	presenter types.Presenter,
 ) *DetailHandler {
 	return &DetailHandler{
-		cogRepository: cogRepository,
-		repoFactory:   factory,
-		presenter:     presenter,
+		cogRepository:           cogRepository,
+		killStatisticRepository: killStatisticRepository,
+		repoFactory:             factory,
+		presenter:               presenter,
 	}
 }
 
 type DetailHandlerPresenterInput struct {
 	Wiki      string
 	Cog       []types.CogSku
-	Creatures []types.CogCreature
+	Creatures []types.CreatureKillStatistic
 }
 
 func (h *DetailHandler) Handler(w http.ResponseWriter, r *http.Request) error {
@@ -63,10 +66,16 @@ func (h *DetailHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 		return repositoryErr
 	}
 
+	killStatistics, killStatisticErr := h.getKillStatistics(cogDetail)
+
+	if killStatisticErr != nil {
+		return killStatisticErr
+	}
+
 	response, presenterErr := h.presenter.Format(DetailHandlerPresenterInput{
 		Wiki:      cogDetail.Link,
 		Cog:       results,
-		Creatures: cogDetail.Creatures,
+		Creatures: killStatistics,
 	})
 
 	if presenterErr != nil {
@@ -98,4 +107,34 @@ func (h *DetailHandler) getCogInformation(itemName string) (types.Cog, error) {
 	}
 
 	return result, nil
+}
+
+func (h *DetailHandler) getKillStatistics(cog types.Cog) ([]types.CreatureKillStatistic, error) {
+	var creatureKillStatistics []types.CreatureKillStatistic
+
+	for _, creature := range cog.Creatures {
+		var filters []types.Filter
+
+		filters = append(filters, types.Filter{
+			Name:    "creature_name",
+			Operand: constants.Equal,
+			Value:   creature.Name,
+		})
+
+		criteria := types.Criteria{Filters: filters}
+
+		result, err := h.killStatisticRepository.FindOne(criteria)
+
+		if err != nil {
+			return nil, err
+		}
+
+		creatureKillStatistics = append(creatureKillStatistics, types.CreatureKillStatistic{
+			Name:          result.CreatureName,
+			DropRate:      result.DropRate,
+			KillStatistic: result.AmountKilled,
+		})
+	}
+
+	return creatureKillStatistics, nil
 }

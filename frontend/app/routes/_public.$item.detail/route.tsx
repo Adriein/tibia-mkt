@@ -7,7 +7,6 @@ import {json, useLoaderData, useParams} from "react-router";
 import {CogDetailChart} from "~/components/CogDetailChart/CogDetailChart";
 import {IconChartDotsFilled, IconInfoCircle, IconRobot} from '@tabler/icons-react';
 import {CogDetailGeneralInfo} from "~/components/CogDetailGeneralInfo/CogDetailGeneralInfo";
-import { Params } from "@remix-run/react";
 
 type DetailApiResponse = {
     ok: boolean,
@@ -89,6 +88,7 @@ export default function CogDetail() {
                             <Accordion.Panel>
                                 <CogDetailGeneralInfo
                                     item={beautifyCamelCase(snakeCaseToCamelCase(params.item))}
+                                    totalData={serverProps.data.detail.cog.length}
                                     data={serverProps.data.tradeEngine}
                                 />
                             </Accordion.Panel>
