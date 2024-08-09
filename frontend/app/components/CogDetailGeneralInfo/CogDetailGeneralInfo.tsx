@@ -1,5 +1,5 @@
 import {Card, Group, Text} from "@mantine/core";
-import {SellOfferFrequency, TradeEngineDetailPageData} from "~/shared/types";
+import {DetailCreature, SellOfferFrequency, TradeEngineDetailPageData} from "~/shared/types";
 import {BarChart} from "@mantine/charts";
 import classes from "./CogDetailGeneralInfo.module.css";
 
@@ -7,7 +7,8 @@ type SellOfferFrequencyBarChartTick = {frequency: string, range: string}
 
 interface CogDetailGeneralInfoProps {
     item: string;
-    totalData: number;
+    dataPoints: number;
+    creatures: DetailCreature[];
     data: TradeEngineDetailPageData;
 }
 
@@ -28,13 +29,25 @@ const sellOfferFrequencyBarChart = (data: SellOfferFrequency[]): SellOfferFreque
     return result;
 }
 
-export function CogDetailGeneralInfo({ item, totalData, data }: CogDetailGeneralInfoProps) {
+const presentCreatures = (creatures: DetailCreature[]): string  => {
+    return creatures.map((creature: DetailCreature) => creature.name).join(', ');
+}
+
+const calculateDropEstimation = (creatures: DetailCreature[]): number => {
+    return Math.round(creatures.reduce((total: number, creature: DetailCreature) => {
+        total += creature.killStatistic * (creature.dropRate / 100);
+
+        return total;
+    }, 0));
+}
+
+export function CogDetailGeneralInfo({ dataPoints, creatures, data }: CogDetailGeneralInfoProps) {
     return (
         <>
             <Group justify="center" mb="md">
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>All time series</Text>
-                    <Text size="xl" fw={700}>{totalData} data points</Text>
+                    <Text size="xl" fw={700}>{dataPoints} data points</Text>
                 </Card>
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>Mean</Text>
@@ -52,14 +65,12 @@ export function CogDetailGeneralInfo({ item, totalData, data }: CogDetailGeneral
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>Est. total dropped</Text>
                     <Text size="xl" fw={700}>
-                        {new Intl.NumberFormat('en-US').format(500)}
+                        {new Intl.NumberFormat('en-US').format(calculateDropEstimation(creatures))}
                     </Text>
                 </Card>
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>Dropped by</Text>
-                    <Text size="xl" fw={700}>
-                        Wasp, Bear
-                    </Text>
+                    <Text size="xl" fw={700}>{presentCreatures(creatures)}</Text>
                 </Card>
             </Group>
             <Card withBorder shadow="sm" radius="md">

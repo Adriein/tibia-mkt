@@ -88,7 +88,8 @@ export default function CogDetail() {
                             <Accordion.Panel>
                                 <CogDetailGeneralInfo
                                     item={beautifyCamelCase(snakeCaseToCamelCase(params.item))}
-                                    totalData={serverProps.data.detail.cog.length}
+                                    dataPoints={serverProps.data.detail.cog.length}
+                                    creatures={serverProps.data.detail.creatures}
                                     data={serverProps.data.tradeEngine}
                                 />
                             </Accordion.Panel>
