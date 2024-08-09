@@ -62,16 +62,20 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data }: CogDetailG
                         }).format(data.stdDeviation)} gp
                     </Text>
                 </Card>
-                <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
-                    <Text size="xl" fw={700}>Est. total dropped</Text>
-                    <Text size="xl" fw={700}>
-                        {new Intl.NumberFormat('en-US').format(calculateDropEstimation(creatures))}
-                    </Text>
-                </Card>
-                <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
-                    <Text size="xl" fw={700}>Dropped by</Text>
-                    <Text size="xl" fw={700}>{presentCreatures(creatures)}</Text>
-                </Card>
+                {creatures.length &&
+                    <>
+                        <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
+                            <Text size="xl" fw={700}>Est. total dropped</Text>
+                            <Text size="xl" fw={700}>
+                                {new Intl.NumberFormat('en-US').format(calculateDropEstimation(creatures))}
+                            </Text>
+                        </Card>
+                        <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
+                            <Text size="xl" fw={700}>Dropped by</Text>
+                            <Text size="xl" fw={700}>{presentCreatures(creatures)}</Text>
+                        </Card>
+                    </>
+                }
             </Group>
             <Card withBorder shadow="sm" radius="md">
                 <Card.Section withBorder inheritPadding py="xs">
