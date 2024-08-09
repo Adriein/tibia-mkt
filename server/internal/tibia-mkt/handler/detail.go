@@ -5,6 +5,7 @@ import (
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
+	"time"
 )
 
 type DetailHandler struct {
@@ -115,11 +116,19 @@ func (h *DetailHandler) getKillStatistics(cog types.Cog) ([]types.CreatureKillSt
 	for _, creature := range cog.Creatures {
 		var filters []types.Filter
 
-		filters = append(filters, types.Filter{
-			Name:    "creature_name",
-			Operand: constants.Equal,
-			Value:   creature.Name,
-		})
+		filters = append(
+			filters,
+			types.Filter{
+				Name:    "creature_name",
+				Operand: constants.Equal,
+				Value:   creature.Name,
+			},
+			types.Filter{
+				Name:    "created_at",
+				Operand: constants.GreaterThanOrEqual,
+				Value:   time.Now().Format(time.DateOnly),
+			},
+		)
 
 		criteria := types.Criteria{Filters: filters}
 
