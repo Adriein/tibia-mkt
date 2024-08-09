@@ -117,9 +117,15 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 		constants.Day31,
 	)
 
+	creatures := input.Creatures
+
+	if input.Creatures == nil || len(input.Creatures) == 0 {
+		creatures = make([]types.CreatureKillStatistic, 0)
+	}
+
 	result := DetailResponse{
 		Wiki:      input.Wiki,
-		Creatures: input.Creatures,
+		Creatures: creatures,
 		Cog:       cogSkuResponseList,
 		SellOfferChart: DetailChartMetadataResponse{
 			YAxisTick: sellOfferYAxisDomain,
