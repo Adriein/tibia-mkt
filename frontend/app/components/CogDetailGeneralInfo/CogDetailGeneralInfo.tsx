@@ -89,7 +89,7 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data }: CogDetailG
                         data={sellOfferFrequencyBarChart(data.sellOfferFrequency)}
                         dataKey="range"
                         series={[
-                            { name: 'frequency', color: 'teal.6' },
+                            { name: 'frequency', label: "Frequency", color: 'teal.6' },
                         ]}
                         tickLine="y"
                     />

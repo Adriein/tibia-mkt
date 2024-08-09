@@ -70,7 +70,7 @@ export default function CogDetail() {
         <Container fluid>
             <Grid gutter="xl">
                 <Grid.Col span={12}>
-                    <Header/>
+                    <Header item={beautifyCamelCase(snakeCaseToCamelCase(params.item))}/>
                 </Grid.Col>
                 <Grid.Col span={12}>
                     <Accordion variant="contained" defaultValue="general-info">
