@@ -125,14 +125,22 @@ func createDetailHandler(api *server.TibiaMktApiServer, database *sql.DB) http.H
 
 	pgCogRepository := repository.NewPgCogRepository(database)
 	pgKillStatisticRepository := repository.NewPgKillStatisticRepository(database)
+	pgDataSnapshotRepository := repository.NewPgDataSnapshotRepository(database)
 
 	homePresenter := presenter.NewDetailPresenter()
 
 	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
 
 	factory := service.NewRepositoryFactory(repositories)
+	prob := service.NewProbHelper()
 
-	detailService := service.NewDetailService(pgCogRepository, pgKillStatisticRepository, factory)
+	detailService := service.NewDetailService(
+		pgCogRepository,
+		pgKillStatisticRepository,
+		pgDataSnapshotRepository,
+		factory,
+		prob,
+	)
 
 	detail := handler.NewDetailHandler(detailService, homePresenter)
 

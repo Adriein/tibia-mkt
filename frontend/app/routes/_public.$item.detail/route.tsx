@@ -1,7 +1,7 @@
 import {beautifyCamelCase, snakeCaseToCamelCase} from "~/shared/util";
 import {Accordion, Container, Grid, rem} from "@mantine/core";
 import {LoaderFunctionArgs} from "@remix-run/node";
-import {DetailPageData, RemixMetaFunc, TradeEngineDetailPageData} from "~/shared/types";
+import {DetailPageData, RemixMetaFunc, SellOfferProbability} from "~/shared/types";
 import {json, useLoaderData, useParams} from "react-router";
 import {CogDetailChart} from "~/components/CogDetailChart/CogDetailChart";
 import {IconChartDotsFilled, IconInfoCircle, IconRobot} from '@tabler/icons-react';
@@ -15,13 +15,13 @@ type DetailApiResponse = {
 
 type TradeEngineApiResponse = {
     ok: boolean,
-    data: TradeEngineDetailPageData
+    data: SellOfferProbability
 }
 
 type DetailPageResponse = {
     data: {
         detail: DetailPageData,
-        tradeEngine: TradeEngineDetailPageData
+        tradeEngine: SellOfferProbability
     }
 }
 
@@ -93,7 +93,7 @@ export default function CogDetail() {
                                     item={beautifyCamelCase(snakeCaseToCamelCase(params.item))}
                                     dataPoints={serverProps.data.detail.cog.length}
                                     creatures={serverProps.data.detail.creatures}
-                                    data={serverProps.data.tradeEngine}
+                                    data={serverProps.data.detail.sellOfferProbability}
                                 />
                             </Accordion.Panel>
                         </Accordion.Item>

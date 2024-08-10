@@ -11,6 +11,12 @@ type CogAverage struct {
 	Average   int    `json:"average"`
 }
 
+type SellOfferProbability struct {
+	Mean               int                        `json:"mean"`
+	StdDeviation       float64                    `json:"stdDeviation"`
+	SellOfferFrequency []types.SellOfferFrequency `json:"sellOfferFrequency"`
+}
+
 type DetailChartMetadataResponse struct {
 	XAxisTick     []string     `json:"xAxisTick"`
 	YAxisTick     []types.Tick `json:"yAxisTick"`
@@ -18,11 +24,13 @@ type DetailChartMetadataResponse struct {
 }
 
 type DetailResponse struct {
-	Wiki           string                        `json:"wiki"`
-	Creatures      []types.CreatureKillStatistic `json:"creatures"`
-	Cog            []types.CogSkuResponse        `json:"cog"`
-	SellOfferChart DetailChartMetadataResponse   `json:"sellOfferChart"`
-	BuyOfferChart  DetailChartMetadataResponse   `json:"buyOfferChart"`
+	Wiki                  string                        `json:"wiki"`
+	Creatures             []types.CreatureKillStatistic `json:"creatures"`
+	SellOfferHistoricData []types.DataSnapshot          `json:"sellOfferHistoricData"`
+	SellOfferProbability  SellOfferProbability          `json:"sellOfferProbability"`
+	Cog                   []types.CogSkuResponse        `json:"cog"`
+	SellOfferChart        DetailChartMetadataResponse   `json:"sellOfferChart"`
+	BuyOfferChart         DetailChartMetadataResponse   `json:"buyOfferChart"`
 }
 
 type DetailPresenter struct{}
@@ -32,7 +40,7 @@ func NewDetailPresenter() *DetailPresenter {
 }
 
 func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
-	input, ok := data.(types.DetailPresenterInput)
+	input, ok := data.(types.Detail)
 
 	if !ok {
 		return types.ServerResponse{}, types.ApiError{
@@ -122,10 +130,18 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 		creatures = make([]types.CreatureKillStatistic, 0)
 	}
 
+	probability := SellOfferProbability{
+		StdDeviation:       input.StdDeviation,
+		Mean:               input.SellPriceMean,
+		SellOfferFrequency: input.SellOfferFrequency,
+	}
+
 	result := DetailResponse{
-		Wiki:      input.Wiki,
-		Creatures: creatures,
-		Cog:       cogSkuResponseList,
+		Wiki:                  input.Wiki,
+		Creatures:             creatures,
+		SellOfferHistoricData: input.SellOfferHistoricData,
+		SellOfferProbability:  probability,
+		Cog:                   cogSkuResponseList,
 		SellOfferChart: DetailChartMetadataResponse{
 			YAxisTick: sellOfferYAxisDomain,
 			XAxisTick: sellOfferXAxisDomain,

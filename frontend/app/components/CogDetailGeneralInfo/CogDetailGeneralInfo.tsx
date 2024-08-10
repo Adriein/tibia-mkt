@@ -2,7 +2,7 @@ import {ActionIcon, Card, Group, Modal, Text, Timeline, Tooltip} from "@mantine/
 import {BarChart} from "@mantine/charts";
 import {IconHistory, IconBinary} from '@tabler/icons-react';
 import classes from "./CogDetailGeneralInfo.module.css";
-import {DetailCreature, SellOfferFrequency, TradeEngineDetailPageData} from "~/shared/types";
+import {DetailCreature, SellOfferFrequency, SellOfferProbability} from "~/shared/types";
 import {useDisclosure} from "@mantine/hooks";
 
 
@@ -12,7 +12,7 @@ interface CogDetailGeneralInfoProps {
     item: string;
     dataPoints: number;
     creatures: DetailCreature[];
-    data: TradeEngineDetailPageData;
+    data: SellOfferProbability;
 }
 
 const sellOfferFrequencyBarChart = (data: SellOfferFrequency[]): SellOfferFrequencyBarChartTick[] => {

@@ -17,6 +17,8 @@ export type DetailCreature = {name: string, dropRate: number, killStatistic: num
 export type DetailPageData = {
     wiki: string,
     creatures: DetailCreature[],
+    sellOfferHistoricData: SellOfferHistoricData[],
+    sellOfferProbability: SellOfferProbability,
     cog: Cog[],
     sellOfferChart: DetailChartMetadata,
     buyOfferChart: DetailChartMetadata
@@ -26,4 +28,6 @@ export type RemixMetaFunc = {params: { item: string }};
 
 export type SellOfferFrequency = { range: string, occurrences: number, frequency: number }
 
-export type TradeEngineDetailPageData = { mean: number, stdDeviation: number, sellOfferFrequency: SellOfferFrequency[]}
+export type SellOfferProbability = { mean: number, stdDeviation: number, sellOfferFrequency: SellOfferFrequency[]}
+
+export type SellOfferHistoricData = { cog: string,  mean: number, stdDeviation: number}
