@@ -206,7 +206,7 @@ func (s *DetailService) get15DaysSellOfferHistoricData(cog string) ([]types.Data
 
 	filters[0] = types.Filter{Name: "cog", Operand: constants.Equal, Value: cog}
 	filters[1] = types.Filter{Name: "created_at", Operand: constants.GreaterThanOrEqual, Value: fifteenDaysAgo}
-	filters[2] = types.Filter{Name: "created_at", Operand: constants.LessThanOrEqual, Value: now.Format(time.DateOnly)}
+	filters[2] = types.Filter{Name: "created_at", Operand: constants.LessThanOrEqual, Value: now.Format(time.DateTime)}
 
 	result, repoErr := s.dataSnapshotRepository.Find(types.Criteria{Filters: filters})
 
