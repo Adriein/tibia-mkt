@@ -123,7 +123,7 @@ export default function CogDetail() {
                             }>
                                 AI Trading Bot
                             </Accordion.Control>
-                            <Accordion.Panel>Content</Accordion.Panel>
+                            <Accordion.Panel>Not implemented yet</Accordion.Panel>
                         </Accordion.Item>
                     </Accordion>
                 </Grid.Col>
