@@ -2,14 +2,10 @@ import classes from "./Header.module.css";
 import {Title} from "@mantine/core";
 import {ColorSchemeToggle} from "~/components/ColorSchemeToggle/ColorSchemeToggle";
 
-interface HeaderProps {
-    item?: string;
-}
-
-export function Header({ item }: HeaderProps) {
+export function Header() {
     return (
         <header className={classes.header}>
-            <Title className={classes.title}>{item ?? "Tibia Mkt"}</Title>
+            <Title className={classes.title}>Tibia Mkt</Title>
             <ColorSchemeToggle/>
         </header>
     )

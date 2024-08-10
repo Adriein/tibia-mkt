@@ -29,10 +29,6 @@ const sellOfferFrequencyBarChart = (data: SellOfferFrequency[]): SellOfferFreque
     return result;
 }
 
-const presentCreatures = (creatures: DetailCreature[]): string  => {
-    return creatures.map((creature: DetailCreature) => creature.name).join(', ');
-}
-
 const calculateDropEstimation = (creatures: DetailCreature[]): number => {
     return Math.round(creatures.reduce((total: number, creature: DetailCreature) => {
         total += creature.killStatistic * (creature.dropRate / 100);
@@ -47,15 +43,15 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data }: CogDetailG
             <Group justify="center" mb="md">
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>All time series</Text>
-                    <Text size="xl" fw={700}>{dataPoints} data points</Text>
+                    <Text size="xl" fw={500}>{dataPoints} data points</Text>
                 </Card>
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>Mean</Text>
-                    <Text size="xl" fw={700}>{data.mean} gp</Text>
+                    <Text size="xl" fw={500}>{data.mean} gp</Text>
                 </Card>
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Text size="xl" fw={700}>Standard Deviation</Text>
-                    <Text size="xl" fw={700}>
+                    <Text size="xl" fw={500}>
                         {new Intl.NumberFormat('en-US', {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
@@ -66,13 +62,9 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data }: CogDetailG
                     <>
                         <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                             <Text size="xl" fw={700}>Est. total dropped</Text>
-                            <Text size="xl" fw={700}>
+                            <Text size="xl" fw={500}>
                                 {new Intl.NumberFormat('en-US').format(calculateDropEstimation(creatures))}
                             </Text>
-                        </Card>
-                        <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
-                            <Text size="xl" fw={700}>Dropped by</Text>
-                            <Text size="xl" fw={700}>{presentCreatures(creatures)}</Text>
                         </Card>
                     </>
                 }

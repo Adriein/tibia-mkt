@@ -1,12 +1,12 @@
 import {beautifyCamelCase, snakeCaseToCamelCase} from "~/shared/util";
 import {Accordion, Container, Grid, rem} from "@mantine/core";
-import {Header} from "~/components/Header/Header";
 import {LoaderFunctionArgs} from "@remix-run/node";
 import {DetailPageData, RemixMetaFunc, TradeEngineDetailPageData} from "~/shared/types";
 import {json, useLoaderData, useParams} from "react-router";
 import {CogDetailChart} from "~/components/CogDetailChart/CogDetailChart";
 import {IconChartDotsFilled, IconInfoCircle, IconRobot} from '@tabler/icons-react';
 import {CogDetailGeneralInfo} from "~/components/CogDetailGeneralInfo/CogDetailGeneralInfo";
+import {DetailHeader} from "~/components/Header/DetailHeader";
 
 type DetailApiResponse = {
     ok: boolean,
@@ -70,7 +70,10 @@ export default function CogDetail() {
         <Container fluid>
             <Grid gutter="xl">
                 <Grid.Col span={12}>
-                    <Header item={beautifyCamelCase(snakeCaseToCamelCase(params.item))}/>
+                    <DetailHeader
+                        item={beautifyCamelCase(snakeCaseToCamelCase(params.item))}
+                        wikiLink={serverProps.data.detail.wiki}
+                    />
                 </Grid.Col>
                 <Grid.Col span={12}>
                     <Accordion variant="contained" defaultValue="general-info">
