@@ -1,7 +1,6 @@
 package presenter
 
 import (
-	"github.com/adriein/tibia-mkt/internal/tibia-mkt/handler"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
@@ -33,7 +32,7 @@ func NewDetailPresenter() *DetailPresenter {
 }
 
 func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
-	input, ok := data.(handler.DetailHandlerPresenterInput)
+	input, ok := data.(types.DetailPresenterInput)
 
 	if !ok {
 		return types.ServerResponse{}, types.ApiError{
