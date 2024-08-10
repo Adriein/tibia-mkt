@@ -99,7 +99,7 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) ([]types.KillStatistic, 
 				CreatureName: creature.Name,
 				AmountKilled: killStatistic,
 				DropRate:     creature.DropRate,
-				ExecutedBy:   "tibia-mkt",
+				ExecutedBy:   constants.TibiaMktCronUser,
 				CreatedAt:    time.Now().UTC().Format(time.DateTime),
 				UpdatedAt:    time.Now().UTC().Format(time.DateTime),
 			})

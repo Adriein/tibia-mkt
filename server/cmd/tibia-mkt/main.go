@@ -10,9 +10,9 @@ import (
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/server"
 	"github.com/adriein/tibia-mkt/internal/trade-engine"
 	"github.com/adriein/tibia-mkt/internal/trade-engine/trade-algorithm"
+	"github.com/adriein/tibia-mkt/pkg"
 	"github.com/adriein/tibia-mkt/pkg/middleware"
 	"github.com/adriein/tibia-mkt/pkg/service"
-	"github.com/adriein/tibia-mkt/pkg/types"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"log"
@@ -54,6 +54,7 @@ func main() {
 	api.Route("GET /home", createHomeHandler(api, database))
 	api.Route("GET /detail", createDetailHandler(api, database))
 	api.Route("GET /kill-statistics-cron", cronMiddlewares.ApplyOn(createKillStatisticsHandler(api, database)))
+	api.Route("GET /data-snapshot-cron", cronMiddlewares.ApplyOn(createDataSnapshotHandler(api, database)))
 
 	api.Route("POST /trade-engine", tradeEngineHandler(api, database))
 	api.Route("POST /seed", createSeedHandler(api, database))
@@ -64,31 +65,23 @@ func main() {
 }
 
 func createHomeHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
-	pgSecuraTibiaCoinCogRepository := repository.NewPgTibiaCoinRepository(database)
-	pgSecuraHoneycombCogRepository := repository.NewPgHoneycombRepository(database)
-
+	container := pkg.NewContainer(database)
 	pgCogRepository := repository.NewPgCogRepository(database)
 
 	homePresenter := presenter.NewHomePresenter(pgCogRepository)
 
-	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
-
-	factory := service.NewRepositoryFactory(repositories)
-
-	home := handler.NewHomeHandler(factory, homePresenter)
+	home := handler.NewHomeHandler(container.NewCogSkuRepositoryFactory(), homePresenter)
 
 	return api.NewHandler(home.Handler)
 }
 
 func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
+	container := pkg.NewContainer(database)
+
 	csvSecuraCogRepository := repository.NewCsvSecuraCogRepository()
-	pgSecuraTibiaCoinCogRepository := repository.NewPgTibiaCoinRepository(database)
-	pgSecuraHoneycombCogRepository := repository.NewPgHoneycombRepository(database)
 	pgCogRepository := repository.NewPgCogRepository(database)
 
-	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
-
-	factory := service.NewRepositoryFactory(repositories)
+	factory := container.NewCogSkuRepositoryFactory()
 
 	seed := handler.NewSeedHandler(csvSecuraCogRepository, factory, pgCogRepository)
 
@@ -96,16 +89,13 @@ func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 }
 
 func tradeEngineHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
-	pgSecuraTibiaCoinCogRepository := repository.NewPgTibiaCoinRepository(database)
-	pgSecuraHoneycombCogRepository := repository.NewPgHoneycombRepository(database)
+	container := pkg.NewContainer(database)
 
 	pgCogRepository := repository.NewPgCogRepository(database)
 
 	homePresenter := presenter.NewHomePresenter(pgCogRepository)
 
-	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
-
-	factory := service.NewRepositoryFactory(repositories)
+	factory := container.NewCogSkuRepositoryFactory()
 
 	config := trade_engine.NewConfig()
 	prob := service.NewProbHelper()
@@ -120,18 +110,15 @@ func tradeEngineHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Ha
 }
 
 func createDetailHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
-	pgSecuraTibiaCoinCogRepository := repository.NewPgTibiaCoinRepository(database)
-	pgSecuraHoneycombCogRepository := repository.NewPgHoneycombRepository(database)
+	container := pkg.NewContainer(database)
 
 	pgCogRepository := repository.NewPgCogRepository(database)
 	pgKillStatisticRepository := repository.NewPgKillStatisticRepository(database)
 	pgDataSnapshotRepository := repository.NewPgDataSnapshotRepository(database)
 
-	homePresenter := presenter.NewDetailPresenter()
+	detailPresenter := presenter.NewDetailPresenter()
 
-	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
-
-	factory := service.NewRepositoryFactory(repositories)
+	factory := container.NewCogSkuRepositoryFactory()
 	prob := service.NewProbHelper()
 
 	detailService := service.NewDetailService(
@@ -142,7 +129,7 @@ func createDetailHandler(api *server.TibiaMktApiServer, database *sql.DB) http.H
 		prob,
 	)
 
-	detail := handler.NewDetailHandler(detailService, homePresenter)
+	detail := handler.NewDetailHandler(detailService, detailPresenter)
 
 	return api.NewHandler(detail.Handler)
 }
@@ -156,4 +143,29 @@ func createKillStatisticsHandler(api *server.TibiaMktApiServer, database *sql.DB
 	killStatistics := handler.NewKillStatisticsHandler(command, pgCogRepository, pgKillStatisticRepository)
 
 	return api.NewHandler(killStatistics.Handler)
+}
+
+func createDataSnapshotHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
+	container := pkg.NewContainer(database)
+
+	pgCogRepository := repository.NewPgCogRepository(database)
+	pgDataSnapshotRepository := repository.NewPgDataSnapshotRepository(database)
+	pgKillStatisticRepository := repository.NewPgKillStatisticRepository(database)
+
+	factory := container.NewCogSkuRepositoryFactory()
+	prob := service.NewProbHelper()
+
+	detailService := service.NewDetailService(
+		pgCogRepository,
+		pgKillStatisticRepository,
+		pgDataSnapshotRepository,
+		factory,
+		prob,
+	)
+
+	command := cron.NewDataSnapshotCron(pgCogRepository, pgDataSnapshotRepository, detailService)
+
+	dataSnapshot := handler.NewDataSnapshotHandler(command)
+
+	return api.NewHandler(dataSnapshot.Handler)
 }

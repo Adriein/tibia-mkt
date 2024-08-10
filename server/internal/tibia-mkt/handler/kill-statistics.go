@@ -8,20 +8,20 @@ import (
 )
 
 type KillStatisticsHandler struct {
-	cron                   *cron.KillStatisticsCron
-	cogRepository          types.Repository[types.Cog]
-	kilStatisticRepository types.Repository[types.KillStatistic]
+	cron                    *cron.KillStatisticsCron
+	cogRepository           types.Repository[types.Cog]
+	killStatisticRepository types.Repository[types.KillStatistic]
 }
 
 func NewKillStatisticsHandler(
 	cron *cron.KillStatisticsCron,
 	cogRepository types.Repository[types.Cog],
-	kilStatisticRepository types.Repository[types.KillStatistic],
+	killStatisticRepository types.Repository[types.KillStatistic],
 ) *KillStatisticsHandler {
 	return &KillStatisticsHandler{
-		cron:                   cron,
-		cogRepository:          cogRepository,
-		kilStatisticRepository: kilStatisticRepository,
+		cron:                    cron,
+		cogRepository:           cogRepository,
+		killStatisticRepository: killStatisticRepository,
 	}
 }
 
@@ -39,7 +39,7 @@ func (h *KillStatisticsHandler) Handler(w http.ResponseWriter, _ *http.Request) 
 	}
 
 	for _, result := range results {
-		if saveErr := h.kilStatisticRepository.Save(result); saveErr != nil {
+		if saveErr := h.killStatisticRepository.Save(result); saveErr != nil {
 			return saveErr
 		}
 	}

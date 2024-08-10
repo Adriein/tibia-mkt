@@ -1,8 +1,10 @@
 package cron
 
 import (
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
+	"github.com/google/uuid"
 	"time"
 )
 
@@ -24,34 +26,35 @@ func NewDataSnapshotCron(
 	}
 }
 
-func (dsc *DataSnapshotCron) Execute() ([]types.DataSnapshot, error) {
+func (dsc *DataSnapshotCron) Execute() error {
 	cogs, cogRepoErr := dsc.cogRepository.Find(types.Criteria{Filters: make([]types.Filter, 0)})
 
 	if cogRepoErr != nil {
-		return nil, cogRepoErr
+		return cogRepoErr
 	}
 
 	for _, cog := range cogs {
+		id := uuid.New()
 		result, serviceErr := dsc.service.Execute(cog.Name)
 
 		if serviceErr != nil {
-			return nil, serviceErr
+			return serviceErr
 		}
 
 		snapshot := types.DataSnapshot{
-			Id:           ",",
+			Id:           id.String(),
 			Cog:          cog.Name,
 			StdDeviation: result.StdDeviation,
 			Mean:         result.SellPriceMean,
-			ExecutedBy:   "tibia-mkt",
+			ExecutedBy:   constants.TibiaMktCronUser,
 			CreatedAt:    time.Now().Format(time.DateTime),
 			UpdatedAt:    time.Now().Format(time.DateTime),
 		}
 
 		if snapshotRepoErr := dsc.dataSnapshotRepository.Save(snapshot); snapshotRepoErr != nil {
-			return nil, snapshotRepoErr
+			return snapshotRepoErr
 		}
 
 	}
-	return nil, nil
+	return nil
 }

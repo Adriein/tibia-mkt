@@ -42,3 +42,9 @@ const (
 	TibiaDataApiVersion           string = "v4"
 	TibiaDataApiKillStatisticsUrl string = "killstatistics"
 )
+
+// App users
+
+const (
+	TibiaMktCronUser string = "tibia-mkt"
+)
