@@ -64,6 +64,10 @@ func (s *DetailService) Execute(cog string) (types.Detail, error) {
 		return types.Detail{}, historicDataErr
 	}
 
+	if len(historicData) == 0 {
+		historicData = make([]types.DataSnapshot, 0)
+	}
+
 	return types.Detail{
 		Wiki:                  cogDetail.Link,
 		Cog:                   cogs,
