@@ -30,4 +30,4 @@ export type SellOfferFrequency = { range: string, occurrences: number, frequency
 
 export type SellOfferProbability = { mean: number, stdDeviation: number, sellOfferFrequency: SellOfferFrequency[]}
 
-export type SellOfferHistoricData = { cog: string,  mean: number, stdDeviation: number}
+export type SellOfferHistoricData = { id: string, cog: string,  mean: number, stdDeviation: number, createdAt: string}

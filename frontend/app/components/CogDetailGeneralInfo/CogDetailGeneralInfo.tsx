@@ -2,7 +2,7 @@ import {ActionIcon, Card, Group, Modal, Text, Timeline, Tooltip} from "@mantine/
 import {BarChart} from "@mantine/charts";
 import {IconHistory, IconBinary} from '@tabler/icons-react';
 import classes from "./CogDetailGeneralInfo.module.css";
-import {DetailCreature, SellOfferFrequency, SellOfferProbability} from "~/shared/types";
+import {DetailCreature, SellOfferFrequency, SellOfferHistoricData, SellOfferProbability} from "~/shared/types";
 import {useDisclosure} from "@mantine/hooks";
 
 
@@ -12,6 +12,7 @@ interface CogDetailGeneralInfoProps {
     item: string;
     dataPoints: number;
     creatures: DetailCreature[];
+    historic: SellOfferHistoricData[];
     data: SellOfferProbability;
 }
 
@@ -40,29 +41,21 @@ const calculateDropEstimation = (creatures: DetailCreature[]): number => {
     }, 0));
 }
 
-export function CogDetailGeneralInfo({ dataPoints, creatures, data }: CogDetailGeneralInfoProps) {
+export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: CogDetailGeneralInfoProps) {
     const [opened, { open, close }] = useDisclosure(false);
 
     return (
         <>
             <Modal opened={opened} onClose={close} title="History" centered>
-                <Timeline active={4} bulletSize={24} lineWidth={2}>
-                    <Timeline.Item bullet={<IconBinary size={18} />} title="New branch">
-                        <Text c="dimmed" size="sm">You&apos;ve created new branch <Text variant="link" component="span" inherit>fix-notifications</Text> from master</Text>
-                        <Text size="xs" mt={4}>2 hours ago</Text>
-                    </Timeline.Item>
-                    <Timeline.Item bullet={<IconBinary size={18} />} title="Commits">
-                        <Text c="dimmed" size="sm">You&apos;ve pushed 23 commits to<Text variant="link" component="span" inherit>fix-notifications branch</Text></Text>
-                        <Text size="xs" mt={4}>52 minutes ago</Text>
-                    </Timeline.Item>
-                    <Timeline.Item bullet={<IconBinary size={18} />} title="Pull request">
-                        <Text c="dimmed" size="sm">You&apos;ve submitted a pull request<Text variant="link" component="span" inherit>Fix incorrect notification message (#187)</Text></Text>
-                        <Text size="xs" mt={4}>34 minutes ago</Text>
-                    </Timeline.Item>
-                    <Timeline.Item bullet={<IconBinary size={18} />} title="Code review">
-                        <Text c="dimmed" size="sm"><Text variant="link" component="span" inherit>Robert Gluesticker</Text> left a code review on your pull request</Text>
-                        <Text size="xs" mt={4}>12 minutes ago</Text>
-                    </Timeline.Item>
+                <Timeline active={historic.length} bulletSize={24} lineWidth={2}>
+                    {historic.map((value: SellOfferHistoricData) => {
+                        return (
+                            <Timeline.Item key={value.id} bullet={<IconBinary size={18} />} title="Ingested data">
+                                <Text c="dimmed" size="sm">{value.stdDeviation}</Text>
+                                <Text size="xs" mt={4}>{value.createdAt}</Text>
+                            </Timeline.Item>
+                        );
+                    })}
                 </Timeline>
             </Modal>
             <Group justify="center" mb="md">

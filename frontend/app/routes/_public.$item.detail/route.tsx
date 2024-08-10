@@ -94,6 +94,7 @@ export default function CogDetail() {
                                     dataPoints={serverProps.data.detail.cog.length}
                                     creatures={serverProps.data.detail.creatures}
                                     data={serverProps.data.detail.sellOfferProbability}
+                                    historic={serverProps.data.detail.sellOfferHistoricData}
                                 />
                             </Accordion.Panel>
                         </Accordion.Item>
