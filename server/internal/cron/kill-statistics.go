@@ -35,17 +35,15 @@ func NewKillStatisticsCron() *KillStatisticsCron {
 }
 
 func (kc *KillStatisticsCron) Execute(cogs []types.Cog) ([]types.KillStatistic, error) {
-	request, requestCreationError := http.NewRequest(
-		http.MethodGet,
-		fmt.Sprintf(
-			"%s/%s/%s/%s",
-			constants.TibiaDataApiBaseUrl,
-			constants.TibiaDataApiVersion,
-			constants.TibiaDataApiKillStatisticsUrl,
-			constants.WorldSecura,
-		),
-		nil,
+	url := fmt.Sprintf(
+		"%s/%s/%s/%s",
+		constants.TibiaDataApiBaseUrl,
+		constants.TibiaDataApiVersion,
+		constants.TibiaDataApiKillStatisticsUrl,
+		constants.WorldSecura,
 	)
+
+	request, requestCreationError := http.NewRequest(http.MethodGet, url, nil)
 
 	if requestCreationError != nil {
 		return nil, types.ApiError{
@@ -63,6 +61,16 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) ([]types.KillStatistic, 
 			Msg:      requestError.Error(),
 			Function: "Execute -> client.Do()",
 			File:     "kill-statistics.go",
+		}
+	}
+
+	if response.StatusCode != http.StatusOK {
+		return nil, types.ApiError{
+			Msg:      fmt.Sprintf("TibiaApi responding with status code %s", response.Status),
+			Function: "Execute -> client.Do()",
+			File:     "kill-statistics.go",
+			Values:   []string{url},
+			Domain:   true,
 		}
 	}
 

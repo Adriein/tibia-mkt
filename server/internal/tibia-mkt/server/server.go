@@ -69,7 +69,7 @@ func (s *TibiaMktApiServer) NewHandler(handler types.TibiaMktHttpHandler) http.H
 					log.Fatal(encodeErr.Error())
 				}
 
-				slog.Warn(fmt.Sprintf("%s TraceId=%s", appError.Error(), r.Header.Get("traceId")))
+				slog.Error(fmt.Sprintf("%s TraceId=%s", appError.Error(), r.Header.Get("traceId")))
 
 				return
 			}
