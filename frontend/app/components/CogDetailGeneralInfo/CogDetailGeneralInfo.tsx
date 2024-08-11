@@ -5,7 +5,7 @@ import classes from "./CogDetailGeneralInfo.module.css";
 import {DetailCreature, SellOfferFrequency, SellOfferHistoricData, SellOfferProbability} from "~/shared/types";
 import {useDisclosure} from "@mantine/hooks";
 import {useState} from "react";
-import {MEAN_HISTORY_MODAL, STD_DEVIATION_MODAL} from "~/shared/constants";
+import {MEAN_HISTORY_MODAL, STD_DEVIATION_MODAL, TOTAL_DROPPED_MODAL} from "~/shared/constants";
 import {beautifyCamelCase} from "~/shared/util";
 
 
@@ -132,7 +132,7 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: 
                             <Text size="xl" fw={700}>Est. total dropped</Text>
                             <Tooltip label="View history" openDelay={300}>
                                 <ActionIcon
-                                    onClick={open}
+                                    onClick={() => assignContextOnOpenModal(TOTAL_DROPPED_MODAL)}
                                     variant="default"
                                     aria-label="item dropped amount history"
                                 >
