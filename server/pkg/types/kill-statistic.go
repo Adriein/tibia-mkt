@@ -14,4 +14,6 @@ type CreatureKillStatistic struct {
 	Name          string  `json:"name"`
 	DropRate      float64 `json:"dropRate"`
 	KillStatistic int     `json:"killStatistic"`
+	CreatedAt     string  `json:"createdAt"`
+	UpdatedAt     string  `json:"updatedAt"`
 }

@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS data_snapshot_cron (
     id VARCHAR(36) PRIMARY KEY, -- Unique identifier (UUID)
     cog VARCHAR(255) NOT NULL,
     std_deviation FLOAT NOT NULL,
-    mean FLOAT NOT NULL,
+    mean INT NOT NULL,
+    total_droped INT NOT NULL,
     executed_by VARCHAR(255) NOT NULL,
     created_at VARCHAR(60) NOT NULL,
     updated_at VARCHAR(60) NOT NULL

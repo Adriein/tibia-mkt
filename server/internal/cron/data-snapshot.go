@@ -37,8 +37,14 @@ func (dsc *DataSnapshotCron) Execute() error {
 		id := uuid.New()
 		result, serviceErr := dsc.service.Execute(cog.Name)
 
+		totalDropped := 0
+
 		if serviceErr != nil {
 			return serviceErr
+		}
+
+		for _, creature := range result.Creatures {
+			totalDropped += creature.KillStatistic
 		}
 
 		snapshot := types.DataSnapshot{
@@ -46,6 +52,7 @@ func (dsc *DataSnapshotCron) Execute() error {
 			Cog:          cog.Name,
 			StdDeviation: result.StdDeviation,
 			Mean:         result.SellPriceMean,
+			TotalDropped: totalDropped,
 			ExecutedBy:   constants.TibiaMktCronUser,
 			CreatedAt:    time.Now().Format(time.DateTime),
 			UpdatedAt:    time.Now().Format(time.DateTime),

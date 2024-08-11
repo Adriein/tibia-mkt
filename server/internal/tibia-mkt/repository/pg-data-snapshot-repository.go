@@ -48,6 +48,7 @@ func (r *PgDataSnapshotRepository) Find(criteria types.Criteria) ([]types.DataSn
 		cog           string
 		std_deviation float64
 		mean          int
+		total_droped  int
 		executed_by   string
 		created_at    string
 		updated_at    string
@@ -61,6 +62,7 @@ func (r *PgDataSnapshotRepository) Find(criteria types.Criteria) ([]types.DataSn
 			&cog,
 			&std_deviation,
 			&mean,
+			&total_droped,
 			&executed_by,
 			&created_at,
 			&updated_at,
@@ -77,6 +79,7 @@ func (r *PgDataSnapshotRepository) Find(criteria types.Criteria) ([]types.DataSn
 			Cog:          cog,
 			StdDeviation: std_deviation,
 			Mean:         mean,
+			TotalDropped: total_droped,
 			ExecutedBy:   executed_by,
 			CreatedAt:    created_at,
 			UpdatedAt:    updated_at,
@@ -102,6 +105,7 @@ func (r *PgDataSnapshotRepository) FindOne(criteria types.Criteria) (types.DataS
 		cog           string
 		std_deviation float64
 		mean          int
+		total_droped  int
 		executed_by   string
 		created_at    string
 		updated_at    string
@@ -112,6 +116,7 @@ func (r *PgDataSnapshotRepository) FindOne(criteria types.Criteria) (types.DataS
 		&cog,
 		&std_deviation,
 		&mean,
+		&total_droped,
 		&executed_by,
 		&created_at,
 		&updated_at,
@@ -129,6 +134,7 @@ func (r *PgDataSnapshotRepository) FindOne(criteria types.Criteria) (types.DataS
 		Cog:          cog,
 		StdDeviation: std_deviation,
 		Mean:         mean,
+		TotalDropped: total_droped,
 		ExecutedBy:   executed_by,
 		CreatedAt:    created_at,
 		UpdatedAt:    updated_at,
@@ -136,7 +142,7 @@ func (r *PgDataSnapshotRepository) FindOne(criteria types.Criteria) (types.DataS
 }
 
 func (r *PgDataSnapshotRepository) Save(entity types.DataSnapshot) error {
-	var query = `INSERT INTO data_snapshot_cron (id, cog, std_deviation, mean, executed_by, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7)`
+	var query = `INSERT INTO data_snapshot_cron (id, cog, std_deviation, mean, total_droped, executed_by, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
 
 	_, err := r.connection.Exec(
 		query,
@@ -144,6 +150,7 @@ func (r *PgDataSnapshotRepository) Save(entity types.DataSnapshot) error {
 		entity.Cog,
 		entity.StdDeviation,
 		entity.Mean,
+		entity.TotalDropped,
 		entity.ExecutedBy,
 		entity.CreatedAt,
 		entity.UpdatedAt,
