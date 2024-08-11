@@ -53,7 +53,7 @@ func (s *DetailService) Execute(cog string) (types.Detail, error) {
 	killStatistics, killStatisticErr := s.getKillStatistics(cogDetail)
 
 	if killStatisticErr != nil {
-		return types.Detail{}, killStatisticErr
+		killStatistics = make([]types.CreatureKillStatistic, 0)
 	}
 
 	frequencyChart, prices := s.buildPriceFrequencyChart(cogs)
