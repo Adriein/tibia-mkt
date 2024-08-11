@@ -44,7 +44,9 @@ func (dsc *DataSnapshotCron) Execute() error {
 		}
 
 		for _, creature := range result.Creatures {
-			totalDropped += creature.KillStatistic
+			itemsDropped := float64(creature.KillStatistic) * (creature.DropRate / 100)
+
+			totalDropped += int(itemsDropped)
 		}
 
 		snapshot := types.DataSnapshot{
