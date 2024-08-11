@@ -4,6 +4,9 @@ import {IconHistory, IconBinary} from '@tabler/icons-react';
 import classes from "./CogDetailGeneralInfo.module.css";
 import {DetailCreature, SellOfferFrequency, SellOfferHistoricData, SellOfferProbability} from "~/shared/types";
 import {useDisclosure} from "@mantine/hooks";
+import {useState} from "react";
+import {MEAN_HISTORY_MODAL, STD_DEVIATION_MODAL} from "~/shared/constants";
+import {beautifyCamelCase} from "~/shared/util";
 
 
 type SellOfferFrequencyBarChartTick = {frequency: string, range: string}
@@ -43,16 +46,41 @@ const calculateDropEstimation = (creatures: DetailCreature[]): number => {
 
 export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: CogDetailGeneralInfoProps) {
     const [opened, { open, close }] = useDisclosure(false);
+    const [context, setContext] = useState(MEAN_HISTORY_MODAL);
+
+    const assignContextOnOpenModal = (context: string): void => {
+        setContext(context);
+        open();
+    }
 
     return (
         <>
             <Modal opened={opened} onClose={close} title="History" centered>
                 <Timeline active={historic.length} bulletSize={24} lineWidth={2}>
                     {historic.map((value: SellOfferHistoricData) => {
+                        const d: Record<string, never> = value as unknown as Record<string, never>;
                         return (
-                            <Timeline.Item key={value.id} bullet={<IconBinary size={18} />} title="Ingested data">
-                                <Text c="dimmed" size="sm">{value.stdDeviation}</Text>
-                                <Text size="xs" mt={4}>{value.createdAt}</Text>
+                            <Timeline.Item
+                                key={value.id}
+                                bullet={<IconBinary size={18} />}
+                                title={`${beautifyCamelCase(context)} ingestion`}
+                            >
+                                <Text c="dimmed" size="sm">
+                                    {
+                                        new Intl.NumberFormat('en-US', {
+                                            maximumFractionDigits: 2,
+                                        }).format(d[context])
+                                    }
+                                </Text>
+                                <Text size="xs" mt={4}>
+                                    {
+                                        new Intl.DateTimeFormat('en-US', {
+                                            month: "long",
+                                            weekday: "short",
+                                            day: "2-digit"
+                                        }).format(new Date(d.createdAt))
+                                    }
+                                </Text>
                             </Timeline.Item>
                         );
                     })}
@@ -64,14 +92,29 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: 
                     <Text size="xl" fw={500}>{dataPoints} data points</Text>
                 </Card>
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
-                    <Text size="xl" fw={700}>Mean</Text>
+                    <Group>
+                        <Text size="xl" fw={700}>Mean</Text>
+                        <Tooltip label="View history" openDelay={300}>
+                            <ActionIcon
+                                onClick={() => assignContextOnOpenModal(MEAN_HISTORY_MODAL)}
+                                variant="default"
+                                aria-label="Mean history"
+                            >
+                                <IconHistory style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                            </ActionIcon>
+                        </Tooltip>
+                    </Group>
                     <Text size="xl" fw={500}>{data.mean} gp</Text>
                 </Card>
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Group>
                         <Text size="xl" fw={700}>Standard Deviation</Text>
                         <Tooltip label="View history" openDelay={300}>
-                            <ActionIcon onClick={open} variant="default" aria-label="History">
+                            <ActionIcon
+                                onClick={() => assignContextOnOpenModal(STD_DEVIATION_MODAL)}
+                                variant="default"
+                                aria-label="Standard deviation history"
+                            >
                                 <IconHistory style={{ width: '70%', height: '70%' }} stroke={1.5} />
                             </ActionIcon>
                         </Tooltip>
@@ -88,7 +131,11 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: 
                         <Group>
                             <Text size="xl" fw={700}>Est. total dropped</Text>
                             <Tooltip label="View history" openDelay={300}>
-                                <ActionIcon onClick={open} variant="default" aria-label="History">
+                                <ActionIcon
+                                    onClick={open}
+                                    variant="default"
+                                    aria-label="item dropped amount history"
+                                >
                                     <IconHistory style={{ width: '70%', height: '70%' }} stroke={1.5} />
                                 </ActionIcon>
                             </Tooltip>
