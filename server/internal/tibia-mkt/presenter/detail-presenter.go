@@ -28,7 +28,7 @@ type DetailResponse struct {
 	Creatures             []types.CreatureKillStatistic `json:"creatures"`
 	SellOfferHistoricData []types.DataSnapshot          `json:"sellOfferHistoricData"`
 	SellOfferProbability  SellOfferProbability          `json:"sellOfferProbability"`
-	Good                  []types.GoodResponse          `json:"good"`
+	Cogs                  []types.GoodResponse          `json:"cogs"`
 	SellOfferChart        DetailChartMetadataResponse   `json:"sellOfferChart"`
 	BuyOfferChart         DetailChartMetadataResponse   `json:"buyOfferChart"`
 }
@@ -141,7 +141,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 		Creatures:             creatures,
 		SellOfferHistoricData: input.SellOfferHistoricData,
 		SellOfferProbability:  probability,
-		Good:                  goodSkuResponseList,
+		Cogs:                  goodSkuResponseList,
 		SellOfferChart: DetailChartMetadataResponse{
 			YAxisTick: sellOfferYAxisDomain,
 			XAxisTick: sellOfferXAxisDomain,

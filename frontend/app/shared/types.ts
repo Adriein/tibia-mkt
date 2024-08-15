@@ -19,7 +19,7 @@ export type DetailPageData = {
     creatures: DetailCreature[],
     sellOfferHistoricData: SellOfferHistoricData[],
     sellOfferProbability: SellOfferProbability,
-    cog: Cog[],
+    cogs: Cog[],
     sellOfferChart: DetailChartMetadata,
     buyOfferChart: DetailChartMetadata
 }

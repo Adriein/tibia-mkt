@@ -32,7 +32,7 @@ const mountXAxisProps = (timeInterval: string, data: DetailPageData): Omit<XAxis
     return {
         interval: "preserveStartEnd",
         tickFormatter: xAxisDateFormatter,
-        ticks: xAxisTick(data.cog, data.sellOfferChart.xAxisTick)
+        ticks: xAxisTick(data.cogs, data.sellOfferChart.xAxisTick)
     };
 }
 
@@ -41,7 +41,7 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
     const [cogs, setCogs] = useState<Cog[]>([]);
 
     useEffect(() => {
-        const chartData: Cog[] = data.cog;
+        const chartData: Cog[] = data.cogs;
 
         const delta: number = chartData.length - TIME_INTERVAL_DIC[timeInterval];
 
@@ -58,7 +58,7 @@ export function CogDetailChart({ data }: CogDetailChartProps) {
         }
 
         setCogs(result.reverse());
-    }, [timeInterval, data.cog]);
+    }, [timeInterval, data.cogs]);
 
     return (
         <>
