@@ -27,7 +27,7 @@ func (h *DetailHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 
 	if !paramsMap.Has("item") {
 		return types.ApiError{
-			Msg:      constants.NoCogSearchParamProvided,
+			Msg:      constants.NoGoodSearchParamProvided,
 			Function: "HomeHandler",
 			File:     "home.go",
 			Domain:   true,

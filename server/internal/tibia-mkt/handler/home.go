@@ -26,7 +26,7 @@ func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 
 	if !paramsMap.Has("item") {
 		return types.ApiError{
-			Msg:      constants.NoCogSearchParamProvided,
+			Msg:      constants.NoGoodSearchParamProvided,
 			Function: "HomeHandler",
 			File:     "home.go",
 			Domain:   true,
@@ -35,8 +35,8 @@ func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 
 	params := paramsMap["item"]
 
-	for _, cog := range params {
-		repository := h.repoFactory.Get(cog)
+	for _, good := range params {
+		repository := h.repoFactory.Get(good)
 
 		var filters []types.Filter
 

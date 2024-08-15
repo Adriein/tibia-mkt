@@ -12,23 +12,23 @@ type ChartMetadataResponse struct {
 }
 
 type HomeResponse struct {
-	Cogs map[string]CogSkuChartResponse `json:"cogs"`
+	Cogs map[string]CogChartResponse `json:"cogs"`
 }
 
-type CogSkuChartResponse struct {
+type CogChartResponse struct {
 	Wiki         string                `json:"wiki"`
-	Cog          []types.GoodResponse  `json:"cog"`
+	Cogs         []types.GoodResponse  `json:"cogs"`
 	Chart        ChartMetadataResponse `json:"chartMetadata"`
 	PagePosition int8                  `json:"pagePosition"`
 }
 
 type HomePresenter struct {
-	cogRepository types.Repository[types.Good]
+	goodRepository types.Repository[types.Good]
 }
 
 func NewHomePresenter(repository types.Repository[types.Good]) *HomePresenter {
 	return &HomePresenter{
-		cogRepository: repository,
+		goodRepository: repository,
 	}
 }
 
@@ -43,7 +43,7 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 		}
 	}
 
-	var homeResponseMap = make(map[string]CogSkuChartResponse)
+	var homeResponseMap = make(map[string]CogChartResponse)
 
 	for i := 0; i < len(cogSkuMatrix); i++ {
 		cogSkuList := cogSkuMatrix[i]
@@ -104,9 +104,9 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 
 		if len(cogSkuList) <= 0 {
 
-			homeResponseMap[cogSkuList[0].ItemName] = CogSkuChartResponse{
+			homeResponseMap[cogSkuList[0].ItemName] = CogChartResponse{
 				Wiki: cog.Link,
-				Cog:  cogSkuResponseList,
+				Cogs: cogSkuResponseList,
 				Chart: ChartMetadataResponse{
 					YAxisTick: yAxisDomain,
 					XAxisTick: xAxisDomain,
@@ -117,9 +117,9 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 			continue
 		}
 
-		homeResponseMap[cogSkuList[0].ItemName] = CogSkuChartResponse{
+		homeResponseMap[cogSkuList[0].ItemName] = CogChartResponse{
 			Wiki: cog.Link,
-			Cog:  cogSkuResponseList,
+			Cogs: cogSkuResponseList,
 			Chart: ChartMetadataResponse{
 				YAxisTick: yAxisDomain,
 				XAxisTick: xAxisDomain,
@@ -147,7 +147,7 @@ func (p *HomePresenter) getWikiLink(itemName string) (types.Good, error) {
 
 	criteria := types.Criteria{Filters: filters}
 
-	result, err := p.cogRepository.FindOne(criteria)
+	result, err := p.goodRepository.FindOne(criteria)
 
 	if err != nil {
 		return types.Good{}, err

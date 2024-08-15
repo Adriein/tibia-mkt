@@ -8,7 +8,7 @@ export type ChartMetadata = {  yAxisTick: YAxisTick[], xAxisTick: string[] }
 
 export type DetailChartMetadata = {  yAxisTick: YAxisTick[], xAxisTick: string[], referenceLine: ReferenceLine }
 
-export type CogChart = { wiki: string, cog: Cog[], chartMetadata: ChartMetadata, pagePosition: number }
+export type CogChart = { wiki: string, cogs: Cog[], chartMetadata: ChartMetadata, pagePosition: number }
 
 export type HomePageData = { [key: string]: CogChart }
 

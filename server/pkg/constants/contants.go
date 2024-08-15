@@ -31,8 +31,8 @@ const (
 // Errors
 
 const (
-	ServerGenericError       = "SERVER_ERROR"
-	NoCogSearchParamProvided = "NO_COG_SEARCH_PARAM_PROVIDED"
+	ServerGenericError        = "SERVER_ERROR"
+	NoGoodSearchParamProvided = "NO_GOOD_SEARCH_PARAM_PROVIDED"
 )
 
 // External API

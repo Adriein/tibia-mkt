@@ -44,14 +44,14 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
                             </ActionIcon>
                         </Anchor>
                     </Tooltip>
-                    <Badge color="indigo">{tibiaServer(data.cog)}</Badge>
+                    <Badge color="indigo">{tibiaServer(data.cogs)}</Badge>
                 </div>
             </Card.Section>
             <Space h="xl"/>
             <AreaChart
                 withLegend
                 h={450}
-                data={data.cog}
+                data={data.cogs}
                 dataKey="date"
                 tooltipAnimationDuration={200}
                 series={[
@@ -63,7 +63,7 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
                 xAxisProps={{
                     interval: "preserveStartEnd",
                     tickFormatter: xAxisDateFormatter,
-                    ticks: xAxisTick(data.cog, data.chartMetadata.xAxisTick)
+                    ticks: xAxisTick(data.cogs, data.chartMetadata.xAxisTick)
                 }}
                 yAxisProps={{
                     domain: data.chartMetadata.yAxisTick.map((tick: YAxisTick) => tick.price)
