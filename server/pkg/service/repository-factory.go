@@ -3,14 +3,14 @@ package service
 import "github.com/adriein/tibia-mkt/pkg/types"
 
 type RepositoryFactory struct {
-	repositories map[string]types.CogRepository
+	repositories map[string]types.GoodRecordRepository
 }
 
-func NewRepositoryFactory(repositories []types.CogRepository) *RepositoryFactory {
-	repoMap := make(map[string]types.CogRepository)
+func NewRepositoryFactory(repositories []types.GoodRecordRepository) *RepositoryFactory {
+	repoMap := make(map[string]types.GoodRecordRepository)
 
 	for _, repository := range repositories {
-		repoMap[repository.EntityName()] = repository
+		repoMap[repository.GoodName()] = repository
 	}
 
 	return &RepositoryFactory{
@@ -18,6 +18,6 @@ func NewRepositoryFactory(repositories []types.CogRepository) *RepositoryFactory
 	}
 }
 
-func (r *RepositoryFactory) Get(repository string) types.CogRepository {
+func (r *RepositoryFactory) Get(repository string) types.GoodRecordRepository {
 	return r.repositories[repository]
 }

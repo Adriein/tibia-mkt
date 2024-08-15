@@ -2,7 +2,7 @@ package types
 
 import "time"
 
-type CogSku struct {
+type GoodRecord struct {
 	Id        string
 	ItemName  string
 	BuyPrice  int
@@ -11,34 +11,34 @@ type CogSku struct {
 	World     string
 }
 
-type CogCreature struct {
+type GoodDrop struct {
 	Name     string  `json:"name"`
 	DropRate float64 `json:"dropRate"`
 }
 
-type Cog struct {
+type Good struct {
 	Id        string
 	Name      string
 	Link      string
-	Creatures []CogCreature
+	Drop      []GoodDrop
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-type CogConfig struct {
+type GoodConfig struct {
 	CogId    string
 	Position int8
 	Columns  int8
 	Rows     int8
 }
 
-type CogInterval struct {
+type GoodRecordInterval struct {
 	Name string
 	From string
 	To   string
 }
 
-type CogSkuResponse struct {
+type GoodResponse struct {
 	BuyOffer  int    `json:"buyOffer"`
 	SellOffer int    `json:"sellOffer"`
 	Date      string `json:"date"`

@@ -24,7 +24,7 @@ func NewTradeEngine[T any](
 	}
 }
 
-func (te *TradeEngine[T]) Execute(interval types.CogInterval) (T, error) {
+func (te *TradeEngine[T]) Execute(interval types.GoodRecordInterval) (T, error) {
 	var failedResponse T
 	cogs, retrieveCogsErr := te.retrieveCogInInterval(interval)
 
@@ -41,7 +41,7 @@ func (te *TradeEngine[T]) Execute(interval types.CogInterval) (T, error) {
 	return result, nil
 }
 
-func (te *TradeEngine[T]) retrieveCogInInterval(interval types.CogInterval) ([]types.CogSku, error) {
+func (te *TradeEngine[T]) retrieveCogInInterval(interval types.GoodRecordInterval) ([]types.GoodRecord, error) {
 	var filters []types.Filter
 
 	filters = append(
@@ -57,7 +57,7 @@ func (te *TradeEngine[T]) retrieveCogInInterval(interval types.CogInterval) ([]t
 	results, err := cogRepository.Find(criteria)
 
 	if err != nil {
-		return []types.CogSku{}, err
+		return []types.GoodRecord{}, err
 	}
 
 	return results, nil

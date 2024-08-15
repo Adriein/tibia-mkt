@@ -40,7 +40,7 @@ func (h *TradeEngineHandler[T]) Handler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	result, tradeEngineErr := h.engine.Execute(
-		types.CogInterval{
+		types.GoodRecordInterval{
 			Name: tradeEngineRequest.Item,
 			From: tradeEngineRequest.From,
 			To:   tradeEngineRequest.To,

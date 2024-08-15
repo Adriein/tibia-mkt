@@ -1,9 +1,9 @@
 package types
 
-type CogRepository interface {
-	EntityName() string
-	Find(criteria Criteria) ([]CogSku, error)
-	Save(entity CogSku) error
+type GoodRecordRepository interface {
+	GoodName() string
+	Find(criteria Criteria) ([]GoodRecord, error)
+	Save(entity GoodRecord) error
 }
 
 type Repository[T any] interface {

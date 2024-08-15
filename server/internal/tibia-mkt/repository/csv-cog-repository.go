@@ -21,8 +21,8 @@ func NewCsvSecuraCogRepository() *CsvSecuraCogRepository {
 	}
 }
 
-func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, error) {
-	var result []types.CogSku
+func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.GoodRecord, error) {
+	var result []types.GoodRecord
 
 	path, _ := os.Getwd()
 
@@ -73,7 +73,7 @@ func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, 
 
 		id := uuid.New()
 
-		result = append(result, types.CogSku{
+		result = append(result, types.GoodRecord{
 			Id:        id.String(),
 			ItemName:  constants.TibiaCoinEntity,
 			Date:      date,
@@ -86,10 +86,10 @@ func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.CogSku, 
 	return result, nil
 }
 
-func (c *CsvSecuraCogRepository) Save(entity types.CogSku) error {
+func (c *CsvSecuraCogRepository) Save(entity types.GoodRecord) error {
 	return nil
 }
 
-func (c *CsvSecuraCogRepository) EntityName() string {
+func (c *CsvSecuraCogRepository) GoodName() string {
 	return c.name
 }

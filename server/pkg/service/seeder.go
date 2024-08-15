@@ -3,11 +3,11 @@ package service
 import "github.com/adriein/tibia-mkt/pkg/types"
 
 type Seeder struct {
-	csvRepository types.CogRepository
-	pgRepository  types.CogRepository
+	csvRepository types.GoodRecordRepository
+	pgRepository  types.GoodRecordRepository
 }
 
-func NewSeeder(csvRepository types.CogRepository, pgRepository types.CogRepository) *Seeder {
+func NewSeeder(csvRepository types.GoodRecordRepository, pgRepository types.GoodRecordRepository) *Seeder {
 	return &Seeder{
 		csvRepository: csvRepository,
 		pgRepository:  pgRepository,

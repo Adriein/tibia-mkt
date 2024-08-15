@@ -7,28 +7,28 @@ import (
 	"time"
 )
 
-type PgCogRepository struct {
+type PgGoodRepository struct {
 	connection  *sql.DB
 	transformer *service.CriteriaToSqlService
 }
 
-func NewPgCogRepository(connection *sql.DB) *PgCogRepository {
+func NewPgGoodRepository(connection *sql.DB) *PgGoodRepository {
 	transformer := service.NewCriteriaToSqlService("cog")
 
-	return &PgCogRepository{
+	return &PgGoodRepository{
 		connection:  connection,
 		transformer: transformer,
 	}
 }
 
-func (r *PgCogRepository) Find(criteria types.Criteria) ([]types.Cog, error) {
+func (r *PgGoodRepository) Find(criteria types.Criteria) ([]types.Good, error) {
 	query, err := r.transformer.Transform(criteria)
 
 	if err != nil {
 		return nil, types.ApiError{
 			Msg:      err.Error(),
 			Function: "Find -> r.transformer.Transform()",
-			File:     "pg-cog-repository.go",
+			File:     "pg-good-repository.go",
 		}
 	}
 
@@ -38,7 +38,7 @@ func (r *PgCogRepository) Find(criteria types.Criteria) ([]types.Cog, error) {
 		return nil, types.ApiError{
 			Msg:      queryErr.Error(),
 			Function: "Find -> r.connection.Query()",
-			File:     "pg-cog-repository.go",
+			File:     "pg-good-repository.go",
 		}
 	}
 
@@ -53,14 +53,14 @@ func (r *PgCogRepository) Find(criteria types.Criteria) ([]types.Cog, error) {
 		updated_at string
 	)
 
-	var results []types.Cog
+	var results []types.Good
 
 	for rows.Next() {
 		if scanErr := rows.Scan(&id, &name, &link, &creatures, &created_at, &updated_at); scanErr != nil {
 			return nil, types.ApiError{
 				Msg:      scanErr.Error(),
 				Function: "Find -> rows.Scan()",
-				File:     "pg-cog-repository.go",
+				File:     "pg-good-repository.go",
 			}
 		}
 
@@ -70,7 +70,7 @@ func (r *PgCogRepository) Find(criteria types.Criteria) ([]types.Cog, error) {
 			return nil, types.ApiError{
 				Msg:      createdAtParseErr.Error(),
 				Function: "Find -> time.Parse()",
-				File:     "pg-cog-repository.go",
+				File:     "pg-good-repository.go",
 			}
 		}
 
@@ -80,25 +80,25 @@ func (r *PgCogRepository) Find(criteria types.Criteria) ([]types.Cog, error) {
 			return nil, types.ApiError{
 				Msg:      updatedAtParseErr.Error(),
 				Function: "Find -> time.Parse()",
-				File:     "pg-cog-repository.go",
+				File:     "pg-good-repository.go",
 			}
 		}
 
-		decodedCreatures, decodeError := service.JsonDecode[[]types.CogCreature](creatures)
+		decodedCreatures, decodeError := service.JsonDecode[[]types.GoodDrop](creatures)
 
 		if decodeError != nil {
 			return nil, types.ApiError{
 				Msg:      decodeError.Error(),
 				Function: "Find -> service.JsonDecode()",
-				File:     "pg-cog-repository.go",
+				File:     "pg-good-repository.go",
 			}
 		}
 
-		results = append(results, types.Cog{
+		results = append(results, types.Good{
 			Id:        id,
 			Name:      name,
 			Link:      link,
-			Creatures: decodedCreatures,
+			Drop:      decodedCreatures,
 			CreatedAt: parsedCreatedAt,
 			UpdatedAt: parsedUpdatedAt,
 		})
@@ -107,14 +107,14 @@ func (r *PgCogRepository) Find(criteria types.Criteria) ([]types.Cog, error) {
 	return results, nil
 }
 
-func (r *PgCogRepository) FindOne(criteria types.Criteria) (types.Cog, error) {
+func (r *PgGoodRepository) FindOne(criteria types.Criteria) (types.Good, error) {
 	query, err := r.transformer.Transform(criteria)
 
 	if err != nil {
-		return types.Cog{}, types.ApiError{
+		return types.Good{}, types.ApiError{
 			Msg:      err.Error(),
 			Function: "FindOne -> r.transformer.Transform()",
-			File:     "pg-cog-repository.go",
+			File:     "pg-good-repository.go",
 		}
 	}
 
@@ -128,10 +128,10 @@ func (r *PgCogRepository) FindOne(criteria types.Criteria) (types.Cog, error) {
 	)
 
 	if scanErr := r.connection.QueryRow(query).Scan(&id, &name, &link, &creatures, &created_at, &updated_at); scanErr != nil {
-		return types.Cog{}, types.ApiError{
+		return types.Good{}, types.ApiError{
 			Msg:      scanErr.Error(),
 			Function: "FindOne -> rows.Scan()",
-			File:     "pg-cog-repository.go",
+			File:     "pg-good-repository.go",
 			Values:   []string{query},
 		}
 	}
@@ -139,53 +139,53 @@ func (r *PgCogRepository) FindOne(criteria types.Criteria) (types.Cog, error) {
 	parsedCreatedAt, createdAtParseErr := time.Parse(time.DateTime, created_at)
 
 	if createdAtParseErr != nil {
-		return types.Cog{}, types.ApiError{
+		return types.Good{}, types.ApiError{
 			Msg:      createdAtParseErr.Error(),
 			Function: "FindOne -> time.Parse()",
-			File:     "pg-cog-repository.go",
+			File:     "pg-good-repository.go",
 		}
 	}
 
 	parsedUpdatedAt, updatedAtParseErr := time.Parse(time.DateTime, updated_at)
 
 	if updatedAtParseErr != nil {
-		return types.Cog{}, types.ApiError{
+		return types.Good{}, types.ApiError{
 			Msg:      updatedAtParseErr.Error(),
 			Function: "FindOne -> time.Parse()",
-			File:     "pg-cog-repository.go",
+			File:     "pg-good-repository.go",
 		}
 	}
 
-	decodedCreatures, decodeError := service.JsonDecode[[]types.CogCreature](creatures)
+	decodedCreatures, decodeError := service.JsonDecode[[]types.GoodDrop](creatures)
 
 	if decodeError != nil {
-		return types.Cog{}, types.ApiError{
+		return types.Good{}, types.ApiError{
 			Msg:      decodeError.Error(),
 			Function: "FindOne -> service.JsonDecode()",
-			File:     "pg-cog-repository.go",
+			File:     "pg-good-repository.go",
 		}
 	}
 
-	return types.Cog{
+	return types.Good{
 		Id:        id,
 		Name:      name,
 		Link:      link,
-		Creatures: decodedCreatures,
+		Drop:      decodedCreatures,
 		CreatedAt: parsedCreatedAt,
 		UpdatedAt: parsedUpdatedAt,
 	}, nil
 }
 
-func (r *PgCogRepository) Save(entity types.Cog) error {
+func (r *PgGoodRepository) Save(entity types.Good) error {
 	var query = `INSERT INTO cog (id, name, link, creatures, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`
 
-	encodedCreatures, jsonEncodeErr := service.JsonEncode(entity.Creatures)
+	encodedCreatures, jsonEncodeErr := service.JsonEncode(entity.Drop)
 
 	if jsonEncodeErr != nil {
 		return types.ApiError{
 			Msg:      jsonEncodeErr.Error(),
 			Function: "Save -> service.JsonEncode()",
-			File:     "pg-cog-repository.go",
+			File:     "pg-good-repository.go",
 		}
 	}
 
@@ -203,7 +203,7 @@ func (r *PgCogRepository) Save(entity types.Cog) error {
 		return types.ApiError{
 			Msg:      err.Error(),
 			Function: "Save -> r.connection.Exec()",
-			File:     "pg-cog-repository.go",
+			File:     "pg-good-repository.go",
 		}
 	}
 

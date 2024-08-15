@@ -2,7 +2,7 @@ package types
 
 type Detail struct {
 	Wiki                  string
-	Cog                   []CogSku
+	Cog                   []GoodRecord
 	Creatures             []CreatureKillStatistic
 	SellPriceMean         int
 	StdDeviation          float64

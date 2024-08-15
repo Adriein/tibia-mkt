@@ -9,13 +9,13 @@ import (
 
 type KillStatisticsHandler struct {
 	cron                    *cron.KillStatisticsCron
-	cogRepository           types.Repository[types.Cog]
+	cogRepository           types.Repository[types.Good]
 	killStatisticRepository types.Repository[types.KillStatistic]
 }
 
 func NewKillStatisticsHandler(
 	cron *cron.KillStatisticsCron,
-	cogRepository types.Repository[types.Cog],
+	cogRepository types.Repository[types.Good],
 	killStatisticRepository types.Repository[types.KillStatistic],
 ) *KillStatisticsHandler {
 	return &KillStatisticsHandler{
@@ -53,7 +53,7 @@ func (h *KillStatisticsHandler) Handler(w http.ResponseWriter, _ *http.Request) 
 	return nil
 }
 
-func (h *KillStatisticsHandler) getTibiaMktTrackedCogs() ([]types.Cog, error) {
+func (h *KillStatisticsHandler) getTibiaMktTrackedCogs() ([]types.Good, error) {
 	var filters []types.Filter
 
 	criteria := types.Criteria{Filters: filters}

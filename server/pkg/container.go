@@ -5,23 +5,46 @@ import (
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
+	"unicode"
 )
 
 type Container struct {
-	database *sql.DB
+	database       *sql.DB
+	goodRepository types.Repository[types.Good]
 }
 
-func NewContainer(database *sql.DB) *Container {
+func NewContainer(database *sql.DB, goodRepository types.Repository[types.Good]) *Container {
 	return &Container{
-		database: database,
+		database:       database,
+		goodRepository: goodRepository,
 	}
 }
 
-func (c *Container) NewCogSkuRepositoryFactory() *service.RepositoryFactory {
-	pgSecuraTibiaCoinCogRepository := repository.NewPgTibiaCoinRepository(c.database)
-	pgSecuraHoneycombCogRepository := repository.NewPgHoneycombRepository(c.database)
+func (c *Container) NewGoodRecordRepositoryFactory() (*service.RepositoryFactory, error) {
+	goods, err := c.goodRepository.Find(types.Criteria{Filters: make([]types.Filter, 0)})
 
-	repositories := []types.CogRepository{pgSecuraTibiaCoinCogRepository, pgSecuraHoneycombCogRepository}
+	if err != nil {
+		return nil, err
+	}
 
-	return service.NewRepositoryFactory(repositories)
+	var repositories = make([]types.GoodRecordRepository, len(goods))
+
+	for index, good := range goods {
+		repositories[index] = repository.NewPgGoodRecordRepository(c.database, c.camelToSnake(good.Name))
+	}
+
+	return service.NewRepositoryFactory(repositories), nil
+}
+
+func (c *Container) camelToSnake(str string) string {
+	var result []rune
+
+	for i, char := range str {
+		if unicode.IsUpper(char) && i > 0 {
+			result = append(result, '_')
+		}
+		result = append(result, unicode.ToLower(char))
+	}
+
+	return string(result)
 }

@@ -16,28 +16,28 @@ type HomeResponse struct {
 }
 
 type CogSkuChartResponse struct {
-	Wiki         string                 `json:"wiki"`
-	Cog          []types.CogSkuResponse `json:"cog"`
-	Chart        ChartMetadataResponse  `json:"chartMetadata"`
-	PagePosition int8                   `json:"pagePosition"`
+	Wiki         string                `json:"wiki"`
+	Cog          []types.GoodResponse  `json:"cog"`
+	Chart        ChartMetadataResponse `json:"chartMetadata"`
+	PagePosition int8                  `json:"pagePosition"`
 }
 
 type HomePresenter struct {
-	cogRepository types.Repository[types.Cog]
+	cogRepository types.Repository[types.Good]
 }
 
-func NewHomePresenter(repository types.Repository[types.Cog]) *HomePresenter {
+func NewHomePresenter(repository types.Repository[types.Good]) *HomePresenter {
 	return &HomePresenter{
 		cogRepository: repository,
 	}
 }
 
 func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
-	cogSkuMatrix, ok := data.([][]types.CogSku)
+	cogSkuMatrix, ok := data.([][]types.GoodRecord)
 
 	if !ok {
 		return types.ServerResponse{}, types.ApiError{
-			Msg:      "Assertion failed, data is not a matrix of type CogSku",
+			Msg:      "Assertion failed, data is not a matrix of type GoodRecord",
 			Function: "Format",
 			File:     "home-presenter.go",
 		}
@@ -51,7 +51,7 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 		var (
 			buyOfferTotal      int
 			sellOfferTotal     int
-			cogSkuResponseList []types.CogSkuResponse
+			cogSkuResponseList []types.GoodResponse
 			highestSellPrice   types.Tick
 			lowestBuyPrice     types.Tick
 			yAxisDomain        []types.Tick
@@ -75,7 +75,7 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 				lowestBuyPrice.Date = cogSku.Date.Format(time.DateOnly)
 			}
 
-			cogSkuResponseList = append(cogSkuResponseList, types.CogSkuResponse{
+			cogSkuResponseList = append(cogSkuResponseList, types.GoodResponse{
 				BuyOffer:  cogSku.BuyPrice,
 				SellOffer: cogSku.SellPrice,
 				Date:      cogSku.Date.Format(time.DateOnly),
@@ -136,7 +136,7 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 	return response, nil
 }
 
-func (p *HomePresenter) getWikiLink(itemName string) (types.Cog, error) {
+func (p *HomePresenter) getWikiLink(itemName string) (types.Good, error) {
 	var filters []types.Filter
 
 	filters = append(filters, types.Filter{
@@ -150,29 +150,29 @@ func (p *HomePresenter) getWikiLink(itemName string) (types.Cog, error) {
 	result, err := p.cogRepository.FindOne(criteria)
 
 	if err != nil {
-		return types.Cog{}, err
+		return types.Good{}, err
 	}
 
 	return result, nil
 }
 
-func (p *HomePresenter) getPagePosition(item types.Cog) types.CogConfig {
+func (p *HomePresenter) getPagePosition(item types.Good) types.GoodConfig {
 	switch item.Name {
 	case constants.TibiaCoinEntity:
-		return types.CogConfig{
+		return types.GoodConfig{
 			CogId:    item.Id,
 			Position: 1,
 			Columns:  12,
 			Rows:     1,
 		}
 	case constants.HoneycombEntity:
-		return types.CogConfig{
+		return types.GoodConfig{
 			CogId:    item.Id,
 			Position: 2,
 			Columns:  6,
 			Rows:     1,
 		}
 	default:
-		return types.CogConfig{}
+		return types.GoodConfig{}
 	}
 }

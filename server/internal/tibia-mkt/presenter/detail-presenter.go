@@ -28,7 +28,7 @@ type DetailResponse struct {
 	Creatures             []types.CreatureKillStatistic `json:"creatures"`
 	SellOfferHistoricData []types.DataSnapshot          `json:"sellOfferHistoricData"`
 	SellOfferProbability  SellOfferProbability          `json:"sellOfferProbability"`
-	Cog                   []types.CogSkuResponse        `json:"cog"`
+	Cog                   []types.GoodResponse          `json:"cog"`
 	SellOfferChart        DetailChartMetadataResponse   `json:"sellOfferChart"`
 	BuyOfferChart         DetailChartMetadataResponse   `json:"buyOfferChart"`
 }
@@ -44,7 +44,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 
 	if !ok {
 		return types.ServerResponse{}, types.ApiError{
-			Msg:      "Assertion failed, data is not an array of CogSku",
+			Msg:      "Assertion failed, data is not an array of GoodRecord",
 			Function: "Format",
 			File:     "detail-presenter.go",
 		}
@@ -55,7 +55,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 	var (
 		buyOfferTotal        int
 		sellOfferTotal       int
-		cogSkuResponseList   []types.CogSkuResponse
+		cogSkuResponseList   []types.GoodResponse
 		lowestSellPrice      types.Tick
 		highestSellPrice     types.Tick
 		lowestBuyPrice       types.Tick
@@ -95,7 +95,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 			highestBuyPrice.Date = cogSku.Date.Format(time.DateOnly)
 		}
 
-		cogSkuResponseList = append(cogSkuResponseList, types.CogSkuResponse{
+		cogSkuResponseList = append(cogSkuResponseList, types.GoodResponse{
 			BuyOffer:  cogSku.BuyPrice,
 			SellOffer: cogSku.SellPrice,
 			Date:      cogSku.Date.Format(time.DateOnly),

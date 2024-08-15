@@ -34,7 +34,7 @@ func NewKillStatisticsCron() *KillStatisticsCron {
 	return &KillStatisticsCron{}
 }
 
-func (kc *KillStatisticsCron) Execute(cogs []types.Cog) ([]types.KillStatistic, error) {
+func (kc *KillStatisticsCron) Execute(cogs []types.Good) ([]types.KillStatistic, error) {
 	url := fmt.Sprintf(
 		"%s/%s/%s/%s",
 		constants.TibiaDataApiBaseUrl,
@@ -95,7 +95,7 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Cog) ([]types.KillStatistic, 
 	}
 
 	for _, cog := range cogs {
-		for _, creature := range cog.Creatures {
+		for _, creature := range cog.Drop {
 			id := uuid.New()
 
 			name := kc.pluralize(creature.Name)

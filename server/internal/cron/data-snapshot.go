@@ -9,13 +9,13 @@ import (
 )
 
 type DataSnapshotCron struct {
-	cogRepository          types.Repository[types.Cog]
+	cogRepository          types.Repository[types.Good]
 	dataSnapshotRepository types.Repository[types.DataSnapshot]
 	service                *service.DetailService
 }
 
 func NewDataSnapshotCron(
-	cogRepository types.Repository[types.Cog],
+	cogRepository types.Repository[types.Good],
 	dataSnapshotRepository types.Repository[types.DataSnapshot],
 	service *service.DetailService,
 ) *DataSnapshotCron {

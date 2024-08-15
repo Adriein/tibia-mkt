@@ -2,36 +2,36 @@ package repository
 
 import (
 	"database/sql"
-	"github.com/adriein/tibia-mkt/pkg/constants"
+	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
 )
 
-type PgTibiaCoinRepository struct {
+type PgGoodRecordRepository struct {
 	connection  *sql.DB
 	transformer *service.CriteriaToSqlService
 	name        string
 }
 
-func NewPgTibiaCoinRepository(connection *sql.DB) *PgTibiaCoinRepository {
-	transformer := service.NewCriteriaToSqlService("tibia_coin")
+func NewPgGoodRecordRepository(connection *sql.DB, name string) *PgGoodRecordRepository {
+	transformer := service.NewCriteriaToSqlService(name)
 
-	return &PgTibiaCoinRepository{
+	return &PgGoodRecordRepository{
 		connection:  connection,
 		transformer: transformer,
-		name:        constants.TibiaCoinEntity,
+		name:        name,
 	}
 }
 
-func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.GoodRecord, error) {
+func (r *PgGoodRecordRepository) Find(criteria types.Criteria) ([]types.GoodRecord, error) {
 	query, err := r.transformer.Transform(criteria)
 
 	if err != nil {
 		return nil, types.ApiError{
 			Msg:      err.Error(),
 			Function: "Find -> r.transformer.Transform()",
-			File:     "pg-tibia-coin-repository.go",
+			File:     fmt.Sprintf("pg-%s-repository.go", r.name),
 		}
 	}
 
@@ -41,7 +41,7 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.GoodRecor
 		return nil, types.ApiError{
 			Msg:      queryErr.Error(),
 			Function: "Find -> r.connection.Query()",
-			File:     "pg-tibia-coin-repository.go",
+			File:     fmt.Sprintf("pg-%s-repository.go", r.name),
 		}
 	}
 
@@ -62,7 +62,7 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.GoodRecor
 			return nil, types.ApiError{
 				Msg:      scanErr.Error(),
 				Function: "Find -> rows.Scan()",
-				File:     "pg-tibia-coin-repository.go",
+				File:     fmt.Sprintf("pg-%s-repository.go", r.name),
 			}
 		}
 
@@ -75,13 +75,13 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.GoodRecor
 			return nil, types.ApiError{
 				Msg:      timeParseErr.Error(),
 				Function: "Find -> time.Parse()",
-				File:     "pg-tibia-coin-repository.go",
+				File:     fmt.Sprintf("pg-%s-repository.go", r.name),
 			}
 		}
 
 		results = append(results, types.GoodRecord{
 			Id:        id,
-			ItemName:  constants.TibiaCoinEntity,
+			ItemName:  r.name,
 			Date:      parsedDate,
 			BuyPrice:  buyPrice,
 			SellPrice: sellPrice,
@@ -92,8 +92,8 @@ func (r *PgTibiaCoinRepository) Find(criteria types.Criteria) ([]types.GoodRecor
 	return results, nil
 }
 
-func (r *PgTibiaCoinRepository) Save(entity types.GoodRecord) error {
-	var query = `INSERT INTO tibia_coin (id, world, date, buy_price, sell_price) VALUES ($1, $2, $3, $4, $5)`
+func (r *PgGoodRecordRepository) Save(entity types.GoodRecord) error {
+	var query = fmt.Sprintf("INSERT INTO %s (id, world, date, buy_price, sell_price) VALUES ($1, $2, $3, $4, $5)", r.name)
 
 	_, err := r.connection.Exec(
 		query,
@@ -108,13 +108,13 @@ func (r *PgTibiaCoinRepository) Save(entity types.GoodRecord) error {
 		return types.ApiError{
 			Msg:      err.Error(),
 			Function: "Save -> r.connection.Exec()",
-			File:     "pg-tibia-coin-repository.go",
+			File:     fmt.Sprintf("pg-%s-repository.go", r.name),
 		}
 	}
 
 	return nil
 }
 
-func (r *PgTibiaCoinRepository) GoodName() string {
+func (r *PgGoodRecordRepository) GoodName() string {
 	return r.name
 }

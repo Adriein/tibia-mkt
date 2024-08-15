@@ -34,7 +34,7 @@ func NewBestSellValueAlgorithm(config *trade_engine.TradeEngineConfig, prob *ser
 	return &BestSellValue{config: config, prob: prob}
 }
 
-func (bsv *BestSellValue) Apply(cogs []types.CogSku) (BestSellValueResult, error) {
+func (bsv *BestSellValue) Apply(cogs []types.GoodRecord) (BestSellValueResult, error) {
 	var (
 		frequencyResults []SellOfferFrequency
 	)

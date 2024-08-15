@@ -14,7 +14,7 @@ type KeyValue struct {
 }
 
 type DetailService struct {
-	cogRepository           types.Repository[types.Cog]
+	cogRepository           types.Repository[types.Good]
 	killStatisticRepository types.Repository[types.KillStatistic]
 	dataSnapshotRepository  types.Repository[types.DataSnapshot]
 	repoFactory             *RepositoryFactory
@@ -22,7 +22,7 @@ type DetailService struct {
 }
 
 func NewDetailService(
-	cogRepository types.Repository[types.Cog],
+	cogRepository types.Repository[types.Good],
 	killStatisticRepository types.Repository[types.KillStatistic],
 	dataSnapshotRepository types.Repository[types.DataSnapshot],
 	repoFactory *RepositoryFactory,
@@ -79,7 +79,7 @@ func (s *DetailService) Execute(cog string) (types.Detail, error) {
 	}, nil
 }
 
-func (s *DetailService) getCogInformation(itemName string) (types.Cog, error) {
+func (s *DetailService) getCogInformation(itemName string) (types.Good, error) {
 	var filters []types.Filter
 
 	filters = append(filters, types.Filter{
@@ -93,13 +93,13 @@ func (s *DetailService) getCogInformation(itemName string) (types.Cog, error) {
 	result, err := s.cogRepository.FindOne(criteria)
 
 	if err != nil {
-		return types.Cog{}, err
+		return types.Good{}, err
 	}
 
 	return result, nil
 }
 
-func (s *DetailService) getCogData(cog string) ([]types.CogSku, error) {
+func (s *DetailService) getCogData(cog string) ([]types.GoodRecord, error) {
 	repository := s.repoFactory.Get(cog)
 
 	var filters []types.Filter
@@ -115,10 +115,10 @@ func (s *DetailService) getCogData(cog string) ([]types.CogSku, error) {
 	return cogs, nil
 }
 
-func (s *DetailService) getKillStatistics(cog types.Cog) ([]types.CreatureKillStatistic, error) {
+func (s *DetailService) getKillStatistics(cog types.Good) ([]types.CreatureKillStatistic, error) {
 	var creatureKillStatistics []types.CreatureKillStatistic
 
-	for _, creature := range cog.Creatures {
+	for _, creature := range cog.Drop {
 		var filters []types.Filter
 
 		filters = append(
@@ -155,7 +155,7 @@ func (s *DetailService) getKillStatistics(cog types.Cog) ([]types.CreatureKillSt
 	return creatureKillStatistics, nil
 }
 
-func (s *DetailService) buildPriceFrequencyChart(cogs []types.CogSku) ([]types.SellOfferFrequency, []int) {
+func (s *DetailService) buildPriceFrequencyChart(cogs []types.GoodRecord) ([]types.SellOfferFrequency, []int) {
 	var frequencyResults []types.SellOfferFrequency
 
 	priceRanges := make(map[string]int)

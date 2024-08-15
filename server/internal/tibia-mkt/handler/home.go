@@ -20,7 +20,7 @@ func NewHomeHandler(factory *service.RepositoryFactory, presenter types.Presente
 }
 
 func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
-	var repositoryResponseMatrix [][]types.CogSku
+	var repositoryResponseMatrix [][]types.GoodRecord
 
 	paramsMap := r.URL.Query()
 

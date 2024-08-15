@@ -25,15 +25,15 @@ type SeedRequest struct {
 }
 
 type SeedHandler struct {
-	csvRepository     types.CogRepository
+	csvRepository     types.GoodRecordRepository
 	repositoryFactory *service.RepositoryFactory
-	cogRepository     types.Repository[types.Cog]
+	cogRepository     types.Repository[types.Good]
 }
 
 func NewSeedHandler(
-	csvRepository types.CogRepository,
+	csvRepository types.GoodRecordRepository,
 	repositoryFactory *service.RepositoryFactory,
-	cogRepository types.Repository[types.Cog],
+	cogRepository types.Repository[types.Good],
 ) *SeedHandler {
 	return &SeedHandler{
 		csvRepository:     csvRepository,
@@ -59,17 +59,17 @@ func (h *SeedHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 
 		id := uuid.New()
 
-		creatures := make([]types.CogCreature, len(item.Creatures))
+		creatures := make([]types.GoodDrop, len(item.Creatures))
 
 		for index, creature := range item.Creatures {
-			creatures[index] = types.CogCreature{Name: creature.Name, DropRate: creature.DropRate}
+			creatures[index] = types.GoodDrop{Name: creature.Name, DropRate: creature.DropRate}
 		}
 
-		cog := types.Cog{
+		cog := types.Good{
 			Id:        id.String(),
 			Name:      item.Name,
 			Link:      item.Wiki,
-			Creatures: creatures,
+			Drop:      creatures,
 			CreatedAt: time.Now().UTC(),
 			UpdatedAt: time.Now().UTC(),
 		}

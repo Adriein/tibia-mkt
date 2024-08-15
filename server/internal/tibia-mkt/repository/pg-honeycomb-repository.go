@@ -24,7 +24,7 @@ func NewPgHoneycombRepository(connection *sql.DB) *PgHoneycombRepository {
 	}
 }
 
-func (r *PgHoneycombRepository) Find(criteria types.Criteria) ([]types.CogSku, error) {
+func (r *PgHoneycombRepository) Find(criteria types.Criteria) ([]types.GoodRecord, error) {
 	query, err := r.transformer.Transform(criteria)
 
 	if err != nil {
@@ -55,7 +55,7 @@ func (r *PgHoneycombRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 		sell_price float64
 	)
 
-	var results []types.CogSku
+	var results []types.GoodRecord
 
 	for rows.Next() {
 		if scanErr := rows.Scan(&id, &world, &date, &buy_price, &sell_price); scanErr != nil {
@@ -79,7 +79,7 @@ func (r *PgHoneycombRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 			}
 		}
 
-		results = append(results, types.CogSku{
+		results = append(results, types.GoodRecord{
 			Id:        id,
 			ItemName:  constants.HoneycombEntity,
 			Date:      parsedDate,
@@ -92,7 +92,7 @@ func (r *PgHoneycombRepository) Find(criteria types.Criteria) ([]types.CogSku, e
 	return results, nil
 }
 
-func (r *PgHoneycombRepository) Save(entity types.CogSku) error {
+func (r *PgHoneycombRepository) Save(entity types.GoodRecord) error {
 	var query = `INSERT INTO honeycomb (id, world, date, buy_price, sell_price) VALUES ($1, $2, $3, $4, $5)`
 
 	_, err := r.connection.Exec(
@@ -115,6 +115,6 @@ func (r *PgHoneycombRepository) Save(entity types.CogSku) error {
 	return nil
 }
 
-func (r *PgHoneycombRepository) EntityName() string {
+func (r *PgHoneycombRepository) GoodName() string {
 	return r.name
 }
