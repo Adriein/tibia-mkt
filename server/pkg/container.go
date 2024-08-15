@@ -5,7 +5,6 @@ import (
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
 	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
-	"unicode"
 )
 
 type Container struct {
@@ -30,21 +29,8 @@ func (c *Container) NewGoodRecordRepositoryFactory() (*service.RepositoryFactory
 	var repositories = make([]types.GoodRecordRepository, len(goods))
 
 	for index, good := range goods {
-		repositories[index] = repository.NewPgGoodRecordRepository(c.database, c.camelToSnake(good.Name))
+		repositories[index] = repository.NewPgGoodRecordRepository(c.database, service.CamelToSnake(good.Name))
 	}
 
 	return service.NewRepositoryFactory(repositories), nil
-}
-
-func (c *Container) camelToSnake(str string) string {
-	var result []rune
-
-	for i, char := range str {
-		if unicode.IsUpper(char) && i > 0 {
-			result = append(result, '_')
-		}
-		result = append(result, unicode.ToLower(char))
-	}
-
-	return string(result)
 }

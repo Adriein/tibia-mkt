@@ -81,7 +81,7 @@ func (r *PgGoodRecordRepository) Find(criteria types.Criteria) ([]types.GoodReco
 
 		results = append(results, types.GoodRecord{
 			Id:        id,
-			ItemName:  r.name,
+			ItemName:  service.SnakeToCamel(r.name),
 			Date:      parsedDate,
 			BuyPrice:  buyPrice,
 			SellPrice: sellPrice,

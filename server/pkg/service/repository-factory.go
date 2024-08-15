@@ -19,5 +19,7 @@ func NewRepositoryFactory(repositories []types.GoodRecordRepository) *Repository
 }
 
 func (r *RepositoryFactory) Get(repository string) types.GoodRecordRepository {
-	return r.repositories[repository]
+	snakeCaseName := CamelToSnake(repository)
+
+	return r.repositories[snakeCaseName]
 }
