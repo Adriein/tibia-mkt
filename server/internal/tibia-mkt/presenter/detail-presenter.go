@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type CogAverage struct {
+type GoodAverage struct {
 	OfferType string `json:"offerType"`
 	Average   int    `json:"average"`
 }
@@ -20,7 +20,7 @@ type SellOfferProbability struct {
 type DetailChartMetadataResponse struct {
 	XAxisTick     []string     `json:"xAxisTick"`
 	YAxisTick     []types.Tick `json:"yAxisTick"`
-	ReferenceLine CogAverage   `json:"referenceLine"`
+	ReferenceLine GoodAverage  `json:"referenceLine"`
 }
 
 type DetailResponse struct {
@@ -28,7 +28,7 @@ type DetailResponse struct {
 	Creatures             []types.CreatureKillStatistic `json:"creatures"`
 	SellOfferHistoricData []types.DataSnapshot          `json:"sellOfferHistoricData"`
 	SellOfferProbability  SellOfferProbability          `json:"sellOfferProbability"`
-	Cog                   []types.GoodResponse          `json:"cog"`
+	Good                  []types.GoodResponse          `json:"good"`
 	SellOfferChart        DetailChartMetadataResponse   `json:"sellOfferChart"`
 	BuyOfferChart         DetailChartMetadataResponse   `json:"buyOfferChart"`
 }
@@ -50,12 +50,12 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 		}
 	}
 
-	cogSkuList := input.Cog
+	goodSkuList := input.GoodRecord
 
 	var (
 		buyOfferTotal        int
 		sellOfferTotal       int
-		cogSkuResponseList   []types.GoodResponse
+		goodSkuResponseList  []types.GoodResponse
 		lowestSellPrice      types.Tick
 		highestSellPrice     types.Tick
 		lowestBuyPrice       types.Tick
@@ -66,40 +66,40 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 		buyOfferXAxisDomain  []string
 	)
 
-	highestSellPrice = types.Tick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
-	lowestSellPrice = types.Tick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
-	lowestBuyPrice = types.Tick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
-	highestBuyPrice = types.Tick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].Date.Format(time.DateOnly)}
+	highestSellPrice = types.Tick{Price: goodSkuList[0].SellPrice, Date: goodSkuList[0].Date.Format(time.DateOnly)}
+	lowestSellPrice = types.Tick{Price: goodSkuList[0].SellPrice, Date: goodSkuList[0].Date.Format(time.DateOnly)}
+	lowestBuyPrice = types.Tick{Price: goodSkuList[0].BuyPrice, Date: goodSkuList[0].Date.Format(time.DateOnly)}
+	highestBuyPrice = types.Tick{Price: goodSkuList[0].BuyPrice, Date: goodSkuList[0].Date.Format(time.DateOnly)}
 
-	for _, cogSku := range cogSkuList {
-		buyOfferTotal = buyOfferTotal + cogSku.BuyPrice
-		sellOfferTotal = sellOfferTotal + cogSku.SellPrice
+	for _, goodSku := range goodSkuList {
+		buyOfferTotal = buyOfferTotal + goodSku.BuyPrice
+		sellOfferTotal = sellOfferTotal + goodSku.SellPrice
 
-		if highestSellPrice.Price < cogSku.SellPrice {
-			highestSellPrice.Price = cogSku.SellPrice
-			highestSellPrice.Date = cogSku.Date.Format(time.DateOnly)
+		if highestSellPrice.Price < goodSku.SellPrice {
+			highestSellPrice.Price = goodSku.SellPrice
+			highestSellPrice.Date = goodSku.Date.Format(time.DateOnly)
 		}
 
-		if lowestSellPrice.Price > cogSku.SellPrice {
-			lowestSellPrice.Price = cogSku.SellPrice
-			lowestSellPrice.Date = cogSku.Date.Format(time.DateOnly)
+		if lowestSellPrice.Price > goodSku.SellPrice {
+			lowestSellPrice.Price = goodSku.SellPrice
+			lowestSellPrice.Date = goodSku.Date.Format(time.DateOnly)
 		}
 
-		if lowestBuyPrice.Price > cogSku.BuyPrice {
-			lowestBuyPrice.Price = cogSku.BuyPrice
-			lowestBuyPrice.Date = cogSku.Date.Format(time.DateOnly)
+		if lowestBuyPrice.Price > goodSku.BuyPrice {
+			lowestBuyPrice.Price = goodSku.BuyPrice
+			lowestBuyPrice.Date = goodSku.Date.Format(time.DateOnly)
 		}
 
-		if highestBuyPrice.Price < cogSku.BuyPrice {
-			highestBuyPrice.Price = cogSku.BuyPrice
-			highestBuyPrice.Date = cogSku.Date.Format(time.DateOnly)
+		if highestBuyPrice.Price < goodSku.BuyPrice {
+			highestBuyPrice.Price = goodSku.BuyPrice
+			highestBuyPrice.Date = goodSku.Date.Format(time.DateOnly)
 		}
 
-		cogSkuResponseList = append(cogSkuResponseList, types.GoodResponse{
-			BuyOffer:  cogSku.BuyPrice,
-			SellOffer: cogSku.SellPrice,
-			Date:      cogSku.Date.Format(time.DateOnly),
-			World:     cogSku.World,
+		goodSkuResponseList = append(goodSkuResponseList, types.GoodResponse{
+			BuyOffer:  goodSku.BuyPrice,
+			SellOffer: goodSku.SellPrice,
+			Date:      goodSku.Date.Format(time.DateOnly),
+			World:     goodSku.World,
 		})
 	}
 
@@ -141,21 +141,21 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 		Creatures:             creatures,
 		SellOfferHistoricData: input.SellOfferHistoricData,
 		SellOfferProbability:  probability,
-		Cog:                   cogSkuResponseList,
+		Good:                  goodSkuResponseList,
 		SellOfferChart: DetailChartMetadataResponse{
 			YAxisTick: sellOfferYAxisDomain,
 			XAxisTick: sellOfferXAxisDomain,
-			ReferenceLine: CogAverage{
+			ReferenceLine: GoodAverage{
 				OfferType: constants.SellOfferType,
-				Average:   p.calculateAverage(sellOfferTotal, len(cogSkuList)),
+				Average:   p.calculateAverage(sellOfferTotal, len(goodSkuList)),
 			},
 		},
 		BuyOfferChart: DetailChartMetadataResponse{
 			YAxisTick: buyOfferYAxisDomain,
 			XAxisTick: buyOfferXAxisDomain,
-			ReferenceLine: CogAverage{
+			ReferenceLine: GoodAverage{
 				OfferType: constants.BuyOfferType,
-				Average:   p.calculateAverage(buyOfferTotal, len(cogSkuList)),
+				Average:   p.calculateAverage(buyOfferTotal, len(goodSkuList)),
 			},
 		},
 	}
@@ -168,10 +168,10 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 	return response, nil
 }
 
-func (p *DetailPresenter) calculateAverage(totalSumCog int, totalNumCog int) int {
-	if totalNumCog == 0 {
+func (p *DetailPresenter) calculateAverage(totalSumGood int, totalNumGood int) int {
+	if totalNumGood == 0 {
 		return 0
 	}
 
-	return totalSumCog / totalNumCog
+	return totalSumGood / totalNumGood
 }

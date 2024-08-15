@@ -38,6 +38,7 @@ func (r *PgDataSnapshotRepository) Find(criteria types.Criteria) ([]types.DataSn
 			Msg:      queryErr.Error(),
 			Function: "Find -> r.connection.Query()",
 			File:     "pg-data-snapshot-repository.go",
+			Values:   []string{query},
 		}
 	}
 

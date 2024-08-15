@@ -14,7 +14,7 @@ type KeyValue struct {
 }
 
 type DetailService struct {
-	cogRepository           types.Repository[types.Good]
+	goodRepository          types.Repository[types.Good]
 	killStatisticRepository types.Repository[types.KillStatistic]
 	dataSnapshotRepository  types.Repository[types.DataSnapshot]
 	repoFactory             *RepositoryFactory
@@ -22,14 +22,14 @@ type DetailService struct {
 }
 
 func NewDetailService(
-	cogRepository types.Repository[types.Good],
+	goodRepository types.Repository[types.Good],
 	killStatisticRepository types.Repository[types.KillStatistic],
 	dataSnapshotRepository types.Repository[types.DataSnapshot],
 	repoFactory *RepositoryFactory,
 	prob *ProbHelper,
 ) *DetailService {
 	return &DetailService{
-		cogRepository:           cogRepository,
+		goodRepository:          goodRepository,
 		killStatisticRepository: killStatisticRepository,
 		dataSnapshotRepository:  dataSnapshotRepository,
 		repoFactory:             repoFactory,
@@ -37,28 +37,28 @@ func NewDetailService(
 	}
 }
 
-func (s *DetailService) Execute(cog string) (types.Detail, error) {
-	cogDetail, cogErr := s.getCogInformation(cog)
+func (s *DetailService) Execute(good string) (types.Detail, error) {
+	goodDetail, goodErr := s.getGoodInformation(good)
 
-	if cogErr != nil {
-		return types.Detail{}, cogErr
+	if goodErr != nil {
+		return types.Detail{}, goodErr
 	}
 
-	cogs, cogDataErr := s.getCogData(cog)
+	goods, goodsDataErr := s.getGoodData(good)
 
-	if cogDataErr != nil {
-		return types.Detail{}, cogDataErr
+	if goodsDataErr != nil {
+		return types.Detail{}, goodsDataErr
 	}
 
-	killStatistics, killStatisticErr := s.getKillStatistics(cogDetail)
+	killStatistics, killStatisticErr := s.getKillStatistics(goodDetail)
 
 	if killStatisticErr != nil {
 		killStatistics = make([]types.CreatureKillStatistic, 0)
 	}
 
-	frequencyChart, prices := s.buildPriceFrequencyChart(cogs)
+	frequencyChart, prices := s.buildPriceFrequencyChart(goods)
 
-	historicData, historicDataErr := s.get15DaysSellOfferHistoricData(cog)
+	historicData, historicDataErr := s.get15DaysSellOfferHistoricData(good)
 
 	if historicDataErr != nil {
 		return types.Detail{}, historicDataErr
@@ -69,8 +69,8 @@ func (s *DetailService) Execute(cog string) (types.Detail, error) {
 	}
 
 	return types.Detail{
-		Wiki:                  cogDetail.Link,
-		Cog:                   cogs,
+		Wiki:                  goodDetail.Link,
+		GoodRecord:            goods,
 		Creatures:             killStatistics,
 		SellPriceMean:         int(s.prob.Mean(prices)),
 		StdDeviation:          s.prob.StdDeviation(prices),
@@ -79,7 +79,7 @@ func (s *DetailService) Execute(cog string) (types.Detail, error) {
 	}, nil
 }
 
-func (s *DetailService) getCogInformation(itemName string) (types.Good, error) {
+func (s *DetailService) getGoodInformation(itemName string) (types.Good, error) {
 	var filters []types.Filter
 
 	filters = append(filters, types.Filter{
@@ -90,7 +90,7 @@ func (s *DetailService) getCogInformation(itemName string) (types.Good, error) {
 
 	criteria := types.Criteria{Filters: filters}
 
-	result, err := s.cogRepository.FindOne(criteria)
+	result, err := s.goodRepository.FindOne(criteria)
 
 	if err != nil {
 		return types.Good{}, err
@@ -99,26 +99,26 @@ func (s *DetailService) getCogInformation(itemName string) (types.Good, error) {
 	return result, nil
 }
 
-func (s *DetailService) getCogData(cog string) ([]types.GoodRecord, error) {
-	repository := s.repoFactory.Get(cog)
+func (s *DetailService) getGoodData(good string) ([]types.GoodRecord, error) {
+	repository := s.repoFactory.Get(good)
 
 	var filters []types.Filter
 
 	filters = append(filters, types.Filter{Name: "world", Operand: constants.Equal, Value: constants.WorldSecura})
 
-	cogs, repositoryErr := repository.Find(types.Criteria{Filters: filters})
+	goods, repositoryErr := repository.Find(types.Criteria{Filters: filters})
 
 	if repositoryErr != nil {
 		return nil, repositoryErr
 	}
 
-	return cogs, nil
+	return goods, nil
 }
 
-func (s *DetailService) getKillStatistics(cog types.Good) ([]types.CreatureKillStatistic, error) {
+func (s *DetailService) getKillStatistics(good types.Good) ([]types.CreatureKillStatistic, error) {
 	var creatureKillStatistics []types.CreatureKillStatistic
 
-	for _, creature := range cog.Drop {
+	for _, creature := range good.Drop {
 		var filters []types.Filter
 
 		filters = append(
@@ -155,16 +155,16 @@ func (s *DetailService) getKillStatistics(cog types.Good) ([]types.CreatureKillS
 	return creatureKillStatistics, nil
 }
 
-func (s *DetailService) buildPriceFrequencyChart(cogs []types.GoodRecord) ([]types.SellOfferFrequency, []int) {
+func (s *DetailService) buildPriceFrequencyChart(goods []types.GoodRecord) ([]types.SellOfferFrequency, []int) {
 	var frequencyResults []types.SellOfferFrequency
 
 	priceRanges := make(map[string]int)
-	prices := make([]int, len(cogs))
+	prices := make([]int, len(goods))
 
-	for i := 0; i < len(cogs); i++ {
-		prices[i] = cogs[i].SellPrice
+	for i := 0; i < len(goods); i++ {
+		prices[i] = goods[i].SellPrice
 
-		rangeStart := (cogs[i].SellPrice / 100) * 100
+		rangeStart := (goods[i].SellPrice / 100) * 100
 		rangeEnd := rangeStart + 99
 
 		rangeStr := fmt.Sprintf("%d-%d", rangeStart, rangeEnd)
@@ -175,7 +175,7 @@ func (s *DetailService) buildPriceFrequencyChart(cogs []types.GoodRecord) ([]typ
 	sortedKeyValue := s.sortFrequencyMap(priceRanges)
 
 	for _, keyValue := range sortedKeyValue {
-		frequency := float64(keyValue.Value) / float64(len(cogs))
+		frequency := float64(keyValue.Value) / float64(len(goods))
 
 		frequencyResults = append(
 			frequencyResults,
@@ -199,14 +199,14 @@ func (s *DetailService) sortFrequencyMap(priceRanges map[string]int) []KeyValue 
 	return result
 }
 
-func (s *DetailService) get15DaysSellOfferHistoricData(cog string) ([]types.DataSnapshot, error) {
+func (s *DetailService) get15DaysSellOfferHistoricData(good string) ([]types.DataSnapshot, error) {
 	filters := make([]types.Filter, 3)
 
 	now := time.Now()
 
 	fifteenDaysAgo := now.AddDate(0, 0, -15).Format(time.DateOnly)
 
-	filters[0] = types.Filter{Name: "cog", Operand: constants.Equal, Value: cog}
+	filters[0] = types.Filter{Name: "cog", Operand: constants.Equal, Value: good}
 	filters[1] = types.Filter{Name: "created_at", Operand: constants.GreaterThanOrEqual, Value: fifteenDaysAgo}
 	filters[2] = types.Filter{Name: "created_at", Operand: constants.LessThanOrEqual, Value: now.Format(time.DateTime)}
 
