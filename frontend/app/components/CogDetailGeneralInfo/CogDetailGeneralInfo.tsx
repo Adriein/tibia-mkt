@@ -1,6 +1,6 @@
 import {ActionIcon, Card, Group, Modal, Text, Timeline, Tooltip} from "@mantine/core";
 import {BarChart} from "@mantine/charts";
-import {IconHistory, IconBinary} from '@tabler/icons-react';
+import {IconHistory, IconBinary, IconEqual, IconArrowUp, IconArrowDown} from '@tabler/icons-react';
 import classes from "./CogDetailGeneralInfo.module.css";
 import {DetailCreature, SellOfferFrequency, SellOfferHistoricData, SellOfferProbability} from "~/shared/types";
 import {useDisclosure} from "@mantine/hooks";
@@ -42,6 +42,71 @@ const calculateDropEstimation = (creatures: DetailCreature[]): number => {
 
         return total;
     }, 0));
+}
+
+const countMajorTendency = (tendency: string[]): string => {
+    let value = 0;
+    let maxKey = null;
+
+    const counter = tendency.reduce((counts: Record<string, number>, direction: string) => {
+        counts[direction]++;
+
+        return counts;
+    }, { up: 0, down: 0, equal: 0 });
+
+    for (const key in counter) {
+        if (counter[key] > value) {
+            maxKey = key;
+            value = counter[key];
+        }
+    }
+
+    return maxKey as string;
+}
+
+const renderHistoricTrendIcon = (context: string, data: SellOfferHistoricData[]) => {
+    const tendency: string[] = [];
+    let previousValue: number = 0;
+
+    const last7DaysPortion: SellOfferHistoricData[] = data.slice(data.length - 8, data.length - 1);
+
+    for (const sellOfferHistoricData of last7DaysPortion) {
+        if(tendency.length === 7) {
+            break;
+        }
+
+        const value: number = sellOfferHistoricData[context as keyof SellOfferHistoricData] as number;
+
+        if (previousValue > value) {
+            tendency.push("down");
+
+            previousValue = value
+        }
+
+        if (previousValue === value) {
+            tendency.push("equal");
+
+            previousValue = value
+        }
+
+        if (previousValue < value) {
+            tendency.push("up");
+
+            previousValue = value
+        }
+    }
+
+    const result: string = countMajorTendency(tendency);
+
+    if (result === "up") {
+        return <IconArrowUp />
+    }
+
+    if (result === "equal") {
+        return <IconEqual />
+    }
+
+    return <IconArrowDown/>
 }
 
 export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: CogDetailGeneralInfoProps) {
@@ -104,7 +169,10 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: 
                             </ActionIcon>
                         </Tooltip>
                     </Group>
-                    <Text size="xl" fw={500}>{data.mean} gp</Text>
+                    <Group>
+                        <Text size="xl" fw={500}>{data.mean} gp</Text>
+                        {renderHistoricTrendIcon(MEAN_HISTORY_MODAL, historic)}
+                    </Group>
                 </Card>
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Group>
@@ -119,12 +187,15 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: 
                             </ActionIcon>
                         </Tooltip>
                     </Group>
-                    <Text size="xl" fw={500}>
-                        {new Intl.NumberFormat('en-US', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                        }).format(data.stdDeviation)} gp
-                    </Text>
+                    <Group>
+                        <Text size="xl" fw={500}>
+                            {new Intl.NumberFormat('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            }).format(data.stdDeviation)} gp
+                        </Text>
+                        {renderHistoricTrendIcon(STD_DEVIATION_MODAL, historic)}
+                    </Group>
                 </Card>
                 {creatures.length &&
                     <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
@@ -140,9 +211,12 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: 
                                 </ActionIcon>
                             </Tooltip>
                         </Group>
-                        <Text size="xl" fw={500}>
-                            {new Intl.NumberFormat('en-US').format(calculateDropEstimation(creatures))}
-                        </Text>
+                        <Group>
+                            <Text size="xl" fw={500}>
+                                {new Intl.NumberFormat('en-US').format(calculateDropEstimation(creatures))}
+                            </Text>
+                            {renderHistoricTrendIcon(TOTAL_DROPPED_MODAL, historic)}
+                        </Group>
                     </Card>
                 }
             </Group>
