@@ -16,10 +16,10 @@ type HomeResponse struct {
 }
 
 type CogChartResponse struct {
-	Wiki         string                `json:"wiki"`
-	Cogs         []types.GoodResponse  `json:"cogs"`
-	Chart        ChartMetadataResponse `json:"chartMetadata"`
-	PagePosition int8                  `json:"pagePosition"`
+	Wiki         string                     `json:"wiki"`
+	Cogs         []types.GoodRecordResponse `json:"cogs"`
+	Chart        ChartMetadataResponse      `json:"chartMetadata"`
+	PagePosition int8                       `json:"pagePosition"`
 }
 
 type HomePresenter struct {
@@ -51,7 +51,7 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 		var (
 			buyOfferTotal      int
 			sellOfferTotal     int
-			cogSkuResponseList []types.GoodResponse
+			cogSkuResponseList []types.GoodRecordResponse
 			highestSellPrice   types.Tick
 			lowestBuyPrice     types.Tick
 			yAxisDomain        []types.Tick
@@ -75,7 +75,7 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 				lowestBuyPrice.Date = cogSku.Date.Format(time.DateOnly)
 			}
 
-			cogSkuResponseList = append(cogSkuResponseList, types.GoodResponse{
+			cogSkuResponseList = append(cogSkuResponseList, types.GoodRecordResponse{
 				BuyOffer:  cogSku.BuyPrice,
 				SellOffer: cogSku.SellPrice,
 				Date:      cogSku.Date.Format(time.DateOnly),

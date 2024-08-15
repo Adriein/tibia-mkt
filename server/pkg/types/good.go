@@ -38,7 +38,7 @@ type GoodRecordInterval struct {
 	To   string
 }
 
-type GoodResponse struct {
+type GoodRecordResponse struct {
 	BuyOffer  int    `json:"buyOffer"`
 	SellOffer int    `json:"sellOffer"`
 	Date      string `json:"date"`

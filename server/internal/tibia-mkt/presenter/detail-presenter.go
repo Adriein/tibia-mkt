@@ -28,7 +28,7 @@ type DetailResponse struct {
 	Creatures             []types.CreatureKillStatistic `json:"creatures"`
 	SellOfferHistoricData []types.DataSnapshot          `json:"sellOfferHistoricData"`
 	SellOfferProbability  SellOfferProbability          `json:"sellOfferProbability"`
-	Cogs                  []types.GoodResponse          `json:"cogs"`
+	Cogs                  []types.GoodRecordResponse    `json:"cogs"`
 	SellOfferChart        DetailChartMetadataResponse   `json:"sellOfferChart"`
 	BuyOfferChart         DetailChartMetadataResponse   `json:"buyOfferChart"`
 }
@@ -55,7 +55,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 	var (
 		buyOfferTotal        int
 		sellOfferTotal       int
-		goodSkuResponseList  []types.GoodResponse
+		goodSkuResponseList  []types.GoodRecordResponse
 		lowestSellPrice      types.Tick
 		highestSellPrice     types.Tick
 		lowestBuyPrice       types.Tick
@@ -95,7 +95,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 			highestBuyPrice.Date = goodSku.Date.Format(time.DateOnly)
 		}
 
-		goodSkuResponseList = append(goodSkuResponseList, types.GoodResponse{
+		goodSkuResponseList = append(goodSkuResponseList, types.GoodRecordResponse{
 			BuyOffer:  goodSku.BuyPrice,
 			SellOffer: goodSku.SellPrice,
 			Date:      goodSku.Date.Format(time.DateOnly),
