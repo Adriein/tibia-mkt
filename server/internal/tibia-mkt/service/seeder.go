@@ -1,8 +1,7 @@
 package service
 
 import (
-	"database/sql"
-	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"github.com/google/uuid"
 	"time"
@@ -12,20 +11,20 @@ type Seeder struct {
 	csvRepository types.GoodRecordRepository
 	cogRepository types.Repository[types.Good]
 	cron          *DataSnapshotCron
-	database      *sql.DB
+	factory       *helper.RepositoryFactory
 }
 
 func NewSeeder(
 	csvRepository types.GoodRecordRepository,
 	cogRepository types.Repository[types.Good],
 	cron *DataSnapshotCron,
-	database *sql.DB,
+	factory *helper.RepositoryFactory,
 ) *Seeder {
 	return &Seeder{
 		csvRepository: csvRepository,
 		cogRepository: cogRepository,
 		cron:          cron,
-		database:      database,
+		factory:       factory,
 	}
 }
 
@@ -54,7 +53,7 @@ func (s *Seeder) Execute(request types.SeedRequest) error {
 	}
 
 	for _, item := range request.Items {
-		repo := repository.NewPgGoodRecordRepository(s.database, item.Name)
+		repo := s.factory.Get(item.Name)
 
 		var filters []types.Filter
 

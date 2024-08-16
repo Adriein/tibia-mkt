@@ -67,15 +67,11 @@ func main() {
 func createHomeHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
 	pgGoodRepository := repository.NewPgGoodRepository(database)
 
-	container := pkg.NewContainer(database, pgGoodRepository)
+	container := pkg.NewContainer(database)
 
 	homePresenter := presenter.NewHomePresenter(pgGoodRepository)
 
-	factory, err := container.NewGoodRecordRepositoryFactory()
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	factory := container.NewGoodRecordRepositoryFactory()
 
 	home := handler.NewHomeHandler(factory, homePresenter)
 
@@ -85,15 +81,11 @@ func createHomeHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
 	pgGoodRepository := repository.NewPgGoodRepository(database)
 
-	container := pkg.NewContainer(database, pgGoodRepository)
+	container := pkg.NewContainer(database)
 
 	csvSecuraCogRepository := repository.NewCsvSecuraCogRepository()
 
-	factory, err := container.NewGoodRecordRepositoryFactory()
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	factory := container.NewGoodRecordRepositoryFactory()
 
 	pgDataSnapshotRepository := repository.NewPgDataSnapshotRepository(database)
 	pgKillStatisticRepository := repository.NewPgKillStatisticRepository(database)
@@ -110,7 +102,7 @@ func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 
 	dataCron := service.NewDataSnapshotCron(pgGoodRepository, pgDataSnapshotRepository, detailService)
 
-	seederService := service.NewSeeder(csvSecuraCogRepository, pgGoodRepository, dataCron, database)
+	seederService := service.NewSeeder(csvSecuraCogRepository, pgGoodRepository, dataCron, factory)
 
 	seed := handler.NewSeedHandler(seederService)
 
@@ -120,15 +112,11 @@ func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 func tradeEngineHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
 	pgGoodRepository := repository.NewPgGoodRepository(database)
 
-	container := pkg.NewContainer(database, pgGoodRepository)
+	container := pkg.NewContainer(database)
 
 	homePresenter := presenter.NewHomePresenter(pgGoodRepository)
 
-	factory, err := container.NewGoodRecordRepositoryFactory()
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	factory := container.NewGoodRecordRepositoryFactory()
 
 	config := trade_engine.NewConfig()
 	prob := helper.NewProbHelper()
@@ -145,18 +133,14 @@ func tradeEngineHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Ha
 func createDetailHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
 	pgGoodRepository := repository.NewPgGoodRepository(database)
 
-	container := pkg.NewContainer(database, pgGoodRepository)
+	container := pkg.NewContainer(database)
 
 	pgKillStatisticRepository := repository.NewPgKillStatisticRepository(database)
 	pgDataSnapshotRepository := repository.NewPgDataSnapshotRepository(database)
 
 	detailPresenter := presenter.NewDetailPresenter()
 
-	factory, err := container.NewGoodRecordRepositoryFactory()
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	factory := container.NewGoodRecordRepositoryFactory()
 
 	prob := helper.NewProbHelper()
 
@@ -186,16 +170,12 @@ func createKillStatisticsHandler(api *server.TibiaMktApiServer, database *sql.DB
 
 func createDataSnapshotHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
 	pgGoodRepository := repository.NewPgGoodRepository(database)
-	container := pkg.NewContainer(database, pgGoodRepository)
+	container := pkg.NewContainer(database)
 
 	pgDataSnapshotRepository := repository.NewPgDataSnapshotRepository(database)
 	pgKillStatisticRepository := repository.NewPgKillStatisticRepository(database)
 
-	factory, err := container.NewGoodRecordRepositoryFactory()
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	factory := container.NewGoodRecordRepositoryFactory()
 
 	prob := helper.NewProbHelper()
 
