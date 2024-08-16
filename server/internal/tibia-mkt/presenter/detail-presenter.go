@@ -137,7 +137,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 		SellOfferFrequency: input.SellOfferFrequency,
 	}
 
-	service.Reverse(input.SellOfferHistoricData)
+	service.Reverse[types.DataSnapshot](input.SellOfferHistoricData)
 
 	result := DetailResponse{
 		Wiki:                  input.Wiki,
