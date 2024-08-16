@@ -68,7 +68,7 @@ const renderHistoricTrendIcon = (context: string, data: SellOfferHistoricData[])
     const tendency: string[] = [];
     let previousValue: number = 0;
 
-    const last7DaysPortion: SellOfferHistoricData[] = data.slice(data.length - 8, data.length - 1);
+    const last7DaysPortion: SellOfferHistoricData[] = data.slice(0, 8);
 
     for (const sellOfferHistoricData of last7DaysPortion) {
         if(tendency.length === 7) {
@@ -169,7 +169,7 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: 
                             </ActionIcon>
                         </Tooltip>
                     </Group>
-                    <Group>
+                    <Group gap="xs">
                         <Text size="xl" fw={500}>{data.mean} gp</Text>
                         {renderHistoricTrendIcon(MEAN_HISTORY_MODAL, historic)}
                     </Group>
@@ -187,7 +187,7 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: 
                             </ActionIcon>
                         </Tooltip>
                     </Group>
-                    <Group>
+                    <Group gap="xs">
                         <Text size="xl" fw={500}>
                             {new Intl.NumberFormat('en-US', {
                                 minimumFractionDigits: 2,
@@ -211,7 +211,7 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: 
                                 </ActionIcon>
                             </Tooltip>
                         </Group>
-                        <Group>
+                        <Group gap="xs">
                             <Text size="xl" fw={500}>
                                 {new Intl.NumberFormat('en-US').format(calculateDropEstimation(creatures))}
                             </Text>
