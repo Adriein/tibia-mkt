@@ -3,34 +3,28 @@ package pkg
 import (
 	"database/sql"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 )
 
 type Container struct {
-	database       *sql.DB
-	goodRepository types.Repository[types.Good]
+	database *sql.DB
 }
 
-func NewContainer(database *sql.DB, goodRepository types.Repository[types.Good]) *Container {
+func NewContainer(database *sql.DB) *Container {
 	return &Container{
-		database:       database,
-		goodRepository: goodRepository,
+		database: database,
 	}
 }
 
-func (c *Container) NewGoodRecordRepositoryFactory() (*helper.RepositoryFactory, error) {
-	goods, err := c.goodRepository.Find(types.Criteria{Filters: make([]types.Filter, 0)})
-
-	if err != nil {
-		return nil, err
-	}
-
+func (c *Container) NewGoodRecordRepositoryFactory() *helper.RepositoryFactory {
+	goods := [2]string{constants.TibiaCoinEntity, constants.HoneycombEntity}
 	var repositories = make([]types.GoodRecordRepository, len(goods))
 
 	for index, good := range goods {
-		repositories[index] = repository.NewPgGoodRecordRepository(c.database, helper.CamelToSnake(good.Name))
+		repositories[index] = repository.NewPgGoodRecordRepository(c.database, helper.CamelToSnake(good))
 	}
 
-	return helper.NewRepositoryFactory(repositories), nil
+	return helper.NewRepositoryFactory(repositories)
 }
