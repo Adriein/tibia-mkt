@@ -45,7 +45,7 @@ const calculateDropEstimation = (creatures: DetailCreature[]): number => {
 }
 
 const countMajorTendency = (tendency: string[]): string => {
-    let value = 0;
+    let value: number = 0;
     let maxKey = null;
 
     const counter = tendency.reduce((counts: Record<string, number>, direction: string) => {
