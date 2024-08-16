@@ -1,7 +1,6 @@
 package service
 
 import (
-	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"github.com/google/uuid"
 	"time"
@@ -10,20 +9,17 @@ import (
 type Seeder struct {
 	csvRepository types.GoodRecordRepository
 	cogRepository types.Repository[types.Good]
-	container     *helper.Container
 	cron          *DataSnapshotCron
 }
 
 func NewSeeder(
 	csvRepository types.GoodRecordRepository,
 	cogRepository types.Repository[types.Good],
-	container *helper.Container,
 	cron *DataSnapshotCron,
 ) *Seeder {
 	return &Seeder{
 		csvRepository: csvRepository,
 		cogRepository: cogRepository,
-		container:     container,
 		cron:          cron,
 	}
 }
