@@ -110,7 +110,7 @@ func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 
 	dataCron := service2.NewDataSnapshotCron(pgGoodRepository, pgDataSnapshotRepository, detailService)
 
-	seederService := service2.NewSeeder(csvSecuraCogRepository, pgGoodRepository, container, dataCron)
+	seederService := service2.NewSeeder(csvSecuraCogRepository, pgGoodRepository, dataCron, database)
 
 	seed := handler.NewSeedHandler(seederService)
 
