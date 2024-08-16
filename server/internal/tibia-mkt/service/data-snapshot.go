@@ -1,8 +1,7 @@
-package cron
+package service
 
 import (
 	"github.com/adriein/tibia-mkt/pkg/constants"
-	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"github.com/google/uuid"
 	"time"
@@ -11,13 +10,13 @@ import (
 type DataSnapshotCron struct {
 	cogRepository          types.Repository[types.Good]
 	dataSnapshotRepository types.Repository[types.DataSnapshot]
-	service                *service.DetailService
+	service                *DetailService
 }
 
 func NewDataSnapshotCron(
 	cogRepository types.Repository[types.Good],
 	dataSnapshotRepository types.Repository[types.DataSnapshot],
-	service *service.DetailService,
+	service *DetailService,
 ) *DataSnapshotCron {
 	return &DataSnapshotCron{
 		cogRepository:          cogRepository,

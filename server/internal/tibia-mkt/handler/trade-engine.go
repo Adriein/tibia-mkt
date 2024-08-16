@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/adriein/tibia-mkt/internal/trade-engine"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
@@ -29,7 +29,7 @@ func NewTradeEngineHandler[T any](
 }
 
 func (h *TradeEngineHandler[T]) Handler(w http.ResponseWriter, r *http.Request) error {
-	tradeEngineRequest, decodeErr := service.Decode[TradeEngineRequest](r.Body)
+	tradeEngineRequest, decodeErr := helper.Decode[TradeEngineRequest](r.Body)
 
 	if decodeErr != nil {
 		return types.ApiError{
@@ -59,7 +59,7 @@ func (h *TradeEngineHandler[T]) Handler(w http.ResponseWriter, r *http.Request) 
 			Error: constants.ServerGenericError,
 		}
 
-		if err := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); err != nil {
+		if err := helper.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); err != nil {
 			return err
 		}
 
@@ -71,7 +71,7 @@ func (h *TradeEngineHandler[T]) Handler(w http.ResponseWriter, r *http.Request) 
 		Data: result,
 	}
 
-	if err := service.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
+	if err := helper.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
 		return err
 	}
 

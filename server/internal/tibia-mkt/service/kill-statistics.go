@@ -1,9 +1,9 @@
-package cron
+package service
 
 import (
 	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/constants"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"github.com/google/uuid"
 	"net/http"
@@ -76,12 +76,12 @@ func (kc *KillStatisticsCron) Execute(cogs []types.Good) ([]types.KillStatistic,
 
 	defer response.Body.Close()
 
-	parsedResponse, decodeErr := service.Decode[TibiaApiKillStatisticsResponse](response.Body)
+	parsedResponse, decodeErr := helper.Decode[TibiaApiKillStatisticsResponse](response.Body)
 
 	if decodeErr != nil {
 		return nil, types.ApiError{
 			Msg:      decodeErr.Error(),
-			Function: "Execute -> service.Decode()",
+			Function: "Execute -> helper.Decode()",
 			File:     "kill-statistics.go",
 		}
 	}

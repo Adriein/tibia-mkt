@@ -1,19 +1,20 @@
 package handler
 
 import (
+	service2 "github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
 	"github.com/adriein/tibia-mkt/pkg/constants"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
 
 type DetailHandler struct {
-	service   *service.DetailService
+	service   *service2.DetailService
 	presenter types.Presenter
 }
 
 func NewDetailHandler(
-	service *service.DetailService,
+	service *service2.DetailService,
 	presenter types.Presenter,
 ) *DetailHandler {
 	return &DetailHandler{
@@ -48,7 +49,7 @@ func (h *DetailHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 		return presenterErr
 	}
 
-	if err := service.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
+	if err := helper.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
 		return err
 	}
 

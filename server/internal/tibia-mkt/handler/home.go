@@ -2,17 +2,17 @@ package handler
 
 import (
 	"github.com/adriein/tibia-mkt/pkg/constants"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
 
 type HomeHandler struct {
-	repoFactory *service.RepositoryFactory
+	repoFactory *helper.RepositoryFactory
 	presenter   types.Presenter
 }
 
-func NewHomeHandler(factory *service.RepositoryFactory, presenter types.Presenter) *HomeHandler {
+func NewHomeHandler(factory *helper.RepositoryFactory, presenter types.Presenter) *HomeHandler {
 	return &HomeHandler{
 		repoFactory: factory,
 		presenter:   presenter,
@@ -61,7 +61,7 @@ func (h *HomeHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 		return presenterErr
 	}
 
-	if err := service.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
+	if err := helper.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
 		return err
 	}
 

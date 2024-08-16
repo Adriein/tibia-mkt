@@ -1,4 +1,4 @@
-package service
+package helper
 
 // Reverse an array of T mutating the array
 func Reverse[T any](array []T) {

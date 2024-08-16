@@ -1,9 +1,8 @@
-package pkg
+package helper
 
 import (
 	"database/sql"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
-	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 )
 
@@ -19,7 +18,7 @@ func NewContainer(database *sql.DB, goodRepository types.Repository[types.Good])
 	}
 }
 
-func (c *Container) NewGoodRecordRepositoryFactory() (*service.RepositoryFactory, error) {
+func (c *Container) NewGoodRecordRepositoryFactory() (*RepositoryFactory, error) {
 	goods, err := c.goodRepository.Find(types.Criteria{Filters: make([]types.Filter, 0)})
 
 	if err != nil {
@@ -29,8 +28,8 @@ func (c *Container) NewGoodRecordRepositoryFactory() (*service.RepositoryFactory
 	var repositories = make([]types.GoodRecordRepository, len(goods))
 
 	for index, good := range goods {
-		repositories[index] = repository.NewPgGoodRecordRepository(c.database, service.CamelToSnake(good.Name))
+		repositories[index] = repository.NewPgGoodRecordRepository(c.database, CamelToSnake(good.Name))
 	}
 
-	return service.NewRepositoryFactory(repositories), nil
+	return NewRepositoryFactory(repositories), nil
 }

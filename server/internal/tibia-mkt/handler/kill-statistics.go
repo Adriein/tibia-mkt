@@ -1,20 +1,20 @@
 package handler
 
 import (
-	"github.com/adriein/tibia-mkt/internal/cron"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	service2 "github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
 
 type KillStatisticsHandler struct {
-	cron                    *cron.KillStatisticsCron
+	cron                    *service2.KillStatisticsCron
 	cogRepository           types.Repository[types.Good]
 	killStatisticRepository types.Repository[types.KillStatistic]
 }
 
 func NewKillStatisticsHandler(
-	cron *cron.KillStatisticsCron,
+	cron *service2.KillStatisticsCron,
 	cogRepository types.Repository[types.Good],
 	killStatisticRepository types.Repository[types.KillStatistic],
 ) *KillStatisticsHandler {
@@ -46,7 +46,7 @@ func (h *KillStatisticsHandler) Handler(w http.ResponseWriter, _ *http.Request) 
 
 	response := types.ServerResponse{Ok: true}
 
-	if err := service.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
+	if err := helper.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
 		return err
 	}
 

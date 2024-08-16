@@ -3,7 +3,7 @@ package trade_algorithm
 import (
 	"fmt"
 	"github.com/adriein/tibia-mkt/internal/trade-engine"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"sort"
 )
@@ -15,7 +15,7 @@ type KeyValue struct {
 
 type BestSellValue struct {
 	config *trade_engine.TradeEngineConfig
-	prob   *service.ProbHelper
+	prob   *helper.ProbHelper
 }
 
 type SellOfferFrequency struct {
@@ -30,7 +30,7 @@ type BestSellValueResult struct {
 	SellOfferFrequency []SellOfferFrequency `json:"sellOfferFrequency"`
 }
 
-func NewBestSellValueAlgorithm(config *trade_engine.TradeEngineConfig, prob *service.ProbHelper) *BestSellValue {
+func NewBestSellValueAlgorithm(config *trade_engine.TradeEngineConfig, prob *helper.ProbHelper) *BestSellValue {
 	return &BestSellValue{config: config, prob: prob}
 }
 

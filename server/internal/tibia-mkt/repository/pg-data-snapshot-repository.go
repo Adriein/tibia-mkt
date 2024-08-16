@@ -2,17 +2,17 @@ package repository
 
 import (
 	"database/sql"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 )
 
 type PgDataSnapshotRepository struct {
 	connection  *sql.DB
-	transformer *service.CriteriaToSqlService
+	transformer *helper.CriteriaToSqlService
 }
 
 func NewPgDataSnapshotRepository(connection *sql.DB) *PgDataSnapshotRepository {
-	transformer := service.NewCriteriaToSqlService("data_snapshot_cron")
+	transformer := helper.NewCriteriaToSqlService("data_snapshot_cron")
 
 	return &PgDataSnapshotRepository{
 		connection:  connection,

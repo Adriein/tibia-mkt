@@ -2,17 +2,17 @@ package repository
 
 import (
 	"database/sql"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 )
 
 type PgKillStatisticRepository struct {
 	connection  *sql.DB
-	transformer *service.CriteriaToSqlService
+	transformer *helper.CriteriaToSqlService
 }
 
 func NewPgKillStatisticRepository(connection *sql.DB) *PgKillStatisticRepository {
-	transformer := service.NewCriteriaToSqlService("kill_statistic_cron")
+	transformer := helper.NewCriteriaToSqlService("kill_statistic_cron")
 
 	return &PgKillStatisticRepository{
 		connection:  connection,

@@ -2,18 +2,18 @@ package repository
 
 import (
 	"database/sql"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
 )
 
 type PgGoodRepository struct {
 	connection  *sql.DB
-	transformer *service.CriteriaToSqlService
+	transformer *helper.CriteriaToSqlService
 }
 
 func NewPgGoodRepository(connection *sql.DB) *PgGoodRepository {
-	transformer := service.NewCriteriaToSqlService("cog")
+	transformer := helper.NewCriteriaToSqlService("cog")
 
 	return &PgGoodRepository{
 		connection:  connection,
@@ -84,12 +84,12 @@ func (r *PgGoodRepository) Find(criteria types.Criteria) ([]types.Good, error) {
 			}
 		}
 
-		decodedCreatures, decodeError := service.JsonDecode[[]types.GoodDrop](creatures)
+		decodedCreatures, decodeError := helper.JsonDecode[[]types.GoodDrop](creatures)
 
 		if decodeError != nil {
 			return nil, types.ApiError{
 				Msg:      decodeError.Error(),
-				Function: "Find -> service.JsonDecode()",
+				Function: "Find -> helper.JsonDecode()",
 				File:     "pg-good-repository.go",
 			}
 		}
@@ -156,12 +156,12 @@ func (r *PgGoodRepository) FindOne(criteria types.Criteria) (types.Good, error) 
 		}
 	}
 
-	decodedCreatures, decodeError := service.JsonDecode[[]types.GoodDrop](creatures)
+	decodedCreatures, decodeError := helper.JsonDecode[[]types.GoodDrop](creatures)
 
 	if decodeError != nil {
 		return types.Good{}, types.ApiError{
 			Msg:      decodeError.Error(),
-			Function: "FindOne -> service.JsonDecode()",
+			Function: "FindOne -> helper.JsonDecode()",
 			File:     "pg-good-repository.go",
 		}
 	}
@@ -179,12 +179,12 @@ func (r *PgGoodRepository) FindOne(criteria types.Criteria) (types.Good, error) 
 func (r *PgGoodRepository) Save(entity types.Good) error {
 	var query = `INSERT INTO cog (id, name, link, creatures, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`
 
-	encodedCreatures, jsonEncodeErr := service.JsonEncode(entity.Drop)
+	encodedCreatures, jsonEncodeErr := helper.JsonEncode(entity.Drop)
 
 	if jsonEncodeErr != nil {
 		return types.ApiError{
 			Msg:      jsonEncodeErr.Error(),
-			Function: "Save -> service.JsonEncode()",
+			Function: "Save -> helper.JsonEncode()",
 			File:     "pg-good-repository.go",
 		}
 	}

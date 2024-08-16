@@ -2,7 +2,7 @@ package presenter
 
 import (
 	"github.com/adriein/tibia-mkt/pkg/constants"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
 )
@@ -137,7 +137,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 		SellOfferFrequency: input.SellOfferFrequency,
 	}
 
-	service.Reverse[types.DataSnapshot](input.SellOfferHistoricData)
+	helper.Reverse[types.DataSnapshot](input.SellOfferHistoricData)
 
 	result := DetailResponse{
 		Wiki:                  input.Wiki,

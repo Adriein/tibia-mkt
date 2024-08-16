@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/constants"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"sort"
 	"time"
@@ -17,16 +18,16 @@ type DetailService struct {
 	goodRepository          types.Repository[types.Good]
 	killStatisticRepository types.Repository[types.KillStatistic]
 	dataSnapshotRepository  types.Repository[types.DataSnapshot]
-	repoFactory             *RepositoryFactory
-	prob                    *ProbHelper
+	repoFactory             *helper.RepositoryFactory
+	prob                    *helper.ProbHelper
 }
 
 func NewDetailService(
 	goodRepository types.Repository[types.Good],
 	killStatisticRepository types.Repository[types.KillStatistic],
 	dataSnapshotRepository types.Repository[types.DataSnapshot],
-	repoFactory *RepositoryFactory,
-	prob *ProbHelper,
+	repoFactory *helper.RepositoryFactory,
+	prob *helper.ProbHelper,
 ) *DetailService {
 	return &DetailService{
 		goodRepository:          goodRepository,

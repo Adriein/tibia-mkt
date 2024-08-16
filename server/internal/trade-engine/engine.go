@@ -2,18 +2,18 @@ package trade_engine
 
 import (
 	"github.com/adriein/tibia-mkt/pkg/constants"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 )
 
 type TradeEngine[T any] struct {
 	config            *TradeEngineConfig
-	repositoryFactory *service.RepositoryFactory
+	repositoryFactory *helper.RepositoryFactory
 	algorithm         types.TradeEngineAlgorithm[T]
 }
 
 func NewTradeEngine[T any](
-	factory *service.RepositoryFactory,
+	factory *helper.RepositoryFactory,
 	config *TradeEngineConfig,
 	algorithm types.TradeEngineAlgorithm[T],
 ) *TradeEngine[T] {

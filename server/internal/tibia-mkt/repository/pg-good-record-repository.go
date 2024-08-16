@@ -3,19 +3,19 @@ package repository
 import (
 	"database/sql"
 	"fmt"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"time"
 )
 
 type PgGoodRecordRepository struct {
 	connection  *sql.DB
-	transformer *service.CriteriaToSqlService
+	transformer *helper.CriteriaToSqlService
 	name        string
 }
 
 func NewPgGoodRecordRepository(connection *sql.DB, name string) *PgGoodRecordRepository {
-	transformer := service.NewCriteriaToSqlService(name)
+	transformer := helper.NewCriteriaToSqlService(name)
 
 	return &PgGoodRecordRepository{
 		connection:  connection,
@@ -81,7 +81,7 @@ func (r *PgGoodRecordRepository) Find(criteria types.Criteria) ([]types.GoodReco
 
 		results = append(results, types.GoodRecord{
 			Id:        id,
-			ItemName:  service.SnakeToCamel(r.name),
+			ItemName:  helper.SnakeToCamel(r.name),
 			Date:      parsedDate,
 			BuyPrice:  buyPrice,
 			SellPrice: sellPrice,

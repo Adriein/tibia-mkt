@@ -1,18 +1,18 @@
 package handler
 
 import (
-	"github.com/adriein/tibia-mkt/internal/cron"
-	"github.com/adriein/tibia-mkt/pkg/service"
+	service2 "github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
 
 type DataSnapshotHandler struct {
-	cron *cron.DataSnapshotCron
+	cron *service2.DataSnapshotCron
 }
 
 func NewDataSnapshotHandler(
-	cron *cron.DataSnapshotCron,
+	cron *service2.DataSnapshotCron,
 ) *DataSnapshotHandler {
 	return &DataSnapshotHandler{
 		cron: cron,
@@ -27,7 +27,7 @@ func (h *DataSnapshotHandler) Handler(w http.ResponseWriter, _ *http.Request) er
 
 	response := types.ServerResponse{Ok: true}
 
-	if err := service.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
+	if err := helper.Encode[types.ServerResponse](w, http.StatusOK, response); err != nil {
 		return err
 	}
 

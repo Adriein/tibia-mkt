@@ -26,13 +26,16 @@ func (c *CsvSecuraCogRepository) Find(criteria types.Criteria) ([]types.GoodReco
 
 	path, _ := os.Getwd()
 
-	file, openErr := os.Open(fmt.Sprintf("%s/data/%s-cog.csv", path, criteria.Filters[0].Value))
+	filePath := fmt.Sprintf("%s/data/%s-cog.csv", path, criteria.Filters[0].Value)
+
+	file, openErr := os.Open(filePath)
 
 	if openErr != nil {
 		return nil, types.ApiError{
 			Msg:      openErr.Error(),
 			Function: "Find -> os.Open()",
 			File:     "csv-cog-repository.go",
+			Values:   []string{filePath},
 		}
 	}
 

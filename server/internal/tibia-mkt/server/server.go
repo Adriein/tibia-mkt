@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/constants"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/middleware"
-	"github.com/adriein/tibia-mkt/pkg/service"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"log"
 	"log/slog"
@@ -65,7 +65,7 @@ func (s *TibiaMktApiServer) NewHandler(handler types.TibiaMktHttpHandler) http.H
 					Error: appError.PresentableError(),
 				}
 
-				if encodeErr := service.Encode[types.ServerResponse](w, http.StatusOK, response); encodeErr != nil {
+				if encodeErr := helper.Encode[types.ServerResponse](w, http.StatusOK, response); encodeErr != nil {
 					log.Fatal(encodeErr.Error())
 				}
 
@@ -79,7 +79,7 @@ func (s *TibiaMktApiServer) NewHandler(handler types.TibiaMktHttpHandler) http.H
 				Error: constants.ServerGenericError,
 			}
 
-			if encodeErr := service.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); encodeErr != nil {
+			if encodeErr := helper.Encode[types.ServerResponse](w, http.StatusInternalServerError, response); encodeErr != nil {
 				log.Fatal(encodeErr.Error())
 			}
 
