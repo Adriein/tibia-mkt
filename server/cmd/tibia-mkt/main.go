@@ -7,7 +7,7 @@ import (
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/presenter"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/server"
-	service2 "github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
 	"github.com/adriein/tibia-mkt/internal/trade-engine"
 	"github.com/adriein/tibia-mkt/internal/trade-engine/trade-algorithm"
 	"github.com/adriein/tibia-mkt/pkg"
@@ -100,7 +100,7 @@ func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 
 	prob := helper.NewProbHelper()
 
-	detailService := service2.NewDetailService(
+	detailService := service.NewDetailService(
 		pgGoodRepository,
 		pgKillStatisticRepository,
 		pgDataSnapshotRepository,
@@ -108,9 +108,9 @@ func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 		prob,
 	)
 
-	dataCron := service2.NewDataSnapshotCron(pgGoodRepository, pgDataSnapshotRepository, detailService)
+	dataCron := service.NewDataSnapshotCron(pgGoodRepository, pgDataSnapshotRepository, detailService)
 
-	seederService := service2.NewSeeder(csvSecuraCogRepository, pgGoodRepository, dataCron, database)
+	seederService := service.NewSeeder(csvSecuraCogRepository, pgGoodRepository, dataCron, database)
 
 	seed := handler.NewSeedHandler(seederService)
 
@@ -160,7 +160,7 @@ func createDetailHandler(api *server.TibiaMktApiServer, database *sql.DB) http.H
 
 	prob := helper.NewProbHelper()
 
-	detailService := service2.NewDetailService(
+	detailService := service.NewDetailService(
 		pgGoodRepository,
 		pgKillStatisticRepository,
 		pgDataSnapshotRepository,
@@ -177,7 +177,7 @@ func createKillStatisticsHandler(api *server.TibiaMktApiServer, database *sql.DB
 	pgGoodRepository := repository.NewPgGoodRepository(database)
 	pgKillStatisticRepository := repository.NewPgKillStatisticRepository(database)
 
-	command := service2.NewKillStatisticsCron()
+	command := service.NewKillStatisticsCron()
 
 	killStatistics := handler.NewKillStatisticsHandler(command, pgGoodRepository, pgKillStatisticRepository)
 
@@ -199,7 +199,7 @@ func createDataSnapshotHandler(api *server.TibiaMktApiServer, database *sql.DB) 
 
 	prob := helper.NewProbHelper()
 
-	detailService := service2.NewDetailService(
+	detailService := service.NewDetailService(
 		pgGoodRepository,
 		pgKillStatisticRepository,
 		pgDataSnapshotRepository,
@@ -207,7 +207,7 @@ func createDataSnapshotHandler(api *server.TibiaMktApiServer, database *sql.DB) 
 		prob,
 	)
 
-	command := service2.NewDataSnapshotCron(pgGoodRepository, pgDataSnapshotRepository, detailService)
+	command := service.NewDataSnapshotCron(pgGoodRepository, pgDataSnapshotRepository, detailService)
 
 	dataSnapshot := handler.NewDataSnapshotHandler(command)
 
