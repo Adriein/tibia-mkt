@@ -70,13 +70,14 @@ func (s *DetailService) Execute(good string) (types.Detail, error) {
 	}
 
 	mean := s.computeMean(prices)
+	stdDeviation := s.computeStdDeviation(prices)
 
 	return types.Detail{
 		Wiki:                  goodDetail.Link,
 		GoodRecord:            goods,
 		Creatures:             killStatistics,
 		SellPriceMean:         mean,
-		StdDeviation:          s.prob.StdDeviation(prices),
+		StdDeviation:          stdDeviation,
 		SellOfferFrequency:    frequencyChart,
 		SellOfferHistoricData: historicData,
 	}, nil
@@ -228,4 +229,12 @@ func (s *DetailService) computeMean(prices []int) int {
 	}
 
 	return int(s.prob.Mean(prices))
+}
+
+func (s *DetailService) computeStdDeviation(prices []int) float64 {
+	if len(prices) == 1 {
+		return 0
+	}
+
+	return s.prob.StdDeviation(prices)
 }
