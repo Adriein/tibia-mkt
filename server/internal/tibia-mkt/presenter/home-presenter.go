@@ -172,6 +172,20 @@ func (p *HomePresenter) getPagePosition(item types.Good) types.GoodConfig {
 			Columns:  6,
 			Rows:     1,
 		}
+	case constants.SwamplingWoodEntity:
+		return types.GoodConfig{
+			CogId:    item.Id,
+			Position: 3,
+			Columns:  6,
+			Rows:     1,
+		}
+	case constants.BrokenShamanicStaffEntity:
+		return types.GoodConfig{
+			CogId:    item.Id,
+			Position: 4,
+			Columns:  6,
+			Rows:     1,
+		}
 	default:
 		return types.GoodConfig{}
 	}

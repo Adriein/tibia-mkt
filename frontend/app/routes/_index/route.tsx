@@ -19,7 +19,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader(): Promise<Response> {
     const nativeRequest: Request = new Request(
-        `${process.env.API_PROTOCOL}://${process.env.API_URL}/home?item=tibiaCoin&item=honeycomb`
+        `${process.env.API_PROTOCOL}://${process.env.API_URL}/home?item=tibiaCoin&item=honeycomb&item=swamplingWood&item=brokenShamanicStaff`
     );
     const nativeResponse: Response = await fetch(nativeRequest);
 
