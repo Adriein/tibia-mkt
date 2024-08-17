@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 )
@@ -162,6 +163,17 @@ func (r *PgDataSnapshotRepository) Save(entity types.DataSnapshot) error {
 			Msg:      err.Error(),
 			Function: "Save -> r.connection.Exec()",
 			File:     "pg-data-snapshot-repository.go",
+			Values: []string{
+				query,
+				entity.Id,
+				entity.Cog,
+				fmt.Sprintf("%f", entity.StdDeviation),
+				fmt.Sprintf("%d", entity.Mean),
+				fmt.Sprintf("%d", entity.TotalDropped),
+				entity.ExecutedBy,
+				entity.CreatedAt,
+				entity.UpdatedAt,
+			},
 		}
 	}
 
