@@ -9,11 +9,11 @@ import (
 )
 
 type SeedHandler struct {
-	service *service2.Seeder
+	service *service2.SeederService
 }
 
 func NewSeedHandler(
-	service *service2.Seeder,
+	service *service2.SeederService,
 ) *SeedHandler {
 	return &SeedHandler{
 		service: service,
@@ -31,7 +31,7 @@ func (h *SeedHandler) Handler(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
-	if serviceErr := h.service.Execute(request); serviceErr != nil {
+	if serviceErr := h.service.Execute(request.Items); serviceErr != nil {
 		return serviceErr
 	}
 

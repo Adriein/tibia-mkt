@@ -7,29 +7,29 @@ import (
 	"time"
 )
 
-type Seeder struct {
-	csvRepository types.GoodRecordRepository
-	cogRepository types.Repository[types.Good]
-	cron          *DataSnapshotCron
-	factory       *helper.RepositoryFactory
+type SeederService struct {
+	csvRepository       types.GoodRecordRepository
+	cogRepository       types.Repository[types.Good]
+	dataSnapshotService *DataSnapshotService
+	factory             *helper.RepositoryFactory
 }
 
-func NewSeeder(
+func NewSeederService(
 	csvRepository types.GoodRecordRepository,
 	cogRepository types.Repository[types.Good],
-	cron *DataSnapshotCron,
+	cron *DataSnapshotService,
 	factory *helper.RepositoryFactory,
-) *Seeder {
-	return &Seeder{
-		csvRepository: csvRepository,
-		cogRepository: cogRepository,
-		cron:          cron,
-		factory:       factory,
+) *SeederService {
+	return &SeederService{
+		csvRepository:       csvRepository,
+		cogRepository:       cogRepository,
+		dataSnapshotService: cron,
+		factory:             factory,
 	}
 }
 
-func (s *Seeder) Execute(request types.SeedRequest) error {
-	for _, item := range request.Items {
+func (s *SeederService) Execute(goodsToSeed []types.SeedGood) error {
+	for _, item := range goodsToSeed {
 		creatures := make([]types.GoodDrop, len(item.Creatures))
 
 		for index, creature := range item.Creatures {
@@ -50,9 +50,7 @@ func (s *Seeder) Execute(request types.SeedRequest) error {
 		if saveErr := s.cogRepository.Save(cog); saveErr != nil {
 			return saveErr
 		}
-	}
 
-	for _, item := range request.Items {
 		repo := s.factory.Get(item.Name)
 
 		var filters []types.Filter
@@ -70,7 +68,7 @@ func (s *Seeder) Execute(request types.SeedRequest) error {
 				return pgErr
 			}
 
-			if cronErr := s.cron.Execute(); cronErr != nil {
+			if cronErr := s.dataSnapshotService.Execute(); cronErr != nil {
 				return cronErr
 			}
 		}

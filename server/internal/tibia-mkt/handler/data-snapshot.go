@@ -8,11 +8,11 @@ import (
 )
 
 type DataSnapshotHandler struct {
-	cron *service2.DataSnapshotCron
+	cron *service2.DataSnapshotService
 }
 
 func NewDataSnapshotHandler(
-	cron *service2.DataSnapshotCron,
+	cron *service2.DataSnapshotService,
 ) *DataSnapshotHandler {
 	return &DataSnapshotHandler{
 		cron: cron,

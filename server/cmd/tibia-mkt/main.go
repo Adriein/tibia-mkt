@@ -100,9 +100,9 @@ func createSeedHandler(api *server.TibiaMktApiServer, database *sql.DB) http.Han
 		prob,
 	)
 
-	dataCron := service.NewDataSnapshotCron(pgGoodRepository, pgDataSnapshotRepository, detailService)
+	dataCron := service.NewDataSnapshotService(pgGoodRepository, pgDataSnapshotRepository, detailService)
 
-	seederService := service.NewSeeder(csvSecuraCogRepository, pgGoodRepository, dataCron, factory)
+	seederService := service.NewSeederService(csvSecuraCogRepository, pgGoodRepository, dataCron, factory)
 
 	seed := handler.NewSeedHandler(seederService)
 
@@ -187,7 +187,7 @@ func createDataSnapshotHandler(api *server.TibiaMktApiServer, database *sql.DB) 
 		prob,
 	)
 
-	command := service.NewDataSnapshotCron(pgGoodRepository, pgDataSnapshotRepository, detailService)
+	command := service.NewDataSnapshotService(pgGoodRepository, pgDataSnapshotRepository, detailService)
 
 	dataSnapshot := handler.NewDataSnapshotHandler(command)
 

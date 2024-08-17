@@ -1,20 +1,20 @@
 package handler
 
 import (
-	service2 "github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
 	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
 
 type KillStatisticsHandler struct {
-	cron                    *service2.KillStatisticsCron
+	cron                    *service.KillStatisticsCron
 	cogRepository           types.Repository[types.Good]
 	killStatisticRepository types.Repository[types.KillStatistic]
 }
 
 func NewKillStatisticsHandler(
-	cron *service2.KillStatisticsCron,
+	cron *service.KillStatisticsCron,
 	cogRepository types.Repository[types.Good],
 	killStatisticRepository types.Repository[types.KillStatistic],
 ) *KillStatisticsHandler {

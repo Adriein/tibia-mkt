@@ -1,7 +1,7 @@
 package handler
 
 import (
-	service2 "github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
@@ -9,12 +9,12 @@ import (
 )
 
 type DetailHandler struct {
-	service   *service2.DetailService
+	service   *service.DetailService
 	presenter types.Presenter
 }
 
 func NewDetailHandler(
-	service *service2.DetailService,
+	service *service.DetailService,
 	presenter types.Presenter,
 ) *DetailHandler {
 	return &DetailHandler{

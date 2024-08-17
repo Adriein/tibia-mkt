@@ -7,26 +7,26 @@ import (
 	"time"
 )
 
-type DataSnapshotCron struct {
+type DataSnapshotService struct {
 	cogRepository          types.Repository[types.Good]
 	dataSnapshotRepository types.Repository[types.DataSnapshot]
 	service                *DetailService
 }
 
-func NewDataSnapshotCron(
+func NewDataSnapshotService(
 	cogRepository types.Repository[types.Good],
 	dataSnapshotRepository types.Repository[types.DataSnapshot],
 	service *DetailService,
-) *DataSnapshotCron {
-	return &DataSnapshotCron{
+) *DataSnapshotService {
+	return &DataSnapshotService{
 		cogRepository:          cogRepository,
 		dataSnapshotRepository: dataSnapshotRepository,
 		service:                service,
 	}
 }
 
-func (dsc *DataSnapshotCron) Execute() error {
-	cogs, cogRepoErr := dsc.cogRepository.Find(types.Criteria{Filters: make([]types.Filter, 0)})
+func (dss *DataSnapshotService) Execute() error {
+	cogs, cogRepoErr := dss.cogRepository.Find(types.Criteria{Filters: make([]types.Filter, 0)})
 
 	if cogRepoErr != nil {
 		return cogRepoErr
@@ -34,7 +34,7 @@ func (dsc *DataSnapshotCron) Execute() error {
 
 	for _, cog := range cogs {
 		id := uuid.New()
-		result, serviceErr := dsc.service.Execute(cog.Name)
+		result, serviceErr := dss.service.Execute(cog.Name)
 
 		totalDropped := 0
 
@@ -59,7 +59,7 @@ func (dsc *DataSnapshotCron) Execute() error {
 			UpdatedAt:    time.Now().Format(time.DateTime),
 		}
 
-		if snapshotRepoErr := dsc.dataSnapshotRepository.Save(snapshot); snapshotRepoErr != nil {
+		if snapshotRepoErr := dss.dataSnapshotRepository.Save(snapshot); snapshotRepoErr != nil {
 			return snapshotRepoErr
 		}
 
