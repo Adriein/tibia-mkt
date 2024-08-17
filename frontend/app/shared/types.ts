@@ -28,6 +28,6 @@ export type RemixMetaFunc = {params: { item: string }};
 
 export type SellOfferFrequency = { range: string, occurrences: number, frequency: number }
 
-export type SellOfferProbability = { mean: number, stdDeviation: number, sellOfferFrequency: SellOfferFrequency[]}
+export type SellOfferProbability = { median: number, mean: number, stdDeviation: number, sellOfferFrequency: SellOfferFrequency[]}
 
 export type SellOfferHistoricData = { id: string, cog: string,  mean: number, stdDeviation: number, createdAt: string}

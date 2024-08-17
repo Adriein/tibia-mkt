@@ -163,6 +163,10 @@ export function CogDetailGeneralInfo({ dataPoints, creatures, data, historic }: 
                     <Text size="xl" fw={500}>{dataPoints} data points</Text>
                 </Card>
                 <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
+                    <Text size="xl" fw={700}>Median</Text>
+                    <Text size="xl" fw={500}>{data.median} gp</Text>
+                </Card>
+                <Card padding="lg" radius="md" withBorder className={classes.infoCard}>
                     <Group>
                         <Text size="xl" fw={700}>Mean</Text>
                         <Tooltip label="View history" openDelay={300}>

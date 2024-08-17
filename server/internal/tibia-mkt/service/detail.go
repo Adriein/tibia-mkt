@@ -71,6 +71,7 @@ func (s *DetailService) Execute(good string) (types.Detail, error) {
 
 	mean := s.computeMean(prices)
 	stdDeviation := s.computeStdDeviation(prices)
+	median := s.computeMedian(prices)
 
 	return types.Detail{
 		Wiki:                  goodDetail.Link,
@@ -78,6 +79,7 @@ func (s *DetailService) Execute(good string) (types.Detail, error) {
 		Creatures:             killStatistics,
 		SellPriceMean:         mean,
 		StdDeviation:          stdDeviation,
+		SellPriceMedian:       median,
 		SellOfferFrequency:    frequencyChart,
 		SellOfferHistoricData: historicData,
 	}, nil
@@ -237,4 +239,12 @@ func (s *DetailService) computeStdDeviation(prices []int) float64 {
 	}
 
 	return s.prob.StdDeviation(prices)
+}
+
+func (s *DetailService) computeMedian(prices []int) int {
+	if len(prices) == 1 {
+		return 0
+	}
+
+	return s.prob.Median(prices)
 }

@@ -1,6 +1,9 @@
 package helper
 
-import "math"
+import (
+	"math"
+	"sort"
+)
 
 type ProbHelper struct{}
 
@@ -31,4 +34,22 @@ func (p *ProbHelper) Variance(data []int) float64 {
 
 func (p *ProbHelper) StdDeviation(data []int) float64 {
 	return math.Sqrt(p.Variance(data))
+}
+
+func (p *ProbHelper) Median(data []int) int {
+	length := float64(len(data))
+
+	sort.Ints(data)
+
+	if length == 0 {
+		return 0
+	}
+
+	middle := int(length / 2)
+
+	if len(data)%2 == 1 {
+		return data[middle]
+	}
+
+	return int((float64(data[middle-1] + data[middle])) / 2)
 }

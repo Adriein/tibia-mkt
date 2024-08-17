@@ -6,6 +6,7 @@ type Detail struct {
 	Creatures             []CreatureKillStatistic
 	SellPriceMean         int
 	StdDeviation          float64
+	SellPriceMedian       int
 	SellOfferFrequency    []SellOfferFrequency
 	SellOfferHistoricData []DataSnapshot
 }

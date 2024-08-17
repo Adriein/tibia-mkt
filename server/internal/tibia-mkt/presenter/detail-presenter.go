@@ -15,6 +15,7 @@ type GoodAverage struct {
 type SellOfferProbability struct {
 	Mean               int                        `json:"mean"`
 	StdDeviation       float64                    `json:"stdDeviation"`
+	Median             int                        `json:"median"`
 	SellOfferFrequency []types.SellOfferFrequency `json:"sellOfferFrequency"`
 }
 
@@ -134,6 +135,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 	probability := SellOfferProbability{
 		StdDeviation:       input.StdDeviation,
 		Mean:               input.SellPriceMean,
+		Median:             input.SellPriceMedian,
 		SellOfferFrequency: input.SellOfferFrequency,
 	}
 
