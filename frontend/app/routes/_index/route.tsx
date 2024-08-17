@@ -4,6 +4,8 @@ import { CogPreview } from "~/components/CogPreview/CogPreview";
 import {Grid, Container} from "@mantine/core";
 import {CogChart, HomePageData} from "~/shared/types";
 import {Header} from "~/components/Header/Header";
+import {TIBIA_COIN} from "~/shared/constants";
+import {GoodPreviewChip} from "~/components/GoodPreviewChip/GoodPreviewChip";
 
 type HomeResponse = {
     ok: boolean;
@@ -48,6 +50,7 @@ export async function loader(): Promise<Response> {
 
 export default function Index() {
     const serverProps: HomeResponse = useLoaderData() as HomeResponse;
+    const tibiaCoin: CogChart = serverProps.data[TIBIA_COIN];
 
     return (
         <Container fluid>
@@ -55,15 +58,12 @@ export default function Index() {
                 <Grid.Col span={12}>
                     <Header/>
                 </Grid.Col>
-                {Object.keys(serverProps.data).map((cogName: string) => {
-                    const cog: CogChart = serverProps.data[cogName];
-
-                    return (
-                        <Grid.Col key={cogName} span={12}>
-                            <CogPreview name={cogName} wikiLink={cog.wiki} data={cog}/>
-                        </Grid.Col>
-                    );
-                })}
+                <Grid.Col span={12}>
+                    <GoodPreviewChip data={serverProps.data}/>
+                </Grid.Col>
+                <Grid.Col key={TIBIA_COIN} span={12}>
+                    <CogPreview name={TIBIA_COIN} wikiLink={tibiaCoin.wiki} data={tibiaCoin}/>
+                </Grid.Col>
             </Grid>
         </Container>
     );
