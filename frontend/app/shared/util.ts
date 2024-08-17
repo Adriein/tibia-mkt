@@ -1,6 +1,8 @@
 import TibiaCoinGif from '~/assets/tibia-coin.gif';
 import HoneycombGif from '~/assets/honeycomb.gif';
-import {HONEYCOMB, TIBIA_COIN} from "~/shared/constants";
+import SwamplingWoodGif from '~/assets/swampling-wood.gif';
+import BrokenShamanicStaffGif from '~/assets/broken-shamanic-staff.gif';
+import {BROKEN_SHAMANIC_STAFF, HONEYCOMB, SWAMPLING_WOOD, TIBIA_COIN} from "~/shared/constants";
 
 export const formatDate = (value: Date): string => {
     return new Intl.DateTimeFormat("es-ES", {
@@ -15,6 +17,10 @@ export const gif = (cogName: string): any => {
             return TibiaCoinGif;
         case HONEYCOMB:
             return HoneycombGif;
+        case SWAMPLING_WOOD:
+            return SwamplingWoodGif;
+        case BROKEN_SHAMANIC_STAFF:
+            return BrokenShamanicStaffGif;
     }
 }
 

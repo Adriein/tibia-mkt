@@ -26,7 +26,7 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
                 <div className={classes.chartHeader}>
                     <div className={classes.worldBadge}>
                         <Title order={2}>{beautifyCamelCase(name)}</Title>
-                        <Image src={gif(name)} alt="Tibia Coin"/>
+                        <Image src={gif(name)} alt={name}/>
                     </div>
                     <Tooltip label="Details" openDelay={300}>
                         <ActionIcon
