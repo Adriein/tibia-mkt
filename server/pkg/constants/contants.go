@@ -1,10 +1,11 @@
 package constants
 
 const (
-	WorldSecura         = "Secura"
-	HoneycombEntity     = "honeycomb"
-	TibiaCoinEntity     = "tibiaCoin"
-	SwamplingWoodEntity = "swamplingWood"
+	WorldSecura               = "Secura"
+	HoneycombEntity           = "honeycomb"
+	TibiaCoinEntity           = "tibiaCoin"
+	SwamplingWoodEntity       = "swamplingWood"
+	BrokenShamanicStaffEntity = "brokenShamanicStaff"
 )
 
 const (

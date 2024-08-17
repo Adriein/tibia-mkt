@@ -19,7 +19,12 @@ func NewContainer(database *sql.DB) *Container {
 }
 
 func (c *Container) NewGoodRecordRepositoryFactory() *helper.RepositoryFactory {
-	goods := [2]string{constants.TibiaCoinEntity, constants.HoneycombEntity}
+	goods := [4]string{
+		constants.TibiaCoinEntity,
+		constants.HoneycombEntity,
+		constants.SwamplingWoodEntity,
+		constants.BrokenShamanicStaffEntity,
+	}
 	var repositories = make([]types.GoodRecordRepository, len(goods))
 
 	for index, good := range goods {
