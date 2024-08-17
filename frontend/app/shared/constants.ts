@@ -11,3 +11,7 @@ export const SELL_OFFER_TYPE: string = 'SELL_OFFER';
 export const MEAN_HISTORY_MODAL: string = "mean";
 export const STD_DEVIATION_MODAL: string = "stdDeviation";
 export const TOTAL_DROPPED_MODAL: string = "totalDropped";
+
+export const HISTORIC_INCREASING: string = "up";
+export const HISTORIC_EQUAL: string = "equal";
+export const HISTORIC_DECREASING: string = "down";

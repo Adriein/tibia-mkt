@@ -5,7 +5,13 @@ import classes from "./CogDetailGeneralInfo.module.css";
 import {DetailCreature, SellOfferFrequency, SellOfferHistoricData, SellOfferProbability} from "~/shared/types";
 import {useDisclosure} from "@mantine/hooks";
 import {useState} from "react";
-import {MEAN_HISTORY_MODAL, STD_DEVIATION_MODAL, TOTAL_DROPPED_MODAL} from "~/shared/constants";
+import {
+    HISTORIC_DECREASING, HISTORIC_EQUAL,
+    HISTORIC_INCREASING,
+    MEAN_HISTORY_MODAL,
+    STD_DEVIATION_MODAL,
+    TOTAL_DROPPED_MODAL
+} from "~/shared/constants";
 import {beautifyCamelCase} from "~/shared/util";
 
 
@@ -78,19 +84,19 @@ const renderHistoricTrendIcon = (context: string, data: SellOfferHistoricData[])
         const value: number = sellOfferHistoricData[context as keyof SellOfferHistoricData] as number;
 
         if (previousValue > value) {
-            tendency.push("down");
+            tendency.push(HISTORIC_DECREASING);
 
             previousValue = value
         }
 
         if (previousValue === value) {
-            tendency.push("equal");
+            tendency.push(HISTORIC_EQUAL);
 
             previousValue = value
         }
 
         if (previousValue < value) {
-            tendency.push("up");
+            tendency.push(HISTORIC_INCREASING);
 
             previousValue = value
         }
@@ -98,11 +104,11 @@ const renderHistoricTrendIcon = (context: string, data: SellOfferHistoricData[])
 
     const result: string = countMajorTendency(tendency);
 
-    if (result === "up") {
+    if (result === HISTORIC_INCREASING) {
         return <IconArrowUp />
     }
 
-    if (result === "equal") {
+    if (result === HISTORIC_EQUAL) {
         return <IconEqual />
     }
 
