@@ -69,11 +69,13 @@ func (s *DetailService) Execute(good string) (types.Detail, error) {
 		historicData = make([]types.DataSnapshot, 0)
 	}
 
+	mean := s.computeMean(prices)
+
 	return types.Detail{
 		Wiki:                  goodDetail.Link,
 		GoodRecord:            goods,
 		Creatures:             killStatistics,
-		SellPriceMean:         int(s.prob.Mean(prices)),
+		SellPriceMean:         mean,
 		StdDeviation:          s.prob.StdDeviation(prices),
 		SellOfferFrequency:    frequencyChart,
 		SellOfferHistoricData: historicData,
@@ -218,4 +220,12 @@ func (s *DetailService) get15DaysSellOfferHistoricData(good string) ([]types.Dat
 	}
 
 	return result, nil
+}
+
+func (s *DetailService) computeMean(prices []int) int {
+	if len(prices) == 1 {
+		return prices[0]
+	}
+
+	return int(s.prob.Mean(prices))
 }
