@@ -23,7 +23,7 @@ export function GoodPreviewChip({ data }: GoodPreviewChipProps) {
                 const cog: CogChart = data[cogName];
 
                 return (
-                    <GridCol key={cogName} span={4}>
+                    <GridCol key={cogName} span={2}>
                         <Card
                             radius="md"
                             withBorder
@@ -32,9 +32,9 @@ export function GoodPreviewChip({ data }: GoodPreviewChipProps) {
                         >
                             <Card.Section inheritPadding py="xs">
                                 <Grid>
-                                    <Grid.Col span={10}>
-                                        <Stack>
-                                            <Title order={2}>{beautifyCamelCase(cogName)}</Title>
+                                    <Grid.Col span={8}>
+                                        <Stack gap={"xs"}>
+                                            <Title order={4} lineClamp={1}>{beautifyCamelCase(cogName)}</Title>
                                             <Group>
                                                 <Tooltip label="Go to TibiaWiki" openDelay={50}>
                                                     <Anchor href={cog.wiki} target="_blank">
@@ -58,7 +58,7 @@ export function GoodPreviewChip({ data }: GoodPreviewChipProps) {
                                         </Stack>
                                     </Grid.Col>
                                     <Grid.Col span="content">
-                                        <Image src={gif(cogName)} alt={cogName} fit="contain" h={80}/>
+                                        <Image src={gif(cogName)} alt={cogName} fit="contain" h={70} w={70}/>
                                     </Grid.Col>
                                 </Grid>
                             </Card.Section>
