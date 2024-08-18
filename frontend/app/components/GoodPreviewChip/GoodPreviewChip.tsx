@@ -1,6 +1,6 @@
 import {CogChart, HomePageData} from "~/shared/types";
 import classes from "~/components/GoodPreviewChip/GoodPreviewChip.module.css";
-import {ActionIcon, Anchor, Card, Grid, GridCol, Group, Image, SimpleGrid, Stack, Title, Tooltip} from "@mantine/core";
+import {ActionIcon, Anchor, Card, Grid, GridCol, Group, Image, Stack, Title, Tooltip} from "@mantine/core";
 import {beautifyCamelCase, camelCaseToSnakeCase, gif} from "~/shared/util";
 import TibiaWikiIcon from "~/assets/tibia-wiki.png";
 import {NavigateFunction, useNavigate} from "react-router";
