@@ -6,6 +6,7 @@ import {CogChart, HomePageData} from "~/shared/types";
 import {Header} from "~/components/Header/Header";
 import {TIBIA_COIN} from "~/shared/constants";
 import {GoodPreviewChip} from "~/components/GoodPreviewChip/GoodPreviewChip";
+import classes from "./HomeRoute.module.css";
 
 type HomeResponse = {
     ok: boolean;
@@ -53,8 +54,8 @@ export default function Index() {
     const tibiaCoin: CogChart = serverProps.data[TIBIA_COIN];
 
     return (
-        <Container fluid>
-            <Grid gutter="xl">
+        <Container fluid className={classes.container}>
+            <Grid gutter="xl" className={classes.fullHeight}>
                 <Grid.Col span={12}>
                     <Header/>
                 </Grid.Col>

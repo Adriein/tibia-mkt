@@ -28,16 +28,18 @@ export function CogPreview({ name, wikiLink, data }: CogPreviewProps) {
                         <Title order={2}>{beautifyCamelCase(name)}</Title>
                         <Image src={gif(name)} alt={name}/>
                     </div>
-                    <Tooltip label="Details" openDelay={300}>
-                        <ActionIcon
-                            variant="default"
-                            aria-label="Details"
-                            onClick={() => navigate(`/${camelCaseToSnakeCase(name)}/detail`)}
-                        >
-                            <IconEye className={classes.eyeIconButton} />
-                        </ActionIcon>
+                    <Tooltip label="Details" openDelay={50}>
+                        <Anchor>
+                            <ActionIcon
+                                variant="default"
+                                aria-label="Details"
+                                onClick={() => navigate(`/${camelCaseToSnakeCase(name)}/detail`)}
+                            >
+                                <IconEye className={classes.eyeIconButton} />
+                            </ActionIcon>
+                        </Anchor>
                     </Tooltip>
-                    <Tooltip label="Go to TibiaWiki" openDelay={300}>
+                    <Tooltip label="Go to TibiaWiki" openDelay={50}>
                         <Anchor href={wikiLink} target="_blank">
                             <ActionIcon variant="default" aria-label="Tibia Wiki">
                                 <Image src={TibiaWikiIcon as string} alt="Tibia Wiki" h={20} w={20}/>

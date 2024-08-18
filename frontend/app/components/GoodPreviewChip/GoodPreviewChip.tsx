@@ -1,10 +1,11 @@
 import {CogChart, HomePageData} from "~/shared/types";
-import classes from "~/components/CogPreview/CogPreview.module.css";
-import {ActionIcon, Anchor, Card, Grid, GridCol, Group, Image, Title, Tooltip} from "@mantine/core";
+import classes from "~/components/GoodPreviewChip/GoodPreviewChip.module.css";
+import {ActionIcon, Anchor, Card, Grid, GridCol, Group, Image, SimpleGrid, Stack, Title, Tooltip} from "@mantine/core";
 import {beautifyCamelCase, camelCaseToSnakeCase, gif} from "~/shared/util";
 import TibiaWikiIcon from "~/assets/tibia-wiki.png";
 import {NavigateFunction, useNavigate} from "react-router";
 import {TIBIA_COIN} from "~/shared/constants";
+import {IconEye} from "@tabler/icons-react";
 
 interface GoodPreviewChipProps {
     data: HomePageData
@@ -27,18 +28,40 @@ export function GoodPreviewChip({ data }: GoodPreviewChipProps) {
                             radius="md"
                             withBorder
                             onClick={() => navigate(`/${camelCaseToSnakeCase(cogName)}/detail`)}
+                            className={classes.card}
                         >
-                            <Group>
-                                <Title order={4}>{beautifyCamelCase(cogName)}</Title>
-                                <Image src={gif(cogName)} alt={cogName}/>
-                                <Tooltip label="Go to TibiaWiki" openDelay={300}>
-                                    <Anchor href={cog.wiki} target="_blank">
-                                        <ActionIcon variant="default" aria-label="Tibia Wiki">
-                                            <Image src={TibiaWikiIcon as string} alt="Tibia Wiki" h={20} w={20}/>
-                                        </ActionIcon>
-                                    </Anchor>
-                                </Tooltip>
-                            </Group>
+                            <Card.Section inheritPadding py="xs">
+                                <Grid>
+                                    <Grid.Col span={10}>
+                                        <Stack>
+                                            <Title order={2}>{beautifyCamelCase(cogName)}</Title>
+                                            <Group>
+                                                <Tooltip label="Go to TibiaWiki" openDelay={50}>
+                                                    <Anchor href={cog.wiki} target="_blank">
+                                                        <ActionIcon variant="default" aria-label="Tibia Wiki">
+                                                            <Image src={TibiaWikiIcon as string} alt="Tibia Wiki" h={20.8} w={20.8}/>
+                                                        </ActionIcon>
+                                                    </Anchor>
+                                                </Tooltip>
+                                                <Tooltip label="Details" openDelay={50}>
+                                                    <Anchor>
+                                                        <ActionIcon
+                                                            variant="default"
+                                                            aria-label="Details"
+                                                            onClick={() => navigate(`/${camelCaseToSnakeCase(cogName)}/detail`)}
+                                                        >
+                                                            <IconEye className={classes.eyeIconButton} />
+                                                        </ActionIcon>
+                                                    </Anchor>
+                                                </Tooltip>
+                                            </Group>
+                                        </Stack>
+                                    </Grid.Col>
+                                    <Grid.Col span="content">
+                                        <Image src={gif(cogName)} alt={cogName} fit="contain" h={80}/>
+                                    </Grid.Col>
+                                </Grid>
+                            </Card.Section>
                         </Card>
                     </GridCol>
                 );
