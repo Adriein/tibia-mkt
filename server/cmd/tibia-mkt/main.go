@@ -53,6 +53,7 @@ func main() {
 
 	api.Route("GET /home", createHomeHandler(api, database))
 	api.Route("GET /detail", createDetailHandler(api, database))
+	api.Route("GET /goods", createSearchGoodsHandler(api, database))
 	api.Route("GET /kill-statistics-cron", cronMiddlewares.ApplyOn(createKillStatisticsHandler(api, database)))
 	api.Route("GET /data-snapshot-cron", cronMiddlewares.ApplyOn(createDataSnapshotHandler(api, database)))
 
@@ -192,4 +193,18 @@ func createDataSnapshotHandler(api *server.TibiaMktApiServer, database *sql.DB) 
 	dataSnapshot := handler.NewDataSnapshotHandler(command)
 
 	return api.NewHandler(dataSnapshot.Handler)
+}
+
+func createSearchGoodsHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
+	pgGoodRepository := repository.NewPgGoodRepository(database)
+
+	goodsPresenter := presenter.NewSearchGoodPresenter()
+
+	goodService := service.NewSearchGoodService(
+		pgGoodRepository,
+	)
+
+	searchGood := handler.NewSearchGoodHandler(goodService, goodsPresenter)
+
+	return api.NewHandler(searchGood.Handler)
 }

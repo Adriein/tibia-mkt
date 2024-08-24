@@ -1,18 +1,18 @@
 package handler
 
 import (
-	service2 "github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
+	"github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
 	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
 	"net/http"
 )
 
 type DataSnapshotHandler struct {
-	cron *service2.DataSnapshotService
+	cron *service.DataSnapshotService
 }
 
 func NewDataSnapshotHandler(
-	cron *service2.DataSnapshotService,
+	cron *service.DataSnapshotService,
 ) *DataSnapshotHandler {
 	return &DataSnapshotHandler{
 		cron: cron,

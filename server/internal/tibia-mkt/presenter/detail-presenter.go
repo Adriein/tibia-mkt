@@ -46,7 +46,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 
 	if !ok {
 		return types.ServerResponse{}, types.ApiError{
-			Msg:      "Assertion failed, data is not an array of GoodRecord",
+			Msg:      "Assertion failed, data is not a Detail type",
 			Function: "Format",
 			File:     "detail-presenter.go",
 		}
