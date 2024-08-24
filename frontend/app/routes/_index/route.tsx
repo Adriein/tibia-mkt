@@ -54,11 +54,9 @@ export default function Index() {
     const tibiaCoin: CogChart = serverProps.data[TIBIA_COIN];
 
     return (
-        <Container fluid className={classes.container}>
+        <Container fluid>
+            <Header/>
             <Grid gutter="xl" className={classes.fullHeight}>
-                <Grid.Col span={12}>
-                    <Header/>
-                </Grid.Col>
                 <Grid.Col span={12}>
                     <GoodPreviewChip data={serverProps.data}/>
                 </Grid.Col>

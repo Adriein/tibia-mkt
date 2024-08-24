@@ -13,8 +13,54 @@ interface GoodPreviewChipProps {
 
 export function GoodPreviewChip({ data }: GoodPreviewChipProps) {
     const navigate: NavigateFunction = useNavigate();
+    const cog = data["honeycomb"]
     return (
         <Grid gutter="xl">
+            {/*new Array(12).fill(null).map(() => {
+                return (
+                    <GridCol key={"honeycomb"} span={2}>
+                        <Card
+                            radius="md"
+                            withBorder
+                            onClick={() => navigate(`/${camelCaseToSnakeCase("honeycomb")}/detail`)}
+                            className={classes.card}
+                        >
+                            <Card.Section inheritPadding py="xs">
+                                <Grid>
+                                    <Grid.Col span={8}>
+                                        <Stack gap={"xs"}>
+                                            <Title order={4} lineClamp={1}>{beautifyCamelCase("honeycomb")}</Title>
+                                            <Group>
+                                                <Tooltip label="Go to TibiaWiki" openDelay={50}>
+                                                    <Anchor href={cog.wiki} target="_blank">
+                                                        <ActionIcon variant="default" aria-label="Tibia Wiki">
+                                                            <Image src={TibiaWikiIcon as string} alt="Tibia Wiki" h={20.8} w={20.8}/>
+                                                        </ActionIcon>
+                                                    </Anchor>
+                                                </Tooltip>
+                                                <Tooltip label="Details" openDelay={50}>
+                                                    <Anchor>
+                                                        <ActionIcon
+                                                            variant="default"
+                                                            aria-label="Details"
+                                                            onClick={() => navigate(`/${camelCaseToSnakeCase("honeycomb")}/detail`)}
+                                                        >
+                                                            <IconEye className={classes.eyeIconButton} />
+                                                        </ActionIcon>
+                                                    </Anchor>
+                                                </Tooltip>
+                                            </Group>
+                                        </Stack>
+                                    </Grid.Col>
+                                    <Grid.Col span="content">
+                                        <Image src={gif("honeycomb")} alt={"honeycomb"} fit="contain" h={70} w={70}/>
+                                    </Grid.Col>
+                                </Grid>
+                            </Card.Section>
+                        </Card>
+                    </GridCol>
+                );
+            })*/}
             {Object.keys(data).map((cogName: string) => {
                 if (cogName === TIBIA_COIN) {
                     return null;
@@ -27,8 +73,6 @@ export function GoodPreviewChip({ data }: GoodPreviewChipProps) {
                         <Card
                             radius="md"
                             withBorder
-                            onClick={() => navigate(`/${camelCaseToSnakeCase(cogName)}/detail`)}
-                            className={classes.card}
                         >
                             <Card.Section inheritPadding py="xs">
                                 <Grid>
