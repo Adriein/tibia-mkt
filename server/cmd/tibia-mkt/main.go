@@ -54,8 +54,10 @@ func main() {
 	api.Route("GET /home", createHomeHandler(api, database))
 	api.Route("GET /detail", createDetailHandler(api, database))
 	api.Route("GET /goods", createSearchGoodsHandler(api, database))
+
 	api.Route("GET /kill-statistics-cron", cronMiddlewares.ApplyOn(createKillStatisticsHandler(api, database)))
 	api.Route("GET /data-snapshot-cron", cronMiddlewares.ApplyOn(createDataSnapshotHandler(api, database)))
+	api.Route("POST /data-ingestion", cronMiddlewares.ApplyOn(createDataIngestionHandler(api, database)))
 
 	api.Route("POST /trade-engine", tradeEngineHandler(api, database))
 	api.Route("POST /seed", createSeedHandler(api, database))
@@ -207,4 +209,16 @@ func createSearchGoodsHandler(api *server.TibiaMktApiServer, database *sql.DB) h
 	searchGood := handler.NewSearchGoodHandler(goodService, goodsPresenter)
 
 	return api.NewHandler(searchGood.Handler)
+}
+
+func createDataIngestionHandler(api *server.TibiaMktApiServer, database *sql.DB) http.HandlerFunc {
+	container := pkg.NewContainer(database)
+
+	factory := container.NewGoodRecordRepositoryFactory()
+
+	dataIngestionService := service.NewDataIngestionService(factory)
+
+	dataIngestion := handler.NewDataIngestionHandler(dataIngestionService)
+
+	return api.NewHandler(dataIngestion.Handler)
 }
