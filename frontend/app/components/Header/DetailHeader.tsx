@@ -10,7 +10,7 @@ interface DetailHeaderProps {
 export function DetailHeader({ item, wikiLink }: DetailHeaderProps) {
     return (
         <header className={classes.header}>
-            <Title className={classes.title}>{item}</Title>
+            <Title lineClamp={1} className={classes.title}>{item}</Title>
             <Tooltip label="Go to TibiaWiki" openDelay={300}>
                 <Anchor href={wikiLink} target="_blank">
                     <ActionIcon variant="default" aria-label="Tibia Wiki">

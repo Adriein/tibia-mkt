@@ -69,14 +69,14 @@ export function GoodPreviewChip({ data }: GoodPreviewChipProps) {
                 const cog: CogChart = data[cogName];
 
                 return (
-                    <GridCol key={cogName} span={2}>
+                    <GridCol key={cogName} span={{ base: 12, md: 2, lg: 2}}>
                         <Card
                             radius="md"
                             withBorder
                         >
                             <Card.Section inheritPadding py="xs">
                                 <Grid>
-                                    <Grid.Col span={8}>
+                                    <Grid.Col span={{ base: "auto", md: 8, lg: 8}}>
                                         <Stack gap={"xs"}>
                                             <Title order={4} lineClamp={1}>{beautifyCamelCase(cogName)}</Title>
                                             <Group>

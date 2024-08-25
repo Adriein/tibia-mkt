@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "react-router";
 import { CogPreview } from "~/components/CogPreview/CogPreview";
-import {Grid, Container} from "@mantine/core";
+import {Grid, Container, Space} from "@mantine/core";
 import {CogChart, HomePageData} from "~/shared/types";
 import {Header} from "~/components/Header/Header";
 import {TIBIA_COIN} from "~/shared/constants";
@@ -44,9 +44,10 @@ export default function Index() {
     const tibiaCoin: CogChart = serverProps.home.data[TIBIA_COIN];
 
     return (
-        <Container fluid>
+        <Container fluid className={classes.fullHeight}>
             <Header search={serverProps.search.data}/>
-            <Grid gutter="xl" className={classes.fullHeight}>
+            <Space h="xl"/>
+            <Grid gutter="xl">
                 <Grid.Col span={12}>
                     <GoodPreviewChip data={serverProps.home.data}/>
                 </Grid.Col>
