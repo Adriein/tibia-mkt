@@ -1,11 +1,11 @@
-import {CogChart, HomePageData} from "~/shared/types";
+import {Cog, CogChart, HomePageData} from "~/shared/types";
 import classes from "~/components/GoodPreviewChip/GoodPreviewChip.module.css";
 import {ActionIcon, Anchor, Card, Grid, GridCol, Group, Image, Stack, Title, Tooltip} from "@mantine/core";
-import {beautifyCamelCase, camelCaseToSnakeCase, gif} from "~/shared/util";
+import {beautifyCamelCase, beautifyLastGoodDataUpdate, camelCaseToSnakeCase, gif} from "~/shared/util";
 import TibiaWikiIcon from "~/assets/tibia-wiki.png";
 import {NavigateFunction, useNavigate} from "react-router";
 import {TIBIA_COIN} from "~/shared/constants";
-import {IconEye} from "@tabler/icons-react";
+import {IconClockQuestion, IconEye} from "@tabler/icons-react";
 
 interface GoodPreviewChipProps {
     data: HomePageData
@@ -67,6 +67,7 @@ export function GoodPreviewChip({ data }: GoodPreviewChipProps) {
                 }
 
                 const cog: CogChart = data[cogName];
+                const lastDataPoint: Cog = data[cogName].cogs[data[cogName].cogs.length - 1];
 
                 return (
                     <GridCol key={cogName} span={{ base: 12, md: 2, lg: 2}}>
@@ -94,7 +95,22 @@ export function GoodPreviewChip({ data }: GoodPreviewChipProps) {
                                                             aria-label="Details"
                                                             onClick={() => navigate(`/${camelCaseToSnakeCase(cogName)}/detail`)}
                                                         >
-                                                            <IconEye className={classes.eyeIconButton} />
+                                                            <IconEye className={classes.icon} />
+                                                        </ActionIcon>
+                                                    </Anchor>
+                                                </Tooltip>
+                                                <Tooltip
+                                                    label={`Updated ${beautifyLastGoodDataUpdate(lastDataPoint)} ago`}
+                                                    openDelay={50}
+                                                >
+                                                    <Anchor>
+                                                        <ActionIcon
+                                                            variant="default"
+                                                            aria-label="Last Updated"
+                                                            disabled
+                                                            className={classes.lastUpdated}
+                                                        >
+                                                            <IconClockQuestion className={classes.icon}/>
                                                         </ActionIcon>
                                                     </Anchor>
                                                 </Tooltip>

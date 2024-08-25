@@ -3,6 +3,9 @@ import HoneycombGif from '~/assets/honeycomb.gif';
 import SwamplingWoodGif from '~/assets/swampling-wood.gif';
 import BrokenShamanicStaffGif from '~/assets/broken-shamanic-staff.gif';
 import {BROKEN_SHAMANIC_STAFF, HONEYCOMB, SWAMPLING_WOOD, TIBIA_COIN} from "~/shared/constants";
+import {Cog, YAxisTick} from "~/shared/types";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 export const formatDate = (value: Date): string => {
     return new Intl.DateTimeFormat("es-ES", {
@@ -48,4 +51,10 @@ export const camelCaseToSnakeCase = (camelCaseWord: string) => {
 
 export const snakeCaseToCamelCase = (snakeCaseWord: string) => {
     return snakeCaseWord.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
+export const beautifyLastGoodDataUpdate = (dataPoint: Cog): string => {
+    dayjs.extend(relativeTime);
+
+    return dayjs().from(dayjs(dataPoint.date), true)
 }

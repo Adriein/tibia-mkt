@@ -7,3 +7,13 @@
 .title {
     flex-grow: 1
 }
+
+.lastUpdated {
+    cursor: default;
+    &:disabled,
+    &[data-disabled] {
+        border: calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-default-border);
+        background-color:  var(--mantine-color-default);
+        color: var(--mantine-color-default-color);
+    }
+}

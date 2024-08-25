@@ -1,7 +1,7 @@
 import {beautifyCamelCase, snakeCaseToCamelCase} from "~/shared/util";
 import {Accordion, Container, Grid, rem} from "@mantine/core";
 import {LoaderFunctionArgs} from "@remix-run/node";
-import {DetailPageData, RemixMetaFunc, SellOfferProbability} from "~/shared/types";
+import {Cog, DetailPageData, RemixMetaFunc, SellOfferProbability} from "~/shared/types";
 import {json, useLoaderData, useParams} from "react-router";
 import {CogDetailChart} from "~/components/CogDetailChart/CogDetailChart";
 import {IconChartDotsFilled, IconInfoCircle, IconRobot} from '@tabler/icons-react';
@@ -65,6 +65,7 @@ export async function loader({ params }: LoaderFunctionArgs): Promise<Response> 
 export default function CogDetail() {
     const serverProps: DetailPageResponse = useLoaderData() as DetailPageResponse;
     const params = useParams() as {item: string};
+    const lastDataPoint: Cog = serverProps.data.detail.cogs[serverProps.data.detail.cogs.length - 1];
 
     return (
         <Container fluid>
@@ -73,6 +74,7 @@ export default function CogDetail() {
                     <DetailHeader
                         item={beautifyCamelCase(snakeCaseToCamelCase(params.item))}
                         wikiLink={serverProps.data.detail.wiki}
+                        lastDataPoint={lastDataPoint}
                     />
                 </Grid.Col>
                 <Grid.Col span={12}>
