@@ -7,15 +7,12 @@ import {Header} from "~/components/Header/Header";
 import {TIBIA_COIN} from "~/shared/constants";
 import {GoodPreviewChip} from "~/components/GoodPreviewChip/GoodPreviewChip";
 import classes from "./HomeRoute.module.css";
+import {HomeResponse} from "~/routes/_index/types";
+import {fetchData, orderHomePageData} from "~/routes/_index/routeFunctions";
 
 type HomeServerProps = {
     home: HomeResponse<HomePageData>,
     search: HomeResponse<string[]>
-}
-
-type HomeResponse<T> = {
-    ok: boolean;
-    data: T
 }
 
 export const meta: MetaFunction = () => {
@@ -26,47 +23,18 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader(): Promise<Response> {
-    const homeRequest: Request = new Request(
-        `${process.env.API_PROTOCOL}://${process.env.API_URL}` +
-        "/home?" +
-        "item=tibiaCoin&item=honeycomb&item=swamplingWood&item=brokenShamanicStaff"
-    );
+    const [ homeData, searchInputData ]: [HomeResponse<HomePageData>, HomeResponse<string[]>] = await fetchData();
 
-    const searchGoodRequest: Request = new Request(
-        `${process.env.API_PROTOCOL}://${process.env.API_URL}/goods`
-    );
-
-    const responses: [HomeResponse<HomePageData>, HomeResponse<string[]>] = await Promise.all([
-        fetch(homeRequest).then((response: Response) => response.json()),
-        fetch(searchGoodRequest).then((response: Response) => response.json()),
-    ]);
-
-    const homeResponse: HomeResponse<HomePageData> = responses[0];
-    const searchResponse: HomeResponse<string[]> = responses[1];
-
-    const cogOrderMap: Map<number, string> = Object.keys(homeResponse.data)
-        .reduce((result: Map<number, string>, cogName: string) => {
-            const cog: CogChart = homeResponse.data[cogName];
-
-            return result.set(cog.pagePosition, cogName);
-        }, new Map<number, string>());
-
-    let result: HomePageData = {};
-
-    for (let i: number = 0; i < Object.keys(homeResponse.data).length; i++) {
-        const cogName: string = cogOrderMap.get(i + 1)!;
-
-        result = {...result, [cogName]: homeResponse.data[cogName]};
-    }
+    const orderedHomeData: HomePageData = orderHomePageData(homeData);
 
     return json({
         home: {
-            ok: homeResponse.ok,
-            data: result
+            ok: homeData.ok,
+            data: orderedHomeData
         },
         search: {
-            ok: searchResponse.ok,
-            data: searchResponse.data
+            ok: searchInputData.ok,
+            data: searchInputData.data
         }
     });
 }
