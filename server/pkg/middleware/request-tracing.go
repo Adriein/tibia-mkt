@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/google/uuid"
 	"log/slog"
 	"net/http"
@@ -25,16 +26,19 @@ func NewRequestTracingMiddleware(handler http.Handler) http.Handler {
 
 		slog.Info(initialTrace)
 
-		handler.ServeHTTP(w, r)
+		rww := helper.NewResponseWriterWrapper(w)
+
+		handler.ServeHTTP(rww, r)
 
 		elapsed := time.Since(start)
 
 		trace := fmt.Sprintf(
-			"Response: Method=%s URI=%s UserAgent=%s Time=%dms TraceId=%s",
+			"Response: Method=%s URI=%s UserAgent=%s Time=%dms Status=%d TraceId=%s",
 			r.Method,
 			r.RequestURI,
 			r.UserAgent(),
 			elapsed.Milliseconds(),
+			rww.StatusCode(),
 			id.String(),
 		)
 
