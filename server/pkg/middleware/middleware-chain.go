@@ -16,7 +16,7 @@ func NewMiddlewareChain(initialMiddlewares ...types.Middleware) *MiddlewareChain
 }
 
 func (c *MiddlewareChain) ApplyOn(next http.Handler) http.Handler {
-	for i := len(c.middlewares) - 1; i >= 0; i-- {
+	for i := 0; i < len(c.middlewares); i++ {
 		next = c.middlewares[i](next)
 	}
 

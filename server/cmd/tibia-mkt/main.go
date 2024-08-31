@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"errors"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/handler"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/presenter"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
@@ -11,6 +10,7 @@ import (
 	"github.com/adriein/tibia-mkt/internal/trade-engine"
 	"github.com/adriein/tibia-mkt/internal/trade-engine/trade-algorithm"
 	"github.com/adriein/tibia-mkt/pkg"
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/middleware"
 	"github.com/joho/godotenv"
@@ -27,21 +27,25 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	api, newServerErr := server.New(":4000")
+	checker := helper.NewEnvVarChecker(
+		constants.DatabaseDsn,
+		constants.ServerPort,
+		constants.TibiaMktApiKey,
+	)
+
+	if envCheckerErr := checker.Check(); envCheckerErr != nil {
+		log.Fatal(envCheckerErr.Error())
+	}
+
+	api, newServerErr := server.New(os.Getenv(constants.ServerPort))
 
 	if newServerErr != nil {
 		log.Fatal(newServerErr.Error())
 	}
 
-	databaseDSN, existEnv := os.LookupEnv("DATABASE_URL")
+	databaseDsn := os.Getenv(constants.DatabaseDsn)
 
-	if !existEnv {
-		noEnvVarError := errors.New("DATABASE_URL is not set")
-
-		log.Fatal(noEnvVarError.Error())
-	}
-
-	database, dbConnErr := sql.Open("postgres", databaseDSN)
+	database, dbConnErr := sql.Open("postgres", databaseDsn)
 
 	if dbConnErr != nil {
 		log.Fatal(dbConnErr.Error())
