@@ -21,7 +21,7 @@ func NewDataIngestionHandler(
 }
 
 func (h *DataIngestionHandler) Handler(w http.ResponseWriter, r *http.Request) error {
-	var request types.GoodRecord
+	var request types.GoodRecordDto
 
 	if decodeErr := json.NewDecoder(r.Body).Decode(&request); decodeErr != nil {
 		return types.ApiError{

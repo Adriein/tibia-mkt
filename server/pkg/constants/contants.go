@@ -58,6 +58,10 @@ const (
 	TibiaDataApiKillStatisticsUrl string = "killstatistics"
 )
 
+const (
+	IncomingTimeFormat = "20060102150405"
+)
+
 // App users
 
 const (

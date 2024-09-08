@@ -46,3 +46,12 @@ type GoodRecordResponse struct {
 	Date      string `json:"date"`
 	World     string `json:"world"`
 }
+
+type GoodRecordDto struct {
+	ItemName  string `json:"itemName"`
+	BuyOffer  int    `json:"buyOffer"`
+	SellOffer int    `json:"sellOffer"`
+	Amount    int    `json:"amount"`
+	Date      string `json:"date"`
+	World     string `json:"world"`
+}
