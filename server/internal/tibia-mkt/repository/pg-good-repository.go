@@ -13,7 +13,7 @@ type PgGoodRepository struct {
 }
 
 func NewPgGoodRepository(connection *sql.DB) *PgGoodRepository {
-	transformer := helper.NewCriteriaToSqlService("cog")
+	transformer := helper.NewCriteriaToSqlService("good")
 
 	return &PgGoodRepository{
 		connection:  connection,
@@ -177,7 +177,7 @@ func (r *PgGoodRepository) FindOne(criteria types.Criteria) (types.Good, error) 
 }
 
 func (r *PgGoodRepository) Save(entity types.Good) error {
-	var query = `INSERT INTO cog (id, name, link, creatures, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`
+	var query = `INSERT INTO good (id, name, link, creatures, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`
 
 	encodedCreatures, jsonEncodeErr := helper.JsonEncode(entity.Drop)
 

@@ -100,6 +100,7 @@ func (p *DetailPresenter) Format(data any) (types.ServerResponse, error) {
 		goodSkuResponseList = append(goodSkuResponseList, types.GoodRecordResponse{
 			BuyOffer:  goodSku.BuyPrice,
 			SellOffer: goodSku.SellPrice,
+			Amount:    goodSku.Amount,
 			Date:      goodSku.Date.Format(time.DateOnly),
 			World:     goodSku.World,
 		})

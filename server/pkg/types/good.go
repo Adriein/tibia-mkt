@@ -7,6 +7,7 @@ type GoodRecord struct {
 	ItemName  string
 	BuyPrice  int
 	SellPrice int
+	Amount    int
 	Date      time.Time
 	World     string
 }
@@ -41,6 +42,7 @@ type GoodRecordInterval struct {
 type GoodRecordResponse struct {
 	BuyOffer  int    `json:"buyOffer"`
 	SellOffer int    `json:"sellOffer"`
+	Amount    int    `json:"amount"`
 	Date      string `json:"date"`
 	World     string `json:"world"`
 }

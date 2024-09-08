@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS swampling_wood (
     world VARCHAR(20) NOT NULL,
     date VARCHAR(60) NOT NULL,
     buy_price DECIMAL(15,2) NOT NULL,
-    sell_price DECIMAL(15,2) NOT NULL
+    sell_price DECIMAL(15,2) NOT NULL,
+    amount DECIMAL(15,2) NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_sw_world ON swampling_wood(world);

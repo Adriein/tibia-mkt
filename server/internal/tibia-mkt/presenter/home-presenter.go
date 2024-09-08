@@ -78,6 +78,7 @@ func (p *HomePresenter) Format(data any) (types.ServerResponse, error) {
 			cogSkuResponseList = append(cogSkuResponseList, types.GoodRecordResponse{
 				BuyOffer:  cogSku.BuyPrice,
 				SellOffer: cogSku.SellPrice,
+				Amount:    cogSku.Amount,
 				Date:      cogSku.Date.Format(time.DateOnly),
 				World:     cogSku.World,
 			})

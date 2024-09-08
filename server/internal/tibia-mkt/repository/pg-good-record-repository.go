@@ -53,12 +53,13 @@ func (r *PgGoodRecordRepository) Find(criteria types.Criteria) ([]types.GoodReco
 		date       string
 		buy_price  float64
 		sell_price float64
+		amount     float64
 	)
 
 	var results []types.GoodRecord
 
 	for rows.Next() {
-		if scanErr := rows.Scan(&id, &world, &date, &buy_price, &sell_price); scanErr != nil {
+		if scanErr := rows.Scan(&id, &world, &date, &buy_price, &sell_price, &amount); scanErr != nil {
 			return nil, types.ApiError{
 				Msg:      scanErr.Error(),
 				Function: "Find -> rows.Scan()",
@@ -68,6 +69,7 @@ func (r *PgGoodRecordRepository) Find(criteria types.Criteria) ([]types.GoodReco
 
 		buyPrice := int(buy_price)
 		sellPrice := int(sell_price)
+		quantity := int(amount)
 
 		parsedDate, timeParseErr := time.Parse(time.DateOnly, date)
 
@@ -85,6 +87,7 @@ func (r *PgGoodRecordRepository) Find(criteria types.Criteria) ([]types.GoodReco
 			Date:      parsedDate,
 			BuyPrice:  buyPrice,
 			SellPrice: sellPrice,
+			Amount:    quantity,
 			World:     world,
 		})
 	}
@@ -93,7 +96,7 @@ func (r *PgGoodRecordRepository) Find(criteria types.Criteria) ([]types.GoodReco
 }
 
 func (r *PgGoodRecordRepository) Save(entity types.GoodRecord) error {
-	var query = fmt.Sprintf("INSERT INTO %s (id, world, date, buy_price, sell_price) VALUES ($1, $2, $3, $4, $5)", r.name)
+	var query = fmt.Sprintf("INSERT INTO %s (id, world, date, buy_price, sell_price, amount) VALUES ($1, $2, $3, $4, $5, $6)", r.name)
 
 	_, err := r.connection.Exec(
 		query,
@@ -102,6 +105,7 @@ func (r *PgGoodRecordRepository) Save(entity types.GoodRecord) error {
 		entity.Date.Format(time.DateOnly),
 		entity.BuyPrice,
 		entity.SellPrice,
+		entity.Amount,
 	)
 
 	if err != nil {

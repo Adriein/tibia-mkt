@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS broken_shamanic_staff (
     world VARCHAR(20) NOT NULL,
     date VARCHAR(60) NOT NULL,
     buy_price DECIMAL(15,2) NOT NULL,
-    sell_price DECIMAL(15,2) NOT NULL
+    sell_price DECIMAL(15,2) NOT NULL,
+    amount DECIMAL(15,2) NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_bss_world ON broken_shamanic_staff(world);
