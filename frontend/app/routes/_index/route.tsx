@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "react-router";
 import { CogPreview } from "~/components/CogPreview/CogPreview";
-import {Grid, Container, Space} from "@mantine/core";
+import {Grid, Container, Space, Center, Box} from "@mantine/core";
 import {CogChart, HomePageData} from "~/shared/types";
 import {Header} from "~/components/Header/Header";
 import {TIBIA_COIN} from "~/shared/constants";
@@ -47,14 +47,21 @@ export default function Index() {
         <Container fluid className={classes.fullHeight}>
             <Header search={serverProps.search.data}/>
             <Space h="xl"/>
-            <Grid gutter="xl">
-                <Grid.Col span={12}>
-                    <GoodPreviewChip data={serverProps.home.data}/>
-                </Grid.Col>
-                <Grid.Col key={TIBIA_COIN} span={12}>
-                    <CogPreview name={TIBIA_COIN} wikiLink={tibiaCoin.wiki} data={tibiaCoin}/>
-                </Grid.Col>
-            </Grid>
+            {tibiaCoin?
+                <Grid gutter="xl">
+                    <Grid.Col span={12}>
+                        <GoodPreviewChip data={serverProps.home.data}/>
+                    </Grid.Col>
+                    <Grid.Col key={TIBIA_COIN} span={12}>
+                        <CogPreview name={TIBIA_COIN} wikiLink={tibiaCoin.wiki} data={tibiaCoin}/>
+                    </Grid.Col>
+                </Grid> :
+                <Grid gutter="xl">
+                    <Grid.Col span={12}>
+                        No data
+                    </Grid.Col>
+                </Grid>
+            }
         </Container>
     );
 }

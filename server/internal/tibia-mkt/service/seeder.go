@@ -51,7 +51,7 @@ func (s *SeederService) Execute(goodsToSeed []types.SeedGood) error {
 			return saveErr
 		}
 
-		repo := s.factory.Get(item.Name)
+		/*repo := s.factory.Get(item.Name)
 
 		var filters []types.Filter
 
@@ -71,7 +71,7 @@ func (s *SeederService) Execute(goodsToSeed []types.SeedGood) error {
 			if cronErr := s.dataSnapshotService.Execute(); cronErr != nil {
 				return cronErr
 			}
-		}
+		}*/
 	}
 
 	return nil
