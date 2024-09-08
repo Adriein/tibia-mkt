@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "react-router";
 import { CogPreview } from "~/components/CogPreview/CogPreview";
-import {Grid, Container, Space, Center, Box} from "@mantine/core";
+import {Grid, Container, Space} from "@mantine/core";
 import {CogChart, HomePageData} from "~/shared/types";
 import {Header} from "~/components/Header/Header";
 import {TIBIA_COIN} from "~/shared/constants";
