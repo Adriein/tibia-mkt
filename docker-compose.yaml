@@ -37,9 +37,8 @@ services:
       - "3000:3000"
     environment:
       DATABASE_URL: ${DATABASE_URL}
-  depends_on:
-    tibia_mkt_api:
-      condition: service_started
+    depends_on:
+      - tibia_mkt_api
   tibia_mkt_web_server:
     container_name: tibia_mkt_web_server
     build:
@@ -47,5 +46,8 @@ services:
       dockerfile: ./infrastructure/tibia-mkt-web-server/Dockerfile
     ports:
       - "80:80"
+    depends_on:
+      - tibia_mkt_api
+      - tibia_mkt_client
 volumes:
   tibia_mkt_database_data:
