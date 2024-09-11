@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check for required environment variables
 if [[ -z "$DATABASE_NAME" || -z "$DATABASE_PASSWORD" || -z "$DATABASE_USER" || -z "$SERVER_PORT" || -z "$TIBIA_MKT_API_KEY" ]]; then
