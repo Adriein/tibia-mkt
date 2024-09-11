@@ -2,7 +2,7 @@ FROM golang:alpine AS build
 
 WORKDIR /var/www/tibia-mkt
 
-COPY . .
+COPY ../../server .
 
 RUN go mod download
 
