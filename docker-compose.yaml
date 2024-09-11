@@ -43,7 +43,7 @@ services:
     container_name: tibia_mkt_web_server
     build:
       context: .
-      dockerfile: infrastructure/tibia-mkt-web-server/Dockerfile
+      dockerfile: infrastructure/nginx-web-server/Dockerfile
     ports:
       - "80:80"
     depends_on:
