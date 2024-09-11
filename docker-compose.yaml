@@ -47,10 +47,5 @@ services:
       dockerfile: ./infrastructure/tibia-mkt-web-server/Dockerfile
     ports:
       - "80:80"
-    depends_on:
-      tibia_mkt_api:
-        condition: service_started
-      tibia_mkt_client:
-        condition: service_started
 volumes:
   tibia_mkt_database_data:
