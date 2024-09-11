@@ -3,9 +3,11 @@ package constants
 //Env var keys
 
 const (
-	DatabaseDsn    = "DATABASE_URL"
-	ServerPort     = "SERVER_PORT"
-	TibiaMktApiKey = "TIBIA_MKT_API_KEY"
+	DatabaseUser     = "DATABASE_USER"
+	DatabasePassword = "DATABASE_PASSWORD"
+	DatabaseName     = "DATABASE_NAME"
+	ServerPort       = "SERVER_PORT"
+	TibiaMktApiKey   = "TIBIA_MKT_API_KEY"
 )
 
 // Tibia Mkt

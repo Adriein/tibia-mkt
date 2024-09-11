@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/handler"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/presenter"
 	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
@@ -28,7 +29,9 @@ func main() {
 	}
 
 	checker := helper.NewEnvVarChecker(
-		constants.DatabaseDsn,
+		constants.DatabaseUser,
+		constants.DatabasePassword,
+		constants.DatabaseName,
 		constants.ServerPort,
 		constants.TibiaMktApiKey,
 	)
@@ -43,7 +46,12 @@ func main() {
 		log.Fatal(newServerErr.Error())
 	}
 
-	databaseDsn := os.Getenv(constants.DatabaseDsn)
+	databaseDsn := fmt.Sprintf(
+		"postgresql://%s:%s@localhost:5432/%s?sslmode=disable",
+		os.Getenv(constants.DatabaseUser),
+		os.Getenv(constants.DatabasePassword),
+		os.Getenv(constants.DatabaseName),
+	)
 
 	database, dbConnErr := sql.Open("postgres", databaseDsn)
 
