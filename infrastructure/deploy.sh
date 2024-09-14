@@ -4,6 +4,7 @@
 if [[ -z "$DATABASE_NAME" || -z "$DATABASE_PASSWORD" || -z "$DATABASE_USER" || -z "$SERVER_PORT" || -z "$TIBIA_MKT_API_KEY" ]]; then
   # Prompt user to enter missing environment variables
   echo "Some environment variables are missing. Please enter the following:"
+  read -p "ENV: " ENV
   read -p "DATABASE_NAME: " DATABASE_NAME
   read -p "DATABASE_PASSWORD: " DATABASE_PASSWORD
   read -p "DATABASE_USER: " DATABASE_USER
@@ -14,7 +15,7 @@ if [[ -z "$DATABASE_NAME" || -z "$DATABASE_PASSWORD" || -z "$DATABASE_USER" || -
   rm -rf .env
 
   echo "Creating new .env"
-  echo "ENV=PRODUCTION" >> .env
+  echo "ENV=$ENV" >> .env
   echo "DATABASE_NAME=$DATABASE_NAME" >> .env
   echo "DATABASE_PASSWORD=$DATABASE_PASSWORD" >> .env
   echo "DATABASE_USER=$DATABASE_USER" >> .env

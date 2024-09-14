@@ -24,6 +24,7 @@ services:
     ports:
       - "4000:4000"
     environment:
+      ENV: ${ENV}
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
