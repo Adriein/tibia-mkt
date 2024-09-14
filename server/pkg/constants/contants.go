@@ -8,6 +8,8 @@ const (
 	DatabaseName     = "DATABASE_NAME"
 	ServerPort       = "SERVER_PORT"
 	TibiaMktApiKey   = "TIBIA_MKT_API_KEY"
+	Env              = "ENV"
+	Production       = "PRODUCTION"
 )
 
 // Tibia Mkt
