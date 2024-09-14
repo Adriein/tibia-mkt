@@ -15,7 +15,7 @@ if [[ -z "$DATABASE_NAME" || -z "$DATABASE_PASSWORD" || -z "$DATABASE_USER" || -
   rm -rf .env
 
   echo "Creating new .env"
-  echo "ENVIRONMENT=$ENVIRONMENT" >> .env
+  echo "ENVIRONMENT=$ENVIRONMENT" > .env
   echo "DATABASE_NAME=$DATABASE_NAME" >> .env
   echo "DATABASE_PASSWORD=$DATABASE_PASSWORD" >> .env
   echo "DATABASE_USER=$DATABASE_USER" >> .env
