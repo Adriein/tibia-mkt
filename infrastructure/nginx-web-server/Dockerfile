@@ -4,6 +4,6 @@ WORKDIR /etc/nginx/conf.d
 
 RUN rm -rf default.conf
 
-COPY ../../config .
+COPY config .
 
 EXPOSE 80
