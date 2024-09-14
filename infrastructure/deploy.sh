@@ -24,6 +24,3 @@ if [[ -z "$DATABASE_NAME" || -z "$DATABASE_PASSWORD" || -z "$DATABASE_USER" || -
   echo "SERVER_PORT=$SERVER_PORT" >> .env
   echo "TIBIA_MKT_API_KEY=$TIBIA_MKT_API_KEY" >> .env
 fi
-
-echo "Perform git pull"
-git pull
