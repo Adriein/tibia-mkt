@@ -10,10 +10,14 @@ if [[ -z "$DATABASE_NAME" || -z "$DATABASE_PASSWORD" || -z "$DATABASE_USER" || -
   read -p "SERVER_PORT: " SERVER_PORT
   read -p "TIBIA_MKT_API_KEY: " TIBIA_MKT_API_KEY
 
-  # Export the entered variables as environment variables
+  echo "Export the entered variables as environment variables"
   export DATABASE_NAME DATABASE_PASSWORD DATABASE_USER SERVER_PORT TIBIA_MKT_API_KEY
 
-  # Save the environment variables to a persistent file (e.g., .env)
+  echo "Deleting actual .env"
+  rm -rf .env
+
+  echo "Creating new .env"
+  echo "ENV=PRODUCTION" >> .env
   echo "DATABASE_NAME=$DATABASE_NAME" >> .env
   echo "DATABASE_PASSWORD=$DATABASE_PASSWORD" >> .env
   echo "DATABASE_USER=$DATABASE_USER" >> .env
@@ -21,5 +25,5 @@ if [[ -z "$DATABASE_NAME" || -z "$DATABASE_PASSWORD" || -z "$DATABASE_USER" || -
   echo "TIBIA_MKT_API_KEY=$TIBIA_MKT_API_KEY" >> .env
 fi
 
-# Perform git pull
+echo "Perform git pull"
 git pull
