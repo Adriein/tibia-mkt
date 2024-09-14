@@ -14,7 +14,7 @@ if [[ -z "$DATABASE_NAME" || -z "$DATABASE_PASSWORD" || -z "$DATABASE_USER" || -
   export DATABASE_NAME DATABASE_PASSWORD DATABASE_USER SERVER_PORT TIBIA_MKT_API_KEY
 
   # Save the environment variables to a persistent file (e.g., .env)
-  echo "DATABASE_NAME=$DATABASE_NAME" > .env
+  echo "DATABASE_NAME=$DATABASE_NAME" >> .env
   echo "DATABASE_PASSWORD=$DATABASE_PASSWORD" >> .env
   echo "DATABASE_USER=$DATABASE_USER" >> .env
   echo "SERVER_PORT=$SERVER_PORT" >> .env
