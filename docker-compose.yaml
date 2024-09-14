@@ -24,7 +24,11 @@ services:
     ports:
       - "4000:4000"
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      SERVER_PORT: ${SERVER_PORT}
+      TIBIA_MKT_API_KEY: ${TIBIA_MKT_API_KEY}
     depends_on:
       tibia_mkt_database:
         condition: service_healthy
