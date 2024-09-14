@@ -10,9 +10,6 @@ if [[ -z "$DATABASE_NAME" || -z "$DATABASE_PASSWORD" || -z "$DATABASE_USER" || -
   read -p "SERVER_PORT: " SERVER_PORT
   read -p "TIBIA_MKT_API_KEY: " TIBIA_MKT_API_KEY
 
-  echo "Export the entered variables as environment variables"
-  export DATABASE_NAME DATABASE_PASSWORD DATABASE_USER SERVER_PORT TIBIA_MKT_API_KEY
-
   echo "Deleting actual .env"
   rm -rf .env
 
