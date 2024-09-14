@@ -1,0 +1,7 @@
+1. NixOS image with server config
+2. Add ssh keys
+3. Pull repository
+4. Build frontend
+5. Build server
+6. Run migrations
+7. spin up docker compose
