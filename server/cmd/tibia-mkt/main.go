@@ -22,10 +22,12 @@ import (
 )
 
 func main() {
-	dotenvErr := godotenv.Load()
+	if os.Getenv(constants.Env) != constants.Production {
+		dotenvErr := godotenv.Load()
 
-	if dotenvErr != nil && os.Getenv(constants.Env) != constants.Production {
-		log.Fatal("Error loading .env file")
+		if dotenvErr != nil {
+			log.Fatal("Error loading .env file")
+		}
 	}
 
 	checker := helper.NewEnvVarChecker(
