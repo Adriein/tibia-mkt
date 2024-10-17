@@ -7,4 +7,7 @@ installGlobals();
 
 export default defineConfig({
   plugins: [remix(), tsconfigPaths()],
+  server: {
+    host: '0.0.0.0'
+  }
 });
