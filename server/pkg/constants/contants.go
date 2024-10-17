@@ -6,6 +6,7 @@ const (
 	DatabaseUser     = "DATABASE_USER"
 	DatabasePassword = "DATABASE_PASSWORD"
 	DatabaseName     = "DATABASE_NAME"
+	DatabaseIp       = "DATABASE_IP"
 	ServerPort       = "SERVER_PORT"
 	TibiaMktApiKey   = "TIBIA_MKT_API_KEY"
 	Env              = "ENV"

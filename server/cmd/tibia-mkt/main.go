@@ -31,6 +31,7 @@ func main() {
 	}
 
 	checker := helper.NewEnvVarChecker(
+		constants.DatabaseIp,
 		constants.DatabaseUser,
 		constants.DatabasePassword,
 		constants.DatabaseName,
@@ -49,9 +50,10 @@ func main() {
 	}
 
 	databaseDsn := fmt.Sprintf(
-		"postgresql://%s:%s@localhost:5432/%s?sslmode=disable",
+		"postgresql://%s:%s@%s:5432/%s?sslmode=disable",
 		os.Getenv(constants.DatabaseUser),
 		os.Getenv(constants.DatabasePassword),
+		os.Getenv(constants.DatabaseIp),
 		os.Getenv(constants.DatabaseName),
 	)
 
