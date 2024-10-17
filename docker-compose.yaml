@@ -41,6 +41,9 @@ services:
       dockerfile: infrastructure/tibia-mkt-client/Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      API_URL: ${API_URL}
+      API_PROTOCOL: ${API_PROTOCOL}
     depends_on:
       - tibia_mkt_api
   tibia_mkt_web_server:
