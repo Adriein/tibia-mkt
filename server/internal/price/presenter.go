@@ -49,20 +49,11 @@ func NewPresenter() *Presenter {
 	return &Presenter{}
 }
 
-func (p *Presenter) Format(data any) gin.H {
-	cogSkuMatrix, ok := data.([][]Price)
-
-	if !ok {
-		return gin.H{
-			"ok":    false,
-			"error": "data is not a matrix of type Price",
-		}
-	}
-
+func (p *Presenter) Format(data [][]*Price) gin.H {
 	var homeResponseMap = make(map[string]CogChartResponse)
 
-	for i := 0; i < len(cogSkuMatrix); i++ {
-		cogSkuList := cogSkuMatrix[i]
+	for i := 0; i < len(data); i++ {
+		cogSkuList := data[i]
 
 		var (
 			buyOfferTotal      int
@@ -145,7 +136,7 @@ func (p *Presenter) Format(data any) gin.H {
 	}
 }
 
-func (p *Presenter) getPagePosition(item Price) PriceConfig {
+func (p *Presenter) getPagePosition(item *Price) PriceConfig {
 	switch item.GoodName {
 	case constants.TibiaCoinEntity:
 		return PriceConfig{

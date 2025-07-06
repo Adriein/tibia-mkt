@@ -6,26 +6,41 @@ import (
 )
 
 type Controller struct {
-	service *Service
+	service   *Service
+	presenter *Presenter
 }
 
-func NewController(service *Service) *Controller {
+func NewController(service *Service, presenter *Presenter) *Controller {
 	return &Controller{
-		service: service,
+		service:   service,
+		presenter: presenter,
 	}
 }
 
 func (c *Controller) Get() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		item := ctx.Query("good")
+		items := ctx.QueryArray("item")
 
-		if item == "" {
+		if len(items) == 0 {
 			ctx.JSON(http.StatusBadRequest, gin.H{"ok": false, "error": "item to query is mandatory"})
 			return
 		}
 
-		c.service.GetPrice(item)
+		var prices []*Price
 
-		ctx.JSON(http.StatusOK, gin.H{"ok": true, "data": "pong"})
+		for _, item := range items {
+			price, err := c.service.GetPrice(item)
+
+			if err != nil {
+				ctx.Error(err)
+				return
+			}
+
+			prices = append(prices, price)
+		}
+
+		response := c.presenter.Format(prices)
+
+		ctx.JSON(http.StatusOK, response)
 	}
 }

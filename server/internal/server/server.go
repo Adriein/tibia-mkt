@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/adriein/tibia-mkt/internal/health"
+	"github.com/adriein/tibia-mkt/internal/price"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/middleware"
 	"github.com/gin-gonic/gin"
@@ -62,7 +63,19 @@ func initDatabase() *sql.DB {
 	return database
 }
 
-func (p *TibiaMkt) routeSetup() {
+func (t *TibiaMkt) routeSetup() {
 	//HEALTH CHECK
-	p.router.GET("/ping", health.NewController().Get())
+	t.router.GET("/ping", health.NewController().Get())
+
+	//PRICE
+	priceController := t.getPriceController()
+
+	t.router.GET("/prices", priceController.Get())
+}
+
+func (t *TibiaMkt) getPriceController() *price.Controller {
+	presenter := price.NewPresenter()
+	service := price.NewService()
+
+	return price.NewController(service, presenter)
 }

@@ -7,6 +7,6 @@ func NewService() *Service {
 	return &Service{}
 }
 
-func (s *Service) GetPrice(good string) {
-
+func (s *Service) GetPrice(good string) (*Price, error) {
+	return nil, nil
 }
