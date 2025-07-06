@@ -5,14 +5,27 @@ import (
 	"net/http"
 )
 
-type Controller struct{}
+type Controller struct {
+	service *Service
+}
 
-func NewController() *Controller {
-	return &Controller{}
+func NewController(service *Service) *Controller {
+	return &Controller{
+		service: service,
+	}
 }
 
 func (c *Controller) Get() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		item := ctx.Query("item")
+
+		if item == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"ok": false, "error": "item to query is mandatory"})
+			return
+		}
+
+		c.service
+
 		ctx.JSON(http.StatusOK, gin.H{"ok": true, "data": "pong"})
 	}
 }
