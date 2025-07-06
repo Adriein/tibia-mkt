@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/adriein/tibia-mkt/internal/tibia-mkt/service"
+	"github.com/adriein/tibia-mkt/internal/service"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"

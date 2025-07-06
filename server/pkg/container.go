@@ -2,7 +2,7 @@ package pkg
 
 import (
 	"database/sql"
-	"github.com/adriein/tibia-mkt/internal/tibia-mkt/repository"
+	"github.com/adriein/tibia-mkt/internal/repository"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/adriein/tibia-mkt/pkg/types"
