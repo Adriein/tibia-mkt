@@ -1,1 +1,0 @@
-DROP TABLE swampling_wood;

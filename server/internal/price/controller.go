@@ -1,4 +1,4 @@
-package good
+package price
 
 import (
 	"github.com/gin-gonic/gin"
@@ -17,20 +17,15 @@ func NewController(service *Service) *Controller {
 
 func (c *Controller) Get() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		item := ctx.Query("item")
+		item := ctx.Query("good")
 
 		if item == "" {
 			ctx.JSON(http.StatusBadRequest, gin.H{"ok": false, "error": "item to query is mandatory"})
 			return
 		}
 
-		good, err := c.service.GetGood(item)
+		c.service.GetPrice(item)
 
-		if err != nil {
-			ctx.Error(err)
-			return
-		}
-
-		ctx.JSON(http.StatusOK, gin.H{"ok": true, "data": good})
+		ctx.JSON(http.StatusOK, gin.H{"ok": true, "data": "pong"})
 	}
 }
