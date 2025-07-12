@@ -1,1 +1,1 @@
-DROP TABLE tibia_coin;
+DROP TABLE prices;

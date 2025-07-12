@@ -2,8 +2,8 @@ CREATE TABLE IF NOT EXISTS prices (
     id UUID PRIMARY KEY,
     good_name VARCHAR(255) NOT NULL,
     world VARCHAR(20) NOT NULL,
-    buy_price DECIMAL(15,2) NOT NULL,
-    sell_price DECIMAL(15,2) NOT NULL,
+    buy_price BIGINT NOT NULL,
+    sell_price BIGINT NOT NULL,
     created_at VARCHAR(60) NOT NULL
 );
 
