@@ -9,23 +9,23 @@ import (
 type Presenter struct {
 }
 
-type ChartMetadataResponse struct {
-	XAxisTick []string `json:"xAxisTick"`
-	YAxisTick []Tick   `json:"yAxisTick"`
+type ChartMetadataDto struct {
+	XAxisTick []string    `json:"xAxisTick"`
+	YAxisTick []ChartTick `json:"yAxisTick"`
 }
 
-type HomeResponse struct {
-	Cogs map[string]CogChartResponse `json:"cogs"`
+type Response struct {
+	Prices map[string]PricesChart `json:"prices"`
 }
 
-type CogChartResponse struct {
-	Wiki         string                `json:"wiki"`
-	Cogs         []PriceRecordResponse `json:"cogs"`
-	Chart        ChartMetadataResponse `json:"chartMetadata"`
-	PagePosition int8                  `json:"pagePosition"`
+type PricesChart struct {
+	Wiki         string           `json:"wiki"`
+	Prices       []PriceDto       `json:"prices"`
+	Chart        ChartMetadataDto `json:"chartMetadata"`
+	PagePosition int8             `json:"pagePosition"`
 }
 
-type PriceRecordResponse struct {
+type PriceDto struct {
 	BuyOffer  int    `json:"buyOffer"`
 	SellOffer int    `json:"sellOffer"`
 	Amount    int    `json:"amount"`
@@ -40,7 +40,7 @@ type PriceConfig struct {
 	Rows     int8
 }
 
-type Tick struct {
+type ChartTick struct {
 	Price int    `json:"price"`
 	Date  string `json:"date"`
 }
@@ -50,7 +50,7 @@ func NewPresenter() *Presenter {
 }
 
 func (p *Presenter) Format(data [][]*Price) gin.H {
-	var homeResponseMap = make(map[string]CogChartResponse)
+	var homeResponseMap = make(map[string]PricesChart)
 
 	for i := 0; i < len(data); i++ {
 		cogSkuList := data[i]
@@ -58,15 +58,15 @@ func (p *Presenter) Format(data [][]*Price) gin.H {
 		var (
 			buyOfferTotal      int
 			sellOfferTotal     int
-			cogSkuResponseList []PriceRecordResponse
-			highestSellPrice   Tick
-			lowestBuyPrice     Tick
-			yAxisDomain        []Tick
+			cogSkuResponseList []PriceDto
+			highestSellPrice   ChartTick
+			lowestBuyPrice     ChartTick
+			yAxisDomain        []ChartTick
 			xAxisDomain        []string
 		)
 
-		highestSellPrice = Tick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].RegisteredAt.Format(time.DateOnly)}
-		lowestBuyPrice = Tick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].RegisteredAt.Format(time.DateOnly)}
+		highestSellPrice = ChartTick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].RegisteredAt.Format(time.DateOnly)}
+		lowestBuyPrice = ChartTick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].RegisteredAt.Format(time.DateOnly)}
 
 		for _, cogSku := range cogSkuList {
 			buyOfferTotal = buyOfferTotal + cogSku.BuyPrice
@@ -82,7 +82,7 @@ func (p *Presenter) Format(data [][]*Price) gin.H {
 				lowestBuyPrice.Date = cogSku.RegisteredAt.Format(time.DateOnly)
 			}
 
-			cogSkuResponseList = append(cogSkuResponseList, PriceRecordResponse{
+			cogSkuResponseList = append(cogSkuResponseList, PriceDto{
 				BuyOffer:  cogSku.BuyPrice,
 				SellOffer: cogSku.SellPrice,
 				Amount:    0,
@@ -105,11 +105,10 @@ func (p *Presenter) Format(data [][]*Price) gin.H {
 		pageConfig := p.getPagePosition(cogSkuList[0])
 
 		if len(cogSkuList) <= 0 {
-
-			homeResponseMap[cogSkuList[0].GoodName] = CogChartResponse{
-				Wiki: "cog.Link",
-				Cogs: cogSkuResponseList,
-				Chart: ChartMetadataResponse{
+			homeResponseMap[cogSkuList[0].GoodName] = PricesChart{
+				Wiki:   "cog.Link",
+				Prices: cogSkuResponseList,
+				Chart: ChartMetadataDto{
 					YAxisTick: yAxisDomain,
 					XAxisTick: xAxisDomain,
 				},
@@ -119,10 +118,10 @@ func (p *Presenter) Format(data [][]*Price) gin.H {
 			continue
 		}
 
-		homeResponseMap[cogSkuList[0].GoodName] = CogChartResponse{
-			Wiki: "cog.Link",
-			Cogs: cogSkuResponseList,
-			Chart: ChartMetadataResponse{
+		homeResponseMap[cogSkuList[0].GoodName] = PricesChart{
+			Wiki:   "cog.Link",
+			Prices: cogSkuResponseList,
+			Chart: ChartMetadataDto{
 				YAxisTick: yAxisDomain,
 				XAxisTick: xAxisDomain,
 			},

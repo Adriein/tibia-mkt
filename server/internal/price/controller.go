@@ -26,17 +26,21 @@ func (c *Controller) Get() gin.HandlerFunc {
 			return
 		}
 
-		var prices []*Price
+		var prices [][]*Price
 
 		for _, item := range items {
+			var result []*Price
+
 			price, err := c.service.GetPrice(item)
 
 			if err != nil {
-				ctx.Error(err)
+				_ = ctx.Error(err)
 				return
 			}
 
-			prices = append(prices, price)
+			result = append(result, price)
+
+			prices = append(prices, result)
 		}
 
 		response := c.presenter.Format(prices)
