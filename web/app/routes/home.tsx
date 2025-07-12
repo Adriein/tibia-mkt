@@ -3,7 +3,7 @@ import { Welcome } from "../welcome/welcome";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "TibiaMkt" },
+    { title: "Tibia Mkt" },
     { name: "description", content: "Welcome to Tibia Mkt!" },
   ];
 }
