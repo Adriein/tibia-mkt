@@ -10,7 +10,7 @@ func NewService(repository PriceRepository) *Service {
 	}
 }
 
-func (s *Service) GetPrice(world string, good string) ([]*Price, error) {
+func (s *Service) GetPrices(world string, good string) ([]*Price, error) {
 	price, err := s.repository.FindByNameAndWorld(world, good)
 
 	if err != nil {

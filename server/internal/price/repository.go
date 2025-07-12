@@ -8,6 +8,7 @@ import (
 
 type PriceRepository interface {
 	FindByNameAndWorld(world string, good string) ([]*Price, error)
+	Save(price *Price) error
 }
 
 type PgPriceRepository struct {
@@ -70,4 +71,24 @@ func (r *PgPriceRepository) FindByNameAndWorld(worldName string, good string) ([
 	}
 
 	return results, nil
+}
+
+func (r *PgPriceRepository) Save(price *Price) error {
+	var query = "INSERT INTO prices (id, good_name, world, buy_price, sell_price, created_at) VALUES ($1, $2, $3, $4, $5, $6)"
+
+	_, err := r.connection.Exec(
+		query,
+		price.Id,
+		price.GoodName,
+		price.World,
+		price.BuyPrice,
+		price.SellPrice,
+		price.CreatedAt.Format(time.DateOnly),
+	)
+
+	if err != nil {
+		return eris.New(err.Error())
+	}
+
+	return nil
 }

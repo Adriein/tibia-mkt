@@ -44,7 +44,7 @@ func (c *Controller) Get() gin.HandlerFunc {
 		var prices [][]*Price
 
 		for _, good := range goods {
-			price, err := c.service.GetPrice(world, good)
+			price, err := c.service.GetPrices(world, good)
 
 			if err != nil {
 				_ = ctx.Error(err)

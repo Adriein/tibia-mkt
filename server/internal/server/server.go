@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/adriein/tibia-mkt/internal/health"
 	"github.com/adriein/tibia-mkt/internal/price"
+	"github.com/adriein/tibia-mkt/internal/script"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/middleware"
 	"github.com/gin-gonic/gin"
@@ -67,7 +68,12 @@ func (t *TibiaMkt) routeSetup() {
 	//HEALTH CHECK
 	t.router.GET("/ping", health.NewController().Get())
 
-	//PRICE
+	//SCRIPTS
+	scriptController := t.getScriptController()
+
+	t.router.GET("/scripts/prices", scriptController.SeedPrices())
+
+	//PRICES
 	priceController := t.getPriceController()
 
 	t.router.GET("/prices", priceController.Get())
@@ -79,4 +85,13 @@ func (t *TibiaMkt) getPriceController() *price.Controller {
 	presenter := price.NewPresenter()
 
 	return price.NewController(service, presenter)
+}
+
+func (t *TibiaMkt) getScriptController() *script.Controller {
+	csvDataRepository := script.NewCsvSecuraPricesRepository()
+	pricesRepository := price.NewPgPriceRepository(t.database)
+
+	service := script.NewService(csvDataRepository, pricesRepository)
+
+	return script.NewController(service)
 }
