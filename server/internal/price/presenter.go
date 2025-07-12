@@ -29,7 +29,7 @@ type PriceDto struct {
 	BuyOffer  int    `json:"buyOffer"`
 	SellOffer int    `json:"sellOffer"`
 	Amount    int    `json:"amount"`
-	Date      string `json:"date"`
+	CreatedAt string `json:"createdAt"`
 	World     string `json:"world"`
 }
 
@@ -86,7 +86,7 @@ func (p *Presenter) Format(data [][]*Price) gin.H {
 				BuyOffer:  cogSku.BuyPrice,
 				SellOffer: cogSku.SellPrice,
 				Amount:    0,
-				Date:      cogSku.CreatedAt.Format(time.DateOnly),
+				CreatedAt: cogSku.CreatedAt.Format(time.DateOnly),
 				World:     cogSku.World,
 			})
 		}
