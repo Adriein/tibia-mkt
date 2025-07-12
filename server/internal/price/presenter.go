@@ -130,8 +130,8 @@ func (p *Presenter) Format(data [][]*Price) gin.H {
 	}
 
 	return gin.H{
-		"ok":   true,
-		"data": homeResponseMap,
+		constants.OkResKey:   true,
+		constants.DataResKey: homeResponseMap,
 	}
 }
 

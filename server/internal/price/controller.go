@@ -1,6 +1,7 @@
 package price
 
 import (
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -22,7 +23,11 @@ func (c *Controller) Get() gin.HandlerFunc {
 		items := ctx.QueryArray("item")
 
 		if len(items) == 0 {
-			ctx.JSON(http.StatusBadRequest, gin.H{"ok": false, "error": "item to query is mandatory"})
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				constants.OkResKey:    false,
+				constants.ErrorResKey: constants.NoGoodSearchParamProvided,
+			})
+
 			return
 		}
 
@@ -36,6 +41,10 @@ func (c *Controller) Get() gin.HandlerFunc {
 			if err != nil {
 				_ = ctx.Error(err)
 				return
+			}
+
+			if price == nil {
+				continue
 			}
 
 			result = append(result, price)

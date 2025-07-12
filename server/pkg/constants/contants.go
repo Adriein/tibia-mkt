@@ -17,6 +17,9 @@ const (
 
 const (
 	ApiKeyHeader = "TibiaMkt-Token"
+	OkResKey     = "ok"
+	ErrorResKey  = "error"
+	DataResKey   = "data"
 )
 
 const (
