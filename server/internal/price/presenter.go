@@ -65,8 +65,8 @@ func (p *Presenter) Format(data [][]*Price) gin.H {
 			xAxisDomain        []string
 		)
 
-		highestSellPrice = ChartTick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].RegisteredAt.Format(time.DateOnly)}
-		lowestBuyPrice = ChartTick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].RegisteredAt.Format(time.DateOnly)}
+		highestSellPrice = ChartTick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].CreatedAt.Format(time.DateOnly)}
+		lowestBuyPrice = ChartTick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].CreatedAt.Format(time.DateOnly)}
 
 		for _, cogSku := range cogSkuList {
 			buyOfferTotal = buyOfferTotal + cogSku.BuyPrice
@@ -74,19 +74,19 @@ func (p *Presenter) Format(data [][]*Price) gin.H {
 
 			if highestSellPrice.Price < cogSku.SellPrice {
 				highestSellPrice.Price = cogSku.SellPrice
-				highestSellPrice.Date = cogSku.RegisteredAt.Format(time.DateOnly)
+				highestSellPrice.Date = cogSku.CreatedAt.Format(time.DateOnly)
 			}
 
 			if lowestBuyPrice.Price > cogSku.BuyPrice {
 				lowestBuyPrice.Price = cogSku.BuyPrice
-				lowestBuyPrice.Date = cogSku.RegisteredAt.Format(time.DateOnly)
+				lowestBuyPrice.Date = cogSku.CreatedAt.Format(time.DateOnly)
 			}
 
 			cogSkuResponseList = append(cogSkuResponseList, PriceDto{
 				BuyOffer:  cogSku.BuyPrice,
 				SellOffer: cogSku.SellPrice,
 				Amount:    0,
-				Date:      cogSku.RegisteredAt.Format(time.DateOnly),
+				Date:      cogSku.CreatedAt.Format(time.DateOnly),
 				World:     cogSku.World,
 			})
 		}

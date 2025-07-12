@@ -54,8 +54,9 @@ const (
 // Errors
 
 const (
-	ServerGenericError        = "SERVER_ERROR"
-	NoGoodSearchParamProvided = "NO_GOOD_SEARCH_PARAM_PROVIDED"
+	ServerGenericError         = "SERVER_ERROR"
+	NoGoodSearchParamProvided  = "NO_GOOD_SEARCH_PARAM_PROVIDED"
+	NoWorldSearchParamProvided = "NO_WORLD_SEARCH_PARAM_PROVIDED"
 )
 
 // External API

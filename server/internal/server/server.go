@@ -74,8 +74,9 @@ func (t *TibiaMkt) routeSetup() {
 }
 
 func (t *TibiaMkt) getPriceController() *price.Controller {
+	repository := price.NewPgPriceRepository(t.database)
+	service := price.NewService(repository)
 	presenter := price.NewPresenter()
-	service := price.NewService()
 
 	return price.NewController(service, presenter)
 }

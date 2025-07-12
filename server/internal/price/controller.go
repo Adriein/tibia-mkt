@@ -20,9 +20,10 @@ func NewController(service *Service, presenter *Presenter) *Controller {
 
 func (c *Controller) Get() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		items := ctx.QueryArray("item")
+		goods := ctx.QueryArray("good")
+		world := ctx.Query("world")
 
-		if len(items) == 0 {
+		if len(goods) == 0 {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				constants.OkResKey:    false,
 				constants.ErrorResKey: constants.NoGoodSearchParamProvided,
@@ -31,12 +32,19 @@ func (c *Controller) Get() gin.HandlerFunc {
 			return
 		}
 
+		if world == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				constants.OkResKey:    false,
+				constants.ErrorResKey: constants.NoWorldSearchParamProvided,
+			})
+
+			return
+		}
+
 		var prices [][]*Price
 
-		for _, item := range items {
-			var result []*Price
-
-			price, err := c.service.GetPrice(item)
+		for _, good := range goods {
+			price, err := c.service.GetPrice(world, good)
 
 			if err != nil {
 				_ = ctx.Error(err)
@@ -47,9 +55,7 @@ func (c *Controller) Get() gin.HandlerFunc {
 				continue
 			}
 
-			result = append(result, price)
-
-			prices = append(prices, result)
+			prices = append(prices, price)
 		}
 
 		response := c.presenter.Format(prices)
