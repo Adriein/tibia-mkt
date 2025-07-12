@@ -49,10 +49,18 @@ func (c *CsvSecuraPricesRepository) Get(good string) ([]*CsvRow, error) {
 			return nil, eris.New(intParseErr.Error())
 		}
 
-		createdAt, timeParseErr := time.Parse(time.DateOnly, record[0])
+		europeanCreatedAtFormat, timeParseErr := time.Parse("02-01-2006", record[0])
 
 		if timeParseErr != nil {
 			return nil, eris.New(timeParseErr.Error())
+		}
+
+		createdAtString := europeanCreatedAtFormat.Format(time.DateOnly)
+
+		createdAt, stringToTimeParseErr := time.Parse(time.DateOnly, createdAtString)
+
+		if stringToTimeParseErr != nil {
+			return nil, eris.New(stringToTimeParseErr.Error())
 		}
 
 		result = append(result, &CsvRow{
