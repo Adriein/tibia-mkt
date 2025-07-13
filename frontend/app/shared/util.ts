@@ -3,7 +3,7 @@ import HoneycombGif from '~/assets/honeycomb.gif';
 import SwamplingWoodGif from '~/assets/swampling-wood.gif';
 import BrokenShamanicStaffGif from '~/assets/broken-shamanic-staff.gif';
 import {BROKEN_SHAMANIC_STAFF, HONEYCOMB, SWAMPLING_WOOD, TIBIA_COIN} from "~/shared/constants";
-import {Cog, YAxisTick} from "~/shared/types";
+import {Cog} from "~/shared/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
