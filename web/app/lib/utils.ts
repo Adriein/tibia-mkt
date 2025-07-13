@@ -42,3 +42,23 @@ export const xAxisTick = (data: Price[], xAxisDomain: string[]): string[] => {
   return result;
 }
 
+//STRINGS
+
+export const beautifyCamelCase = (camelCaseWord: string, maxWordClamp: number = 0): string => {
+  const word: string = camelCaseWord.replace(/([A-Z])/g, " $1").trim();
+
+  const firstLetter: string = (word.split("").at(0) as string).toUpperCase();
+
+  if (maxWordClamp === 0) {
+    return firstLetter + word.substring(1, word.length);
+  }
+
+  const camelCase: string = firstLetter + word.substring(1, word.length);
+
+  if (camelCase.length >= maxWordClamp) {
+    return camelCase.split("").splice(0, maxWordClamp, ).join("") + "...";
+  }
+
+  return camelCase;
+}
+

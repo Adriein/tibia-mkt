@@ -1,7 +1,7 @@
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "~/components/ui/card";
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
-import {formatDate} from "~/lib/utils";
+import {beautifyCamelCase, formatDate} from "~/lib/utils";
 import type {PriceChartData} from "~/home/types";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
@@ -34,7 +34,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>{good}</CardTitle>
+                <CardTitle>{beautifyCamelCase(good)}</CardTitle>
                 <CardDescription>January - June 2024</CardDescription>
             </CardHeader>
             <CardContent>
@@ -71,10 +71,22 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                         <Line
                             dataKey="buyOffer"
                             type="natural"
-                            stroke="var(--primary)"
+                            stroke="var(--chart-theme-1)"
                             strokeWidth={2}
                             dot={{
-                                fill: "var(--primary)",
+                                fill: "var(--chart-theme-1)",
+                            }}
+                            activeDot={{
+                                r: 6,
+                            }}
+                        />
+                        <Line
+                            dataKey="sellOffer"
+                            type="natural"
+                            stroke="var(--chart-theme-2)"
+                            strokeWidth={2}
+                            dot={{
+                                fill: "var(--chart-theme-2)",
                             }}
                             activeDot={{
                                 r: 6,

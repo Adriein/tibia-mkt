@@ -122,6 +122,8 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.554 0.135 66.442);
+  --chart-theme-1: oklch(0.795 0.184 86.047);
+  --chart-theme-2: oklch(0.75 0.18 266);
 }
 
 @layer base {
