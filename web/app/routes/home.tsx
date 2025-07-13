@@ -25,7 +25,7 @@ export default function Home({loaderData}: Route.ComponentProps) {
         <header className="flex items-center justify-center w-full h-24 text-center text-2xl font-bold text-foreground">
           <h1>Welcome to Tibia Mkt</h1>
         </header>
-        <div className="flex w-full border-amber-600 border-2">
+        <div className="flex w-full">
           <PriceOverview good={"honeycomb"} data={getLast6MonthsPreview(data.honeycomb)}/>
         </div>
       </main>

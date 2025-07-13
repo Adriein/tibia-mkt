@@ -2,7 +2,7 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
 import {formatDate} from "~/lib/utils";
-import type {Price, PriceChartData} from "~/home/types";
+import type {PriceChartData} from "~/home/types";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
 
@@ -26,6 +26,10 @@ const labelFormatter = (label: string, payload: Array<Payload<ValueType, NameTyp
     return <span>{formatDate(label)}</span>
 }
 
+const transformValueNumberToLocale = (value: number|string): string => {
+    return Intl.NumberFormat("es-Es").format(value as number).toString()
+};
+
 function PriceOverview({good, data}: PriceOverviewProps) {
     return (
         <Card className="w-full">
@@ -34,7 +38,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                 <CardDescription>January - June 2024</CardDescription>
             </CardHeader>
             <CardContent>
-                <ChartContainer config={chartConfig} className="w-full max-h-[200px]">
+                <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
                     <LineChart
                         accessibilityLayer
                         data={data.prices}
@@ -56,7 +60,13 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                         />
                         <ChartTooltip
                             cursor={false}
-                            content={<ChartTooltipContent indicator="line" labelFormatter={labelFormatter} />}
+                            content={
+                            <ChartTooltipContent
+                                indicator="line"
+                                labelFormatter={labelFormatter}
+                                valueFormatter={transformValueNumberToLocale}
+                                className="w-[150px]"/>
+                            }
                         />
                         <Line
                             dataKey="buyOffer"
@@ -69,9 +79,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                             activeDot={{
                                 r: 6,
                             }}
-                        >
-
-                        </Line>
+                        />
                     </LineChart>
                 </ChartContainer>
             </CardContent>

@@ -13,7 +13,8 @@ export function cn(...inputs: ClassValue[]) {
 export const formatDate: (value: string) => string = (value: string): string => {
   return new Intl.DateTimeFormat("es-ES", {
     month: "short",
-    day: "2-digit"
+    day: "2-digit",
+    year: "2-digit"
   }).format(new Date(value))
 };
 
