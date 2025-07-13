@@ -1,0 +1,84 @@
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "~/components/ui/card";
+import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
+import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
+import {formatDate} from "~/lib/utils";
+import type {Price, PriceChartData} from "~/home/types";
+import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
+import React from "react";
+
+const chartConfig = {
+    buyOffer: {
+        label: "Buy Offer",
+        color: "var(--chart-1)",
+    },
+    sellOffer: {
+        label: "Sell Offer",
+        color: "var(--chart-2)",
+    },
+} satisfies ChartConfig
+
+type PriceOverviewProps = {
+    good: string;
+    data: PriceChartData;
+}
+
+const labelFormatter = (label: string, payload: Array<Payload<ValueType, NameType>>): React.ReactNode => {
+    return <span>{formatDate(label)}</span>
+}
+
+function PriceOverview({good, data}: PriceOverviewProps) {
+    return (
+        <Card className="w-full">
+            <CardHeader>
+                <CardTitle>{good}</CardTitle>
+                <CardDescription>January - June 2024</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ChartContainer config={chartConfig} className="w-full max-h-[200px]">
+                    <LineChart
+                        accessibilityLayer
+                        data={data.prices}
+                        margin={{
+                            top: 20,
+                            left: 12,
+                            right: 12,
+                        }}
+                    >
+                        <CartesianGrid vertical={false} />
+                        <XAxis
+                            dataKey="createdAt"
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={8}
+                            interval="preserveStartEnd"
+                            //ticks={xAxisTick(data.prices, data.chartMetadata.xAxisTick)}
+                            tickFormatter={formatDate}
+                        />
+                        <ChartTooltip
+                            cursor={false}
+                            content={<ChartTooltipContent indicator="line" labelFormatter={labelFormatter} />}
+                        />
+                        <Line
+                            dataKey="buyOffer"
+                            type="natural"
+                            stroke="var(--primary)"
+                            strokeWidth={2}
+                            dot={{
+                                fill: "var(--primary)",
+                            }}
+                            activeDot={{
+                                r: 6,
+                            }}
+                        >
+
+                        </Line>
+                    </LineChart>
+                </ChartContainer>
+            </CardContent>
+        </Card>
+    );
+}
+
+export {
+    PriceOverview,
+}

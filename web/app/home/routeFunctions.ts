@@ -1,5 +1,5 @@
 import type {ApiResponse} from "~/lib/types";
-import type {HomePageData, PriceChartData} from "~/home/types";
+import type {HomePageData, Price, PriceChartData} from "~/home/types";
 
 
 export const fetchPrices: () => Promise<ApiResponse<HomePageData>> = async (): Promise<ApiResponse<HomePageData>> => {
@@ -35,4 +35,12 @@ export const orderHomePageData = (unOrderedResults: ApiResponse<HomePageData>): 
     }
 
     return result;
+}
+
+export const getLast6MonthsPreview = (chartData: PriceChartData): PriceChartData => {
+    const initialDataPoint = chartData.prices.length - (30 * 3);
+    return {
+        ...chartData,
+        prices: chartData.prices.slice(initialDataPoint, chartData.prices.length),
+    }
 }
