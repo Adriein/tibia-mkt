@@ -1,5 +1,5 @@
 import type {Route} from "./+types/home";
-import {fetchPrices, getLast6MonthsPreview, orderHomePageData} from "~/home/routeFunctions";
+import {fetchPrices, getRelevantPrices, orderByPagePosition} from "~/home/routeFunctions";
 import type {ApiResponse} from "~/lib/types";
 import type {HomePageData} from "~/home/types";
 import {PriceOverview} from "~/components/ui/price-overview";
@@ -14,7 +14,9 @@ export function meta({}: Route.MetaArgs) {
 export async function loader(): Promise<{data: HomePageData}> {
   const prices: ApiResponse<HomePageData> = await fetchPrices();
 
-  return {data: orderHomePageData(prices)};
+  const orderedPrices: HomePageData = orderByPagePosition(prices);
+
+  return {data: getRelevantPrices(orderedPrices)};
 }
 
 export default function Home({loaderData}: Route.ComponentProps) {
@@ -26,7 +28,7 @@ export default function Home({loaderData}: Route.ComponentProps) {
           <h1>Welcome to Tibia Mkt</h1>
         </header>
         <div className="flex w-full">
-          <PriceOverview good={"honeycomb"} data={getLast6MonthsPreview(data.honeycomb)}/>
+          <PriceOverview good={"honeycomb"} data={data.honeycomb}/>
         </div>
       </main>
   );

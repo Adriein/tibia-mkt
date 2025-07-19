@@ -2,7 +2,7 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
 import {beautifyCamelCase, formatDate} from "~/lib/utils";
-import type {PriceChartData} from "~/home/types";
+import type {Price, PriceChartData} from "~/home/types";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
 
@@ -22,7 +22,7 @@ type PriceOverviewProps = {
     data: PriceChartData;
 }
 
-const labelFormatter = (label: string, payload: Array<Payload<ValueType, NameType>>): React.ReactNode => {
+const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
     return <span>{formatDate(label)}</span>
 }
 
@@ -30,12 +30,24 @@ const transformValueNumberToLocale = (value: number|string): string => {
     return Intl.NumberFormat("es-Es").format(value as number).toString()
 };
 
+function presentTimeSpan(data: Price[]): string {
+    const start: string = Intl
+        .DateTimeFormat('es-ES', {year: "numeric", month: "short"})
+        .format(new Date(data[0].createdAt));
+
+    const end: string = Intl
+        .DateTimeFormat('es-ES', {year: "numeric", month: "short"})
+        .format(new Date(data[data.length - 1].createdAt));
+
+    return `${start} - ${end}`;
+}
+
 function PriceOverview({good, data}: PriceOverviewProps) {
     return (
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>{beautifyCamelCase(good)}</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
+                <CardDescription>{presentTimeSpan(data.prices)}</CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
@@ -55,7 +67,6 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                             axisLine={false}
                             tickMargin={8}
                             interval="preserveStartEnd"
-                            //ticks={xAxisTick(data.prices, data.chartMetadata.xAxisTick)}
                             tickFormatter={formatDate}
                         />
                         <ChartTooltip
