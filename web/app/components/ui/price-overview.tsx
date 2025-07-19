@@ -1,10 +1,13 @@
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "~/components/ui/card";
+import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "~/components/ui/card";
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
 import {beautifyCamelCase, formatDate} from "~/lib/utils";
 import type {Price, PriceChartData} from "~/home/types";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
+import {Button} from "~/components/ui/button";
+import {Book, Eye} from "lucide-react";
+import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
 
 const chartConfig = {
     buyOffer: {
@@ -48,6 +51,28 @@ function PriceOverview({good, data}: PriceOverviewProps) {
             <CardHeader>
                 <CardTitle>{beautifyCamelCase(good)}</CardTitle>
                 <CardDescription>{presentTimeSpan(data.prices)}</CardDescription>
+                <CardAction>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button variant="secondary" size="icon" className="size-8">
+                                <Eye/>
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>View details</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button variant="secondary" size="icon" className="size-8">
+                                <Book/>
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Go to tibiawiki.com</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </CardAction>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
