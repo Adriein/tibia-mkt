@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import type {Price} from "~/home/types";
+import type {Price} from "~/routes/home/types";
 
 //STYLE
 

@@ -2,7 +2,7 @@ import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} f
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
 import {beautifyCamelCase, formatDate} from "~/lib/utils";
-import type {Price, PriceChartData} from "~/home/types";
+import type {Price, PriceChartData} from "~/routes/home/types";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
 import {Button} from "~/components/ui/button";
@@ -69,7 +69,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                            <p>Go to tibiawiki.com</p>
+                            <p>Go to Tibia Wiki</p>
                         </TooltipContent>
                     </Tooltip>
                 </CardAction>

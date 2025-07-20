@@ -1,9 +1,9 @@
-import type {Route} from "./+types/home";
-import {fetchPrices, getRelevantPrices, orderByPagePosition} from "~/home/routeFunctions";
+import {fetchPrices, getRelevantPrices, orderByPagePosition} from "~/routes/home/routeFunctions";
 import type {ApiResponse} from "~/lib/types";
-import type {HomePageData} from "~/home/types";
+import type {HomePageData} from "~/routes/home/types";
 import {PriceOverview} from "~/components/ui/price-overview";
 import {English, type HomeTranslations, loc} from "~/locale/loc";
+import type {Route} from "@/.react-router/types/app/routes/home/+types/home";
 
 export function meta({}: Route.MetaArgs) {
   return [
