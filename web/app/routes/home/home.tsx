@@ -4,6 +4,7 @@ import type {HomePageData} from "~/routes/home/types";
 import {PriceOverview} from "~/components/ui/price-overview";
 import {English, type HomeTranslations, loc} from "~/locale/loc";
 import type {Route} from "@/.react-router/types/app/routes/home/+types/home";
+import React from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
