@@ -9,6 +9,8 @@ import {Book, Eye} from "lucide-react";
 import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
 import {Link} from "react-router";
 import type {Price, PriceChartData} from "~/lib/types";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
+import {ToggleGroup, ToggleGroupItem} from "~/components/ui/toggle-group";
 
 const chartConfig = {
     buyOffer: {
@@ -47,41 +49,39 @@ function presentTimeSpan(data: Price[]): string {
 }
 
 function PriceDetail({good, data}: PriceDetailProps) {
+    const [timeRange, setTimeRange] = React.useState("90d")
+
+    /*const filteredData = chartData.filter((item) => {
+        const date = new Date(item.date)
+        const referenceDate = new Date("2024-06-30")
+        let daysToSubtract = 90
+        if (timeRange === "30d") {
+            daysToSubtract = 30
+        } else if (timeRange === "7d") {
+            daysToSubtract = 7
+        }
+        const startDate = new Date(referenceDate)
+        startDate.setDate(startDate.getDate() - daysToSubtract)
+        return date >= startDate
+    })*/
+
     return (
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>{beautifyCamelCase(good)}</CardTitle>
                 <CardDescription>{presentTimeSpan(data.prices)}</CardDescription>
                 <CardAction className="flex gap-3">
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button asChild variant="secondary" size="icon" className="size-8">
-                                <Link to={`/${good}/detail`}>
-                                    <Eye/>
-                                </Link>
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>View details</p>
-                        </TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button variant="secondary" size="icon" className="size-8">
-                                <Link
-                                    to={`https://tibia.fandom.com/wiki/${good}`}
-                                    aria-label="Go to Tibia Wiki"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
-                                    <Book/>
-                                </Link>
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Tibia Wiki</p>
-                        </TooltipContent>
-                    </Tooltip>
+                    <ToggleGroup
+                        type="single"
+                        value={timeRange}
+                        onValueChange={setTimeRange}
+                        variant="outline"
+                        className="*:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
+                    >
+                        <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
+                        <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
+                        <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+                    </ToggleGroup>
                 </CardAction>
             </CardHeader>
             <CardContent>
