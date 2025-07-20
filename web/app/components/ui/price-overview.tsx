@@ -8,7 +8,7 @@ import React from "react";
 import {Button} from "~/components/ui/button";
 import {Book, Eye} from "lucide-react";
 import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
-import {Link} from "react-router";
+import {Link, NavLink} from "react-router";
 
 const chartConfig = {
     buyOffer: {
@@ -55,8 +55,10 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                 <CardAction className="flex gap-3">
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="secondary" size="icon" className="size-8 cursor-pointer">
-                                <Eye/>
+                            <Button variant="secondary" size="icon" className="size-8">
+                                <NavLink to={`/${good}/detail`}>
+                                    <Eye/>
+                                </NavLink>
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>
