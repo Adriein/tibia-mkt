@@ -21,7 +21,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-type PriceOverviewProps = {
+type PriceDetailProps = {
     good: string;
     data: PriceChartData;
 }
@@ -46,7 +46,7 @@ function presentTimeSpan(data: Price[]): string {
     return `${start} - ${end}`;
 }
 
-function PriceOverview({good, data}: PriceOverviewProps) {
+function PriceDetail({good, data}: PriceDetailProps) {
     return (
         <Card className="w-full">
             <CardHeader>
@@ -107,11 +107,11 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                         <ChartTooltip
                             cursor={false}
                             content={
-                            <ChartTooltipContent
-                                indicator="line"
-                                labelFormatter={labelFormatter}
-                                valueFormatter={transformValueNumberToLocale}
-                                className="w-[150px]"/>
+                                <ChartTooltipContent
+                                    indicator="line"
+                                    labelFormatter={labelFormatter}
+                                    valueFormatter={transformValueNumberToLocale}
+                                    className="w-[150px]"/>
                             }
                         />
                         <Line
@@ -146,5 +146,5 @@ function PriceOverview({good, data}: PriceOverviewProps) {
 }
 
 export {
-    PriceOverview,
+    PriceDetail,
 }

@@ -1,10 +1,12 @@
 import React from "react";
 import type {Route} from "@/.react-router/types/app/routes/detail/+types/detail";
-import type {HomePageData} from "~/routes/home/types";
 import {English, type HomeTranslations, loc} from "~/locale/loc";
 import type {ApiResponse} from "~/lib/types";
-import {fetchPrices, getRelevantPrices, orderByPagePosition} from "~/routes/home/routeFunctions";
 import {beautifyCamelCase} from "~/lib/utils";
+import {fetchGoodPrices} from "~/routes/detail/routeFunctions";
+import type {DetailPageData} from "~/routes/detail/types";
+import {redirect} from "react-router";
+import {PriceDetail} from "~/components/ui/price-detail";
 
 export function meta({params}: Route.MetaArgs) {
     return [
@@ -13,16 +15,23 @@ export function meta({params}: Route.MetaArgs) {
     ];
 }
 
-export async function loader(): Promise<{data: HomePageData, t: HomeTranslations}> {
-    const prices: ApiResponse<HomePageData> = await fetchPrices();
+export async function loader({params}: Route.LoaderArgs): Promise<{ data: any; t: HomeTranslations } | Response> {
+    const prices: ApiResponse<DetailPageData> = await fetchGoodPrices(params.good);
 
-    const orderedPrices: HomePageData = orderByPagePosition(prices);
+    if (!prices.ok || !prices.data) {
+        return redirect("/404");
+    }
 
-    return {data: getRelevantPrices(orderedPrices), t: loc(English, "Home")};
+    return {data: prices.data[params.good], t: loc(English, "Home")};
 }
 
-export default function PriceDetail({loaderData}: Route.ComponentProps): React.ReactElement {
+export default function Detail({loaderData, params}: Route.ComponentProps): React.ReactElement {
+    const { data, t } = loaderData;
     return (
-        <div>Detail</div>
+        <main className="flex flex-col items-center w-screen h-screen">
+            <div className="flex w-full">
+                <PriceDetail good={params.good} data={data}/>
+            </div>
+        </main>
     );
 }
