@@ -3,11 +3,13 @@ package server
 import (
 	"database/sql"
 	"fmt"
+	"github.com/adriein/tibia-mkt/internal/detail"
 	"github.com/adriein/tibia-mkt/internal/health"
 	"github.com/adriein/tibia-mkt/internal/price"
 	"github.com/adriein/tibia-mkt/internal/script"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/middleware"
+	"github.com/adriein/tibia-mkt/pkg/statistics"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/rotisserie/eris"
@@ -77,6 +79,11 @@ func (t *TibiaMkt) routeSetup() {
 	priceController := t.getPriceController()
 
 	t.router.GET("/prices", priceController.Get())
+
+	//DETAIL
+	detailController := t.getDetailController()
+
+	t.router.GET("/details", detailController.Get())
 }
 
 func (t *TibiaMkt) getPriceController() *price.Controller {
@@ -94,4 +101,14 @@ func (t *TibiaMkt) getScriptController() *script.Controller {
 	service := script.NewService(csvDataRepository, pricesRepository)
 
 	return script.NewController(service)
+}
+
+func (t *TibiaMkt) getDetailController() *detail.Controller {
+	priceRepository := price.NewPgPriceRepository(t.database)
+	priceService := price.NewService(priceRepository)
+
+	service := detail.NewService(statistics.New(), priceService)
+	presenter := detail.NewPresenter()
+
+	return detail.NewController(service, presenter)
 }
