@@ -1,15 +1,10 @@
-import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "~/components/ui/card";
+import {Card, CardAction, CardContent, CardHeader, CardTitle} from "~/components/ui/card";
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
 import {beautifyCamelCase, formatDate} from "~/lib/utils";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
-import {Button} from "~/components/ui/button";
-import {Book, Eye} from "lucide-react";
-import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
-import {Link} from "react-router";
 import type {Price, PriceChartData} from "~/lib/types";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {ToggleGroup, ToggleGroupItem} from "~/components/ui/toggle-group";
 
 const chartConfig = {
@@ -36,40 +31,31 @@ const transformValueNumberToLocale = (value: number|string): string => {
     return Intl.NumberFormat("es-Es").format(value as number).toString()
 };
 
-function presentTimeSpan(data: Price[]): string {
-    const start: string = Intl
-        .DateTimeFormat('es-ES', {year: "numeric", month: "short"})
-        .format(new Date(data[0].createdAt));
-
-    const end: string = Intl
-        .DateTimeFormat('es-ES', {year: "numeric", month: "short"})
-        .format(new Date(data[data.length - 1].createdAt));
-
-    return `${start} - ${end}`;
-}
-
 function PriceDetail({good, data}: PriceDetailProps) {
-    const [timeRange, setTimeRange] = React.useState("90d")
+    const [timeRange, setTimeRange] = React.useState("90d");
 
-    /*const filteredData = chartData.filter((item) => {
-        const date = new Date(item.date)
-        const referenceDate = new Date("2024-06-30")
-        let daysToSubtract = 90
+    const filteredData: Price[] = data.prices.filter((item: Price): boolean => {
+        const date = new Date(item.createdAt);
+
+        let daysToSubtract = 90;
+
         if (timeRange === "30d") {
             daysToSubtract = 30
         } else if (timeRange === "7d") {
             daysToSubtract = 7
         }
-        const startDate = new Date(referenceDate)
+
+        const startDate = new Date(data.prices.at(-1)?.createdAt!);
+
         startDate.setDate(startDate.getDate() - daysToSubtract)
+
         return date >= startDate
-    })*/
+    });
 
     return (
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>{beautifyCamelCase(good)}</CardTitle>
-                <CardDescription>{presentTimeSpan(data.prices)}</CardDescription>
                 <CardAction className="flex gap-3">
                     <ToggleGroup
                         type="single"
@@ -88,7 +74,7 @@ function PriceDetail({good, data}: PriceDetailProps) {
                 <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
                     <LineChart
                         accessibilityLayer
-                        data={data.prices}
+                        data={filteredData}
                         margin={{
                             top: 20,
                             left: 12,
