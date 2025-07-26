@@ -10,10 +10,17 @@ export const Polish = "pl-PL";
 
 export interface PageTranslations {
     Home: HomeTranslations;
+    Detail: DetailTranslations;
 }
 
 export interface HomeTranslations {
     welcome: string;
+}
+
+export interface DetailTranslations {
+    timeSpan3Months: string;
+    timeSpan30Days: string;
+    timeSpan7ays: string;
 }
 
 // Define a generic type that returns the correct translation interface based on the page parameter

@@ -6,6 +6,7 @@ import type {NameType, Payload, ValueType} from "recharts/types/component/Defaul
 import React from "react";
 import type {Price, PriceChartData} from "~/lib/types";
 import {ToggleGroup, ToggleGroupItem} from "~/components/ui/toggle-group";
+import type {DetailTranslations} from "~/locale/loc";
 
 const chartConfig = {
     buyOffer: {
@@ -21,6 +22,7 @@ const chartConfig = {
 type PriceDetailProps = {
     good: string;
     data: PriceChartData;
+    t: DetailTranslations;
 }
 
 const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
@@ -31,7 +33,7 @@ const transformValueNumberToLocale = (value: number|string): string => {
     return Intl.NumberFormat("es-Es").format(value as number).toString()
 };
 
-function PriceDetail({good, data}: PriceDetailProps) {
+function PriceDetail({good, data, t}: PriceDetailProps) {
     const [timeRange, setTimeRange] = React.useState("90d");
 
     const filteredData: Price[] = data.prices.filter((item: Price): boolean => {
@@ -64,9 +66,9 @@ function PriceDetail({good, data}: PriceDetailProps) {
                         variant="outline"
                         className="*:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
                     >
-                        <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-                        <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-                        <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+                        <ToggleGroupItem value="90d">{t.timeSpan3Months}</ToggleGroupItem>
+                        <ToggleGroupItem value="30d">{t.timeSpan30Days}</ToggleGroupItem>
+                        <ToggleGroupItem value="7d">{t.timeSpan7ays}</ToggleGroupItem>
                     </ToggleGroup>
                 </CardAction>
             </CardHeader>

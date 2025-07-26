@@ -22,7 +22,7 @@ export async function loader({params}: Route.LoaderArgs): Promise<{ data: any; t
         return redirect("/404");
     }
 
-    return {data: prices.data[params.good], t: loc(English, "Home")};
+    return {data: prices.data[params.good], t: loc(English, "Detail")};
 }
 
 export default function Detail({loaderData, params}: Route.ComponentProps): React.ReactElement {
@@ -30,7 +30,7 @@ export default function Detail({loaderData, params}: Route.ComponentProps): Reac
     return (
         <main className="flex flex-col items-center w-screen h-screen">
             <div className="flex w-full">
-                <PriceDetail good={params.good} data={data}/>
+                <PriceDetail good={params.good} data={data} t={t}/>
             </div>
         </main>
     );
