@@ -154,20 +154,35 @@ function PriceDetailChart({good, type, data, t}: PriceDetailChartProps) {
 
 function PriceDetailStatistics({data, type, t}: PriceDetailStatisticsProps) {
     return (
-        <Card className="w-full">
+        <Card>
             <CardContent>
                 <div className="flex justify-center align-center gap-24">
                     <div className="flex flex-col items-center gap-2">
-                        <span>Buy offer mean</span>
-                        <span>{transformValueNumberToLocale(data.buyOffersMean)}</span>
+                        <span>{type === BUY_CHART? t.buyOffersMean : t.sellOffersMean}</span>
+                        <span>
+                            {type === BUY_CHART?
+                                transformValueNumberToLocale(data.buyOffersMean) :
+                                transformValueNumberToLocale(data.sellOffersMean)
+                            }
+                        </span>
                     </div>
                     <div className="flex flex-col align-center items-center gap-2">
-                        <span>Buy offer median</span>
-                        <span>{transformValueNumberToLocale(data.buyOffersMedian)}</span>
+                        <span>{type === BUY_CHART? t.buyOffersMedian : t.sellOffersMedian}</span>
+                        <span>
+                            {type === BUY_CHART?
+                                transformValueNumberToLocale(data.buyOffersMedian) :
+                                transformValueNumberToLocale(data.sellOffersMedian)
+                            }
+                        </span>
                     </div>
                     <div className="flex flex-col align-center items-center gap-2">
-                        <span>Buy offer std deviation</span>
-                        <span>{transformValueNumberToLocale(data.buyOffersStdDeviation)}</span>
+                        <span>{type === BUY_CHART? t.buyOfferStdDeviation : t.sellOfferStdDeviation}</span>
+                        <span>
+                            {type === BUY_CHART?
+                                transformValueNumberToLocale(data.buyOffersStdDeviation) :
+                                transformValueNumberToLocale(data.sellOffersStdDeviation)
+                            }
+                        </span>
                     </div>
                 </div>
             </CardContent>

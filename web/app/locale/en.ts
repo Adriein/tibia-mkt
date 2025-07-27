@@ -8,5 +8,11 @@ export default {
         timeSpan7ays: "Last 7 days",
         buyOffer: "Buy offer",
         sellOffer: "Sell offer",
+        buyOffersMean: "Buy offer mean",
+        buyOffersMedian: "Buy offer median",
+        buyOfferStdDeviation: "Buy offer std deviation",
+        sellOffersMean: "Sell offer mean",
+        sellOffersMedian: "Sell offer median",
+        sellOfferStdDeviation: "Sell offer std deviation",
     }
-};
+} as const;

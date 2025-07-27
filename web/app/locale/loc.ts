@@ -8,22 +8,9 @@ export const Spanish = "es-ES";
 export const Portuguese = "br-BR";
 export const Polish = "pl-PL";
 
-export interface PageTranslations {
-    Home: HomeTranslations;
-    Detail: DetailTranslations;
-}
-
-export interface HomeTranslations {
-    welcome: string;
-}
-
-export interface DetailTranslations {
-    timeSpan3Months: string;
-    timeSpan30Days: string;
-    timeSpan7ays: string;
-    buyOffer: string;
-    sellOffer: string;
-}
+export type PageTranslations = typeof EN.default;
+export type HomeTranslations = typeof EN.default.Home;
+export type DetailTranslations = typeof EN.default.Detail;
 
 // Define a generic type that returns the correct translation interface based on the page parameter
 type TranslationForPage<P extends keyof PageTranslations> = PageTranslations[P];

@@ -8,5 +8,11 @@ export default {
         timeSpan7ays: "Ostatnie 7 dni",
         buyOffer: "Oferta kupna",
         sellOffer: "Oferta sprzedaży",
+        buyOffersMean: "Średnia oferty kupna",
+        buyOffersMedian: "Mediana oferty kupna",
+        buyOfferStdDeviation: "Odchylenie standardowe oferty kupna",
+        sellOffersMean: "Średnia oferty sprzedaży",
+        sellOffersMedian: "Mediana oferty sprzedaży",
+        sellOfferStdDeviation: "Odchylenie standardowe oferty sprzedaży",
     }
 };
