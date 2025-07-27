@@ -43,10 +43,10 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 
 	return &Detail{
 		SellOffersMean:         int(sellOfferMean),
-		SellOffersStdDeviation: sellOfferStdDeviation,
+		SellOffersStdDeviation: int(sellOfferStdDeviation),
 		SellOffersMedian:       sellOfferMedian,
 		BuyOffersMean:          int(buyOfferMean),
-		BuyOffersStdDeviation:  buyOfferStdDeviation,
+		BuyOffersStdDeviation:  int(buyOfferStdDeviation),
 		BuyOffersMedian:        buyOfferMedian,
 	}, nil
 }

@@ -34,10 +34,13 @@ export async function loader({params}: Route.LoaderArgs): Promise<LoaderData | R
 export default function Detail({loaderData, params}: Route.ComponentProps): React.ReactElement {
     const { prices, statistics, t } = loaderData;
     return (
-        <main className="flex flex-col items-center w-screen h-screen">
-            <div className="flex w-full">
-                <PriceDetail good={params.good} data={prices} t={t}/>
-            </div>
+        <main className="flex flex-col items-center w-screen h-screen p-3">
+            <PriceDetail
+                good={params.good}
+                prices={prices}
+                statistics={statistics}
+                t={t}
+            />
         </main>
     );
 }

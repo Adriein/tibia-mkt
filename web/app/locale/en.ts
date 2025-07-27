@@ -6,5 +6,7 @@ export default {
         timeSpan3Months: "Last 3 months",
         timeSpan30Days: "Last 30 days",
         timeSpan7ays: "Last 7 days",
+        buyOffer: "Buy offer",
+        sellOffer: "Sell offer",
     }
 };

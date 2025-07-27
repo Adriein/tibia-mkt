@@ -21,6 +21,8 @@ export interface DetailTranslations {
     timeSpan3Months: string;
     timeSpan30Days: string;
     timeSpan7ays: string;
+    buyOffer: string;
+    sellOffer: string;
 }
 
 // Define a generic type that returns the correct translation interface based on the page parameter

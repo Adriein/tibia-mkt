@@ -6,5 +6,7 @@ export default {
         timeSpan3Months: "Ostatnie 3 miesiące",
         timeSpan30Days: "Ostatnie 30 dni",
         timeSpan7ays: "Ostatnie 7 dni",
+        buyOffer: "Oferta kupna",
+        sellOffer: "Oferta sprzedaży",
     }
 };
