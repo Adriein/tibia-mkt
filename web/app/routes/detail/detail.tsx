@@ -1,12 +1,14 @@
 import React from "react";
 import type {Route} from "@/.react-router/types/app/routes/detail/+types/detail";
 import {type DetailTranslations, English, loc} from "~/locale/loc";
-import type {ApiResponse} from "~/lib/types";
+import type {ApiResponse, PriceChartData} from "~/lib/types";
 import {beautifyCamelCase} from "~/lib/utils";
 import {fetchDetailData} from "~/routes/detail/routeFunctions";
-import type {DetailPageData} from "~/routes/detail/types";
+import type {DetailPageData, DetailPageStatisticsData} from "~/routes/detail/types";
 import {redirect} from "react-router";
 import {PriceDetail} from "~/components/ui/price-detail";
+
+type LoaderData = { t: DetailTranslations; prices: PriceChartData, statistics: DetailPageStatisticsData };
 
 export function meta({params}: Route.MetaArgs) {
     return [
@@ -15,7 +17,7 @@ export function meta({params}: Route.MetaArgs) {
     ];
 }
 
-export async function loader({params}: Route.LoaderArgs): Promise<{ prices: any; statistics: any, t: DetailTranslations } | Response> {
+export async function loader({params}: Route.LoaderArgs): Promise<LoaderData | Response> {
     const res: ApiResponse<DetailPageData> = await fetchDetailData(params.good);
 
     if (!res.ok || !res.data) {
