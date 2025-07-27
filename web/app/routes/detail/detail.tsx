@@ -1,6 +1,6 @@
 import React from "react";
 import type {Route} from "@/.react-router/types/app/routes/detail/+types/detail";
-import {English, type HomeTranslations, loc} from "~/locale/loc";
+import {type DetailTranslations, English, loc} from "~/locale/loc";
 import type {ApiResponse} from "~/lib/types";
 import {beautifyCamelCase} from "~/lib/utils";
 import {fetchGoodPrices} from "~/routes/detail/routeFunctions";
@@ -10,12 +10,12 @@ import {PriceDetail} from "~/components/ui/price-detail";
 
 export function meta({params}: Route.MetaArgs) {
     return [
-        { title: beautifyCamelCase(params.good) },
+        { title: `Tibia Mkt | ${beautifyCamelCase(params.good)}` },
         { name: "description", content: "Detail" },
     ];
 }
 
-export async function loader({params}: Route.LoaderArgs): Promise<{ data: any; t: HomeTranslations } | Response> {
+export async function loader({params}: Route.LoaderArgs): Promise<{ data: any; t: DetailTranslations } | Response> {
     const prices: ApiResponse<DetailPageData> = await fetchGoodPrices(params.good);
 
     if (!prices.ok || !prices.data) {
