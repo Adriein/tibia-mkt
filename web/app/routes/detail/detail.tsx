@@ -8,7 +8,7 @@ import type {DetailPageData, DetailPageStatisticsData} from "~/routes/detail/typ
 import {redirect} from "react-router";
 import {PriceDetail} from "~/components/ui/price-detail";
 
-type LoaderData = { t: DetailTranslations; prices: PriceChartData, statistics: DetailPageStatisticsData };
+type LoaderData = { t: DetailTranslations; prices: PriceChartData, statistics: DetailPageStatisticsData, isMobile: boolean };
 
 export function meta({params}: Route.MetaArgs) {
     return [
@@ -17,7 +17,10 @@ export function meta({params}: Route.MetaArgs) {
     ];
 }
 
-export async function loader({params}: Route.LoaderArgs): Promise<LoaderData | Response> {
+export async function loader({params, request}: Route.LoaderArgs): Promise<LoaderData | Response> {
+    const userAgent: string = request.headers.get('user-agent') || '';
+    const isMobile: boolean = /Mobi|Android|IPhone/i.test(userAgent);
+
     const res: ApiResponse<DetailPageData> = await fetchDetailData(params.good);
 
     if (!res.ok || !res.data) {
@@ -27,12 +30,13 @@ export async function loader({params}: Route.LoaderArgs): Promise<LoaderData | R
     return {
         prices: res.data.prices[params.good],
         statistics: res.data.statistics,
-        t: loc(English, "Detail")
+        t: loc(English, "Detail"),
+        isMobile,
     };
 }
 
 export default function Detail({loaderData, params}: Route.ComponentProps): React.ReactElement {
-    const { prices, statistics, t } = loaderData;
+    const { prices, statistics, t, isMobile } = loaderData;
     return (
         <main className="flex flex-col items-center w-screen h-screen p-3">
             <PriceDetail
@@ -40,6 +44,7 @@ export default function Detail({loaderData, params}: Route.ComponentProps): Reac
                 prices={prices}
                 statistics={statistics}
                 t={t}
+                isMobile={isMobile}
             />
         </main>
     );
