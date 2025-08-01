@@ -1,5 +1,5 @@
-import type {ApiResponse} from "~/lib/types";
-import type {HomePageData, Price, PriceChartData} from "~/routes/home/types";
+import type {ApiResponse, Price, PriceChartData} from "~/lib/types";
+import type {HomePageData} from "~/routes/home/types";
 
 
 export async function fetchPrices(): Promise<ApiResponse<HomePageData>> {

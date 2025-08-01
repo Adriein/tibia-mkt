@@ -8,11 +8,11 @@ export default {
         timeSpan7ays: "Ostatnie 7 dni",
         buyOffer: "Oferta kupna",
         sellOffer: "Oferta sprzedaży",
-        buyOffersMean: "Średnia oferty kupna",
-        buyOffersMedian: "Mediana oferty kupna",
-        buyOfferStdDeviation: "Odchylenie standardowe oferty kupna",
-        sellOffersMean: "Średnia oferty sprzedaży",
-        sellOffersMedian: "Mediana oferty sprzedaży",
-        sellOfferStdDeviation: "Odchylenie standardowe oferty sprzedaży",
+        averagePrice: "Cena średnia",
+        medianPrice: "Cena mediana",
+        stdDeviation: "Zmienność cen",
+        averagePriceInfo: "Suma wszystkich cen podzielona przez ich liczbę. Jest to typowa cena.",
+        medianPriceInfo: "Środkowa cena w posortowanej liście cen. Połowa cen jest wyższa, połowa niższa.",
+        stdDeviationInfo: "Jak bardzo cena aktywa ma tendencję do wahania się w czasie. Wysoka zmienność oznacza duże, szybkie zmiany cen.",
     }
 };

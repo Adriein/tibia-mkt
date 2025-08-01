@@ -10,9 +10,12 @@ import type {DetailTranslations} from "~/locale/loc";
 import type {DetailPageStatisticsData} from "~/routes/detail/types";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {Badge} from "~/components/ui/badge";
-import {TrendingUp, TrendingDown} from "lucide-react";
+import {TrendingUp, TrendingDown, CircleQuestionMark, Eye} from "lucide-react";
 import {Avatar, AvatarImage} from "~/components/ui/avatar";
 import HoneycombGif from "~/assets/honeycomb.gif";
+import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
+import {Button} from "~/components/ui/button";
+import {Link} from "react-router";
 
 const SELL_CHART = "sell";
 const BUY_CHART = "buy";
@@ -49,7 +52,7 @@ type PriceDetailStatsCardProps = {
     trend?: "up" | "down";
     change?: number;
     value: number | string;
-    t: DetailTranslations;
+    info: string;
 }
 
 const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
@@ -181,12 +184,22 @@ function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps
     );
 }
 
-function PriceDetailStatsCard({title, trend, change, value, t}: PriceDetailStatsCardProps) {
+function PriceDetailStatsCard({title, trend, change, value, info}: PriceDetailStatsCardProps) {
     return (
         <Card className="relative">
             <CardHeader className="pb-2">
                 <CardTitle className="font-medium flex items-center justify-between">
-                    {title}
+                    <div className="flex items-center gap-1">
+                        {title}
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CircleQuestionMark className="h-4 w-4" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>{info}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </div>
                     {trend && (
                         <Badge className={`flex items-center gap-1 text-xs font-medium ${
                             trend === "up"
@@ -222,7 +235,7 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                             </Avatar>
                             <div>
                                 <h1 className="text-3xl font-bold">Honeycomb Analytics</h1>
-                                <p className="mt-1">Honeycomb Trading Data</p>
+                                <p className="text-sm mt-1">Data series {formatDate(prices.prices.at(0)!.createdAt)} - {formatDate(prices.prices.at(-1)!.createdAt)}</p>
                             </div>
                         </div>
                     </div>
@@ -268,25 +281,25 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <PriceDetailStatsCard
-                            title="Average Price"
+                            title={t.averagePrice}
                             value={statistics.buyOffersMean}
                             trend={"up"}
                             change={10}
-                            t={t}
+                            info={t.averagePriceInfo}
                         />
                         <PriceDetailStatsCard
-                            title="Median Price"
+                            title={t.medianPrice}
                             value={statistics.buyOffersMedian}
                             trend={"up"}
                             change={10}
-                            t={t}
+                            info={t.medianPriceInfo}
                         />
                         <PriceDetailStatsCard
-                            title="Price Volatility"
+                            title={t.stdDeviation}
                             value={statistics.buyOffersStdDeviation}
                             trend={"up"}
                             change={10}
-                            t={t}
+                            info={t.stdDeviationInfo}
                         />
                     </div>
 
@@ -308,25 +321,25 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <PriceDetailStatsCard
-                            title="Average Price"
+                            title={t.averagePrice}
                             value={statistics.sellOffersMean}
                             trend={"up"}
                             change={10}
-                            t={t}
+                            info={t.averagePriceInfo}
                         />
                         <PriceDetailStatsCard
-                            title="Median Price"
+                            title={t.medianPrice}
                             value={statistics.sellOffersMedian}
                             trend={"up"}
                             change={10}
-                            t={t}
+                            info={t.medianPriceInfo}
                         />
                         <PriceDetailStatsCard
-                            title="Price Volatility"
+                            title={t.stdDeviation}
                             value={statistics.sellOffersStdDeviation}
                             trend={"up"}
                             change={10}
-                            t={t}
+                            info={t.stdDeviationInfo}
                         />
                     </div>
                     <PriceDetailChart good={good} type={SELL_CHART} data={prices} t={t} isMobile={isMobile}/>

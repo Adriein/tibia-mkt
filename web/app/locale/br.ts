@@ -8,11 +8,11 @@ export default {
         timeSpan7ays: "Últimos 7 dias",
         buyOffer: "Oferta de compra",
         sellOffer: "Oferta de venda",
-        buyOffersMean: "Média da oferta de compra",
-        buyOffersMedian: "Mediana da oferta de compra",
-        buyOfferStdDeviation: "Desvio padrão da oferta de compra",
-        sellOffersMean: "Média da oferta de venda",
-        sellOffersMedian: "Mediana da oferta de venda",
-        sellOfferStdDeviation: "Desvio padrão da oferta de venda",
+        averagePrice: "Preço médio",
+        medianPrice: "Preço mediano",
+        stdDeviation: "Volatilidade do preço",
+        averagePriceInfo: "A soma de todos os preços dividida pelo número de preços. É o preço típico.",
+        medianPriceInfo: "O preço central em uma lista ordenada de preços. Metade dos preços está acima, metade abaixo.",
+        stdDeviationInfo: "O quanto o preço de um ativo tende a flutuar ao longo do tempo. Alta volatilidade significa grandes e rápidas mudanças de preço.",
     }
 };
