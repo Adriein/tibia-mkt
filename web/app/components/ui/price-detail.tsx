@@ -10,12 +10,10 @@ import type {DetailTranslations} from "~/locale/loc";
 import type {DetailPageStatisticsData} from "~/routes/detail/types";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {Badge} from "~/components/ui/badge";
-import {TrendingUp, TrendingDown, CircleQuestionMark, Eye} from "lucide-react";
+import {TrendingUp, TrendingDown, CircleQuestionMark, ChartNoAxesCombined, CalendarClock} from "lucide-react";
 import {Avatar, AvatarImage} from "~/components/ui/avatar";
 import HoneycombGif from "~/assets/honeycomb.gif";
 import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
-import {Button} from "~/components/ui/button";
-import {Link} from "react-router";
 
 const SELL_CHART = "sell";
 const BUY_CHART = "buy";
@@ -189,7 +187,7 @@ function PriceDetailStatsCard({title, trend, change, value, info}: PriceDetailSt
         <Card className="relative">
             <CardHeader className="pb-2">
                 <CardTitle className="font-medium flex items-center justify-between">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                         {title}
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -265,6 +263,165 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                         Live Data
                     </Badge>
                 </div>*/}
+
+                {/* Market Summary */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Market Overview Card */}
+                    <Card className="relative overflow-hidden">
+                        <CardHeader>
+                            <CardTitle className="relative flex items-center gap-2">
+                                <ChartNoAxesCombined className="w-5 h-5" />
+                                Market Overview
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="relative space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm">Bid-Ask Spread:</span>
+                                        <span className="font-medium">1000</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm">Spread %:</span>
+                                        <span className="font-medium">
+                                            10%
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm">Market Cap:</span>
+                                        <span className="font-medium">1250000</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm">24h Volume:</span>
+                                        <span className="font-medium">1250000</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="pt-2 border-t border-[var(--secondary)]">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm">Market Status:</span>
+                                    <div className="flex items-center gap-2">
+                                        <Badge
+                                            variant={"secondary"}
+                                            className={`text-xs`}
+                                        >
+                                            {"Stable Trading"}
+                                        </Badge>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Trading Insights Card */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <TrendingUp className="w-5 h-5" />
+                                Trading Insights
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between p-3 bg-[var(--secondary)] rounded-lg">
+                                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                                        <div className="w-2 h-2 bg-[var(--primary)] rounded-full flex-shrink-0"></div>
+                                        <span className="text-sm">Buy Pressure</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 min-w-[100px]">
+                                        <div className="w-16 h-2 bg-[var(--foreground)] rounded-full overflow-hidden">
+                                            <div className="w-3/4 h-full bg-[var(--primary)] rounded-full"></div>
+                                        </div>
+                                        <span className="text-xs text-[var(--primary)] font-medium w-16 text-right">Strong</span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center justify-between p-3 bg-[var(--secondary)] rounded-lg">
+                                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                                        <div className="w-2 h-2 bg-[var(--chart-theme-2)] rounded-full flex-shrink-0"></div>
+                                        <span className="text-sm">Sell Pressure</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 min-w-[100px]">
+                                        <div className="w-16 h-2 bg-[var(--foreground)] rounded-full overflow-hidden">
+                                            <div className="w-1/2 h-full bg-[var(--chart-theme-2)] rounded-full"></div>
+                                        </div>
+                                        <span className="text-xs text-[var(--chart-theme-2)] font-medium w-16 text-right">Moderate</span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center justify-between p-3 bg-[var(--secondary)] rounded-lg">
+                                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                                        <div className="w-2 h-2 bg-[var(--chart-2)] rounded-full flex-shrink-0"></div>
+                                        <span className="text-sm">Liquidity</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 min-w-[100px]">
+                                        <div className="w-16 h-2 bg-[var(--foreground)] rounded-full overflow-hidden">
+                                            <div className="w-5/6 h-full bg-[var(--chart-2)] rounded-full"></div>
+                                        </div>
+                                        <span className="text-xs text-[var(--chart-2)] font-medium w-16 text-right">High</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Market Activity Timeline */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <CalendarClock className="w-5 h-5" />
+                            Recent Market Activity
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                    <span className="text-xs">2 min ago</span>
+                                </div>
+                                <span className="text-sm">Large buy order executed at 1580</span>
+                                <Badge variant="outline" className="text-green-400 border-green-500/30 text-xs">
+                                    +2.1%
+                                </Badge>
+                            </div>
+
+                            <div className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                                    <span className="text-xs text-gray-400">8 min ago</span>
+                                </div>
+                                <span className="text-sm text-gray-300">Market volatility decreased by 15%</span>
+                                <Badge variant="outline" className="text-blue-400 border-blue-500/30 text-xs">
+                                    Stable
+                                </Badge>
+                            </div>
+
+                            <div className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
+                                    <span className="text-xs">15 min ago</span>
+                                </div>
+                                <span className="text-sm">Trading volume increased by 23%</span>
+                                <Badge variant="outline" className="text-amber-400 border-amber-500/30 text-xs">
+                                    Volume
+                                </Badge>
+                            </div>
+                        </div>
+
+                        <div className="mt-4 pt-4 flex items-center justify-between">
+                            <span className="text-sm">Last data refresh:</span>
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                <span className="font-medium text-green-400">Live</span>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
 
                 {/* Buy Offers Section */}
                 <div className="space-y-4">
