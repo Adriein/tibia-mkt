@@ -8,11 +8,11 @@ import type {Price, PriceChartData} from "~/lib/types";
 import {ToggleGroup, ToggleGroupItem} from "~/components/ui/toggle-group";
 import type {DetailTranslations} from "~/locale/loc";
 import type {DetailPageStatisticsData} from "~/routes/detail/types";
-import {useIsMobile} from "~/lib/hooks";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
 import {Badge} from "~/components/ui/badge";
 import {TrendingUp, TrendingDown} from "lucide-react";
+import {Avatar, AvatarImage} from "~/components/ui/avatar";
+import HoneycombGif from "~/assets/honeycomb.gif";
 
 const SELL_CHART = "sell";
 const BUY_CHART = "buy";
@@ -185,21 +185,19 @@ function PriceDetailStatsCard({title, trend, change, value, t}: PriceDetailStats
     return (
         <Card className="relative">
             <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium flex items-center justify-between">
+                <CardTitle className="font-medium flex items-center justify-between">
                     {title}
                     {trend && (
-                        <div
-                            className={`flex items-center gap-1 text-xs font-medium ${
-                                trend === "up"
-                                    ? "text-green-600 dark:text-green-400"
-                                    : trend === "down"
-                                        ? "text-red-600 dark:text-red-400"
-                                        : "text-gray-600 dark:text-gray-400"
-                            }`}
-                        >
+                        <Badge className={`flex items-center gap-1 text-xs font-medium ${
+                            trend === "up"
+                                ? "text-green-600 dark:text-green-400"
+                                : trend === "down"
+                                    ? "text-red-600 dark:text-red-400"
+                                    : "text-gray-600 dark:text-gray-400"
+                        }`} variant="outline">
                             {trend === "up" ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                             {change && `${change > 0 ? "+" : ""}${change}%`}
-                        </div>
+                        </Badge>
                     )}
                 </CardTitle>
             </CardHeader>
@@ -217,8 +215,33 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
             <div className="max-w-7xl mx-auto space-y-6">
                 {/*Header Section */}
                 <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
+                            <Avatar className="w-10 h-10">
+                                <AvatarImage src={HoneycombGif} />
+                            </Avatar>
+                            <div>
+                                <h1 className="text-3xl font-bold">Honeycomb Analytics</h1>
+                                <p className="mt-1">Honeycomb Trading Data</p>
+                            </div>
+                        </div>
+                    </div>
+                    <Badge
+                        variant="secondary"
+                        className="flex items-center gap-2 bg-green-500/10 text-green-400 border-green-500/30"
+                    >
+                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        Live Data
+                    </Badge>
+                </div>
+                {/*<div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold">Market Analytics</h1>
+                        <div className="flex justify-center items-center justify-items-center gap-1">
+                            <h1 className="text-3xl font-bold">Honeycomb Analytics</h1>
+                            <Avatar>
+                                <AvatarImage src={HoneycombGif} />
+                            </Avatar>
+                        </div>
                         <p className="mt-1">Honeycomb Trading Data</p>
                     </div>
                     <Badge
@@ -228,7 +251,7 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                         <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full animate-pulse"></div>
                         Live Data
                     </Badge>
-                </div>
+                </div>*/}
 
                 {/* Buy Offers Section */}
                 <div className="space-y-4">
