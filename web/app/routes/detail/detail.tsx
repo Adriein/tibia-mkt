@@ -38,7 +38,7 @@ export async function loader({params, request}: Route.LoaderArgs): Promise<Loade
 export default function Detail({loaderData, params}: Route.ComponentProps): React.ReactElement {
     const { prices, statistics, t, isMobile } = loaderData;
     return (
-        <main className="flex flex-col items-center w-screen h-screen p-3">
+        <main>
             <PriceDetail
                 good={params.good}
                 prices={prices}

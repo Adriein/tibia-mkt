@@ -11,6 +11,8 @@ import type {DetailPageStatisticsData} from "~/routes/detail/types";
 import {useIsMobile} from "~/lib/hooks";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
+import {Badge} from "~/components/ui/badge";
+import {TrendingUp, TrendingDown} from "lucide-react";
 
 const SELL_CHART = "sell";
 const BUY_CHART = "buy";
@@ -42,9 +44,11 @@ type PriceDetailChartProps = {
     isMobile: boolean;
 }
 
-type PriceDetailStatisticsProps = {
-    type: typeof SELL_CHART | typeof BUY_CHART
-    data: DetailPageStatisticsData
+type PriceDetailStatsCardProps = {
+    title: string;
+    trend?: "up" | "down";
+    change?: number;
+    value: number | string;
     t: DetailTranslations;
 }
 
@@ -177,39 +181,30 @@ function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps
     );
 }
 
-function PriceDetailStatistics({data, type, t}: PriceDetailStatisticsProps) {
+function PriceDetailStatsCard({title, trend, change, value, t}: PriceDetailStatsCardProps) {
     return (
-        <Card>
+        <Card className="relative">
+            <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center justify-between">
+                    {title}
+                    {trend && (
+                        <div
+                            className={`flex items-center gap-1 text-xs font-medium ${
+                                trend === "up"
+                                    ? "text-green-600 dark:text-green-400"
+                                    : trend === "down"
+                                        ? "text-red-600 dark:text-red-400"
+                                        : "text-gray-600 dark:text-gray-400"
+                            }`}
+                        >
+                            {trend === "up" ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                            {change && `${change > 0 ? "+" : ""}${change}%`}
+                        </div>
+                    )}
+                </CardTitle>
+            </CardHeader>
             <CardContent>
-                <div className="flex justify-center align-center gap-24">
-                    <div className="flex flex-col items-center gap-2">
-                        <span>{type === BUY_CHART? t.buyOffersMean : t.sellOffersMean}</span>
-                        <span>
-                            {type === BUY_CHART?
-                                transformValueNumberToLocale(data.buyOffersMean) :
-                                transformValueNumberToLocale(data.sellOffersMean)
-                            }
-                        </span>
-                    </div>
-                    <div className="flex flex-col align-center items-center gap-2">
-                        <span>{type === BUY_CHART? t.buyOffersMedian : t.sellOffersMedian}</span>
-                        <span>
-                            {type === BUY_CHART?
-                                transformValueNumberToLocale(data.buyOffersMedian) :
-                                transformValueNumberToLocale(data.sellOffersMedian)
-                            }
-                        </span>
-                    </div>
-                    <div className="flex flex-col align-center items-center gap-2">
-                        <span>{type === BUY_CHART? t.buyOfferStdDeviation : t.sellOfferStdDeviation}</span>
-                        <span>
-                            {type === BUY_CHART?
-                                transformValueNumberToLocale(data.buyOffersStdDeviation) :
-                                transformValueNumberToLocale(data.sellOffersStdDeviation)
-                            }
-                        </span>
-                    </div>
-                </div>
+                <div className="text-2xl font-bold">{transformValueNumberToLocale(value)}</div>
             </CardContent>
         </Card>
     );
@@ -217,30 +212,105 @@ function PriceDetailStatistics({data, type, t}: PriceDetailStatisticsProps) {
 
 
 function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) {
-    return isMobile? (
-            <div className="w-full">
-                <Tabs defaultValue="chart">
-                    <TabsList>
-                        <TabsTrigger value="chart">Charts</TabsTrigger>
-                        <TabsTrigger value="info">Info</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="chart" className="flex flex-col gap-3">
-                        <PriceDetailChart good={good} type={BUY_CHART} data={prices} t={t} isMobile={isMobile}/>
-                        <PriceDetailChart good={good} type={SELL_CHART} data={prices} t={t} isMobile={isMobile}/>
-                    </TabsContent>
-                    <TabsContent value="info" className="flex flex-col gap-3">
-                        <PriceDetailStatistics data={statistics} t={t} type={BUY_CHART}/>
-                        <PriceDetailStatistics data={statistics} t={t} type={SELL_CHART}/>
-                    </TabsContent>
-                </Tabs>
-            </div>) : (
-            <div className="flex flex-col gap-3 w-full">
-                <PriceDetailStatistics data={statistics} t={t} type={BUY_CHART}/>
-                <PriceDetailChart good={good} type={BUY_CHART} data={prices} t={t} isMobile={isMobile}/>
-                <PriceDetailStatistics data={statistics} t={t} type={SELL_CHART}/>
-                <PriceDetailChart good={good} type={SELL_CHART} data={prices} t={t} isMobile={isMobile}/>
+    return (
+        <div className="min-h-screen p-6">
+            <div className="max-w-7xl mx-auto space-y-6">
+                {/*Header Section */}
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold">Market Analytics</h1>
+                        <p className="mt-1">Honeycomb Trading Data</p>
+                    </div>
+                    <Badge
+                        variant="secondary"
+                        className="flex items-center gap-2 bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 dark:border-green-500/30"
+                    >
+                        <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full animate-pulse"></div>
+                        Live Data
+                    </Badge>
+                </div>
+
+                {/* Buy Offers Section */}
+                <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-[var(--chart-theme-1)] rounded-full shadow-lg shadow-amber-500/50"></div>
+                        <h2 className="text-xl font-semibold">Buy Offers</h2>
+                        <Badge
+                            variant="outline"
+                            className="text-amber-600 dark:text-amber-400 border-amber-500/30 dark:border-amber-500/50"
+                        >
+                            Trending Up
+                        </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <PriceDetailStatsCard
+                            title="Average Price"
+                            value={statistics.buyOffersMean}
+                            trend={"up"}
+                            change={10}
+                            t={t}
+                        />
+                        <PriceDetailStatsCard
+                            title="Median Price"
+                            value={statistics.buyOffersMedian}
+                            trend={"up"}
+                            change={10}
+                            t={t}
+                        />
+                        <PriceDetailStatsCard
+                            title="Price Volatility"
+                            value={statistics.buyOffersStdDeviation}
+                            trend={"up"}
+                            change={10}
+                            t={t}
+                        />
+                    </div>
+
+                    <PriceDetailChart good={good} type={BUY_CHART} data={prices} t={t} isMobile={isMobile}/>
+                </div>
+
+                {/* Sell Offers Section */}
+                <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-[var(--chart-theme-2)] rounded-full shadow-lg shadow-blue-500/50"></div>
+                        <h2 className="text-xl font-semibold">Sell Offers</h2>
+                        <Badge
+                            variant="outline"
+                            className="text-red-600 dark:text-red-400 border-red-500/30 dark:border-red-500/50"
+                        >
+                            Trending Down
+                        </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <PriceDetailStatsCard
+                            title="Average Price"
+                            value={statistics.sellOffersMean}
+                            trend={"up"}
+                            change={10}
+                            t={t}
+                        />
+                        <PriceDetailStatsCard
+                            title="Median Price"
+                            value={statistics.sellOffersMedian}
+                            trend={"up"}
+                            change={10}
+                            t={t}
+                        />
+                        <PriceDetailStatsCard
+                            title="Price Volatility"
+                            value={statistics.sellOffersStdDeviation}
+                            trend={"up"}
+                            change={10}
+                            t={t}
+                        />
+                    </div>
+                    <PriceDetailChart good={good} type={SELL_CHART} data={prices} t={t} isMobile={isMobile}/>
+                </div>
             </div>
-        );
+        </div>
+    );
 }
 
 export {
