@@ -416,8 +416,7 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                         <div className="mt-4 pt-4 flex items-center justify-between">
                             <span className="text-sm">Last data refresh:</span>
                             <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                <span className="font-medium text-green-400">Live</span>
+                                <span className="text-sm">1 min ago</span>
                             </div>
                         </div>
                     </CardContent>
