@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS prices (
     good_amount SMALLINT NOT NULL,
     unit_price BIGINT NOT NULL,
     total_price BIGINT NOT NULL,
-    end_at TIMESTAMP(2) NOT NULL,
-    created_at TIMESTAMP(2) NOT NULL
+    end_at TIMESTAMP(0) NOT NULL,
+    created_at TIMESTAMP(0) NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_prices_good_name ON prices(good_name);

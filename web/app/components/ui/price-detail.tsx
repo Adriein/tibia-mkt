@@ -53,11 +53,17 @@ type PriceDetailStatsCardProps = {
     info: string;
 }
 
+const MARKET_STATUS_COLORS = {
+    "Stable": "bg-green-500/10 text-green-400 border-green-500/20",
+    "Risky": "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    "Volatile": "bg-red-500/10 text-red-400 border-red-500/20",
+} as Record<string, string>;
+
 const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
     return <span>{formatDate(label)}</span>
 }
 
-const transformValueNumberToLocale = (value: number|string): string => {
+const transformNumberToLocale = (value: number|string): string => {
     return Intl.NumberFormat("es-Es").format(value as number).toString()
 };
 
@@ -169,7 +175,7 @@ function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps
                                 <ChartTooltipContent
                                     indicator="line"
                                     labelFormatter={labelFormatter}
-                                    valueFormatter={transformValueNumberToLocale}
+                                    valueFormatter={transformNumberToLocale}
                                     className="w-[150px]"/>
                             }
                         />
@@ -235,7 +241,7 @@ function PriceDetailStatsCard({title, trend, change, value, info}: PriceDetailSt
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">{transformValueNumberToLocale(value)}</div>
+                <div className="text-2xl font-bold">{transformNumberToLocale(value)}</div>
             </CardContent>
         </Card>
     );
@@ -286,23 +292,27 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm">Bid-Ask Spread:</span>
-                                        <span className="font-medium">1000</span>
+                                        <span className="font-medium">
+                                            {transformNumberToLocale(statistics.overview.buySellSpread)}
+                                        </span>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm">Spread %:</span>
-                                        <span className="font-medium">
-                                            10%
-                                        </span>
+                                        <span className="font-medium">{statistics.overview.spreadPercentage}%</span>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm">Market Cap:</span>
-                                        <span className="font-medium">1250000</span>
+                                        <span className="font-medium">
+                                            {transformNumberToLocale(statistics.overview.marketCap)}
+                                        </span>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm">24h Volume:</span>
-                                        <span className="font-medium">1250000</span>
+                                        <span className="font-medium">
+                                            {transformNumberToLocale(statistics.overview.lastTwentyFourHoursVolume)}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -313,9 +323,9 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                                     <div className="flex items-center gap-2">
                                         <Badge
                                             variant={"secondary"}
-                                            className={`text-xs`}
+                                            className={`text-xs ${MARKET_STATUS_COLORS[statistics.overview.marketStatus]}`}
                                         >
-                                            {"Stable Trading"}
+                                            {`${statistics.overview.marketStatus} Trading`}
                                         </Badge>
                                     </div>
                                 </div>
@@ -436,7 +446,7 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                         <h2 className="text-xl font-semibold">Buy Offers</h2>
                         <Badge
                             variant="outline"
-                            className="text-amber-600 dark:text-amber-400 border-amber-500/30 dark:border-amber-500/50"
+                            className="text-amber-600 dark:text-amber-400 border-amber-500/50"
                         >
                             Trending Up
                         </Badge>
@@ -445,21 +455,21 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <PriceDetailStatsCard
                             title={t.averagePrice}
-                            value={statistics.buyOffersMean}
+                            value={statistics.stats.buyOffersMean}
                             trend={"up"}
                             change={10}
                             info={t.averagePriceInfo}
                         />
                         <PriceDetailStatsCard
                             title={t.medianPrice}
-                            value={statistics.buyOffersMedian}
+                            value={statistics.stats.buyOffersMedian}
                             trend={"up"}
                             change={10}
                             info={t.medianPriceInfo}
                         />
                         <PriceDetailStatsCard
                             title={t.stdDeviation}
-                            value={statistics.buyOffersStdDeviation}
+                            value={statistics.stats.buyOffersStdDeviation}
                             trend={"up"}
                             change={10}
                             info={t.stdDeviationInfo}
@@ -485,21 +495,21 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <PriceDetailStatsCard
                             title={t.averagePrice}
-                            value={statistics.sellOffersMean}
+                            value={statistics.stats.sellOffersMean}
                             trend={"up"}
                             change={10}
                             info={t.averagePriceInfo}
                         />
                         <PriceDetailStatsCard
                             title={t.medianPrice}
-                            value={statistics.sellOffersMedian}
+                            value={statistics.stats.sellOffersMedian}
                             trend={"up"}
                             change={10}
                             info={t.medianPriceInfo}
                         />
                         <PriceDetailStatsCard
                             title={t.stdDeviation}
-                            value={statistics.sellOffersStdDeviation}
+                            value={statistics.stats.sellOffersStdDeviation}
                             trend={"up"}
                             change={10}
                             info={t.stdDeviationInfo}

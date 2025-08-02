@@ -30,6 +30,9 @@ const (
 	BrokenShamanicStaffEntity = "brokenShamanicStaff"
 	SellOffer                 = "SELL"
 	BuyOffer                  = "BUY"
+	VolatileMarketStatus      = "Volatile"
+	StableMarketStatus        = "Stable"
+	RiskyMarketStatus         = "Risky"
 )
 
 const (

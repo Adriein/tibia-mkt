@@ -2,13 +2,26 @@ import type {PriceChartData} from "~/lib/types";
 
 export type DetailPageData = { prices: DetailPagePricesData, statistics: DetailPageStatisticsData };
 
-export type DetailPagePricesData = { [key: string]: PriceChartData } & { [key: string]: any};
-
-export type DetailPageStatisticsData = {
+export type Stats = {
     sellOffersMean: number;
     sellOffersStdDeviation: number;
     sellOffersMedian: number;
     buyOffersMean: number;
     buyOffersStdDeviation: number;
     buyOffersMedian: number;
+}
+
+export type Overview = {
+    buySellSpread: number;
+    spreadPercentage: number;
+    marketCap: number;
+    lastTwentyFourHoursVolume: number;
+    marketStatus: string;
+}
+
+export type DetailPagePricesData = { [key: string]: PriceChartData } & { [key: string]: any};
+
+export type DetailPageStatisticsData = {
+    stats: Stats;
+    overview: Overview;
 };
