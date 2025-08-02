@@ -7,7 +7,7 @@ import (
 )
 
 type PriceRepository interface {
-	FindByNameAndWorld(world string, good string) ([]*Price, error)
+	FindNewestOfferByGoodAndWorld(world string, good string, offerType string) ([]*Price, error)
 	Save(price *Price) error
 }
 
@@ -21,23 +21,27 @@ func NewPgPriceRepository(connection *sql.DB) *PgPriceRepository {
 	}
 }
 
-func (r *PgPriceRepository) FindByNameAndWorld(worldName string, good string) ([]*Price, error) {
-	statement, err := r.connection.Prepare("SELECT * FROM prices WHERE world = $1 AND good_name = $2;")
+func (r *PgPriceRepository) FindNewestOfferByGoodAndWorld(worldName string, good string, offerType string) ([]*Price, error) {
+	statement, err := r.connection.Prepare("SELECT DISTINCT ON (good_name, created_at) * FROM prices WHERE world = $1 AND good_name = $2 AND offer_type = $3 ORDER BY good_name, created_at DESC;")
 
 	if err != nil {
 		return nil, eris.New(err.Error())
 	}
 
 	var (
-		id         string
-		good_name  string
-		world      string
-		buy_price  int
-		sell_price int
-		created_at string
+		id          string
+		offer_type  string
+		good_name   string
+		world       string
+		created_by  string
+		good_amount int
+		unit_price  int
+		total_price int
+		end_at      string
+		created_at  string
 	)
 
-	rows, err := statement.Query(worldName, good)
+	rows, err := statement.Query(worldName, good, offerType)
 
 	defer rows.Close()
 
@@ -48,25 +52,34 @@ func (r *PgPriceRepository) FindByNameAndWorld(worldName string, good string) ([
 	var results []*Price
 
 	for rows.Next() {
-		scanErr := rows.Scan(&id, &good_name, &world, &buy_price, &sell_price, &created_at)
+		scanErr := rows.Scan(&id, &offer_type, &good_name, &world, &created_by, &good_amount, &unit_price, &total_price, &end_at, &created_at)
 
 		if scanErr != nil {
 			return nil, eris.New(scanErr.Error())
 		}
 
-		createdAt, timeParseErr := time.Parse(time.DateOnly, created_at)
+		createdAt, createdAtTimeParseErr := time.Parse(time.RFC3339Nano, created_at)
 
-		if timeParseErr != nil {
-			return nil, eris.New(timeParseErr.Error())
+		if createdAtTimeParseErr != nil {
+			return nil, eris.New(createdAtTimeParseErr.Error())
+		}
+
+		endAt, endAtTimeParseErr := time.Parse(time.RFC3339Nano, created_at)
+
+		if endAtTimeParseErr != nil {
+			return nil, eris.New(endAtTimeParseErr.Error())
 		}
 
 		results = append(results, &Price{
-			Id:        id,
-			GoodName:  good_name,
-			World:     world,
-			BuyPrice:  buy_price,
-			SellPrice: sell_price,
-			CreatedAt: createdAt,
+			Id:         id,
+			OfferType:  offer_type,
+			GoodName:   good_name,
+			World:      world,
+			CreatedBy:  created_by,
+			UnitPrice:  unit_price,
+			TotalPrice: total_price,
+			EndAt:      endAt,
+			CreatedAt:  createdAt,
 		})
 	}
 
@@ -74,16 +87,20 @@ func (r *PgPriceRepository) FindByNameAndWorld(worldName string, good string) ([
 }
 
 func (r *PgPriceRepository) Save(price *Price) error {
-	var query = "INSERT INTO prices (id, good_name, world, buy_price, sell_price, created_at) VALUES ($1, $2, $3, $4, $5, $6)"
+	var query = "INSERT INTO prices (id, offer_type, good_name, world, created_by, good_amount, unit_price, total_price, end_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
 
 	_, err := r.connection.Exec(
 		query,
 		price.Id,
+		price.OfferType,
 		price.GoodName,
 		price.World,
-		price.BuyPrice,
-		price.SellPrice,
-		price.CreatedAt.Format(time.DateOnly),
+		price.CreatedBy,
+		price.GoodAmount,
+		price.UnitPrice,
+		price.TotalPrice,
+		price.EndAt.Format(time.DateTime),
+		price.CreatedAt.Format(time.DateTime),
 	)
 
 	if err != nil {

@@ -1,5 +1,7 @@
 package price
 
+import "github.com/adriein/tibia-mkt/pkg/constants"
+
 type Service struct {
 	repository PriceRepository
 }
@@ -11,11 +13,23 @@ func NewService(repository PriceRepository) *Service {
 }
 
 func (s *Service) GetPrices(world string, good string) ([]*Price, error) {
-	price, err := s.repository.FindByNameAndWorld(world, good)
+	var prices []*Price
 
-	if err != nil {
-		return nil, err
+	sellOfferResults, sellOfferErr := s.repository.FindNewestOfferByGoodAndWorld(world, good, constants.SellOffer)
+
+	if sellOfferErr != nil {
+		return nil, sellOfferErr
 	}
 
-	return price, nil
+	prices = append(prices, sellOfferResults...)
+
+	buyOfferResults, buyOfferErr := s.repository.FindNewestOfferByGoodAndWorld(world, good, constants.BuyOffer)
+
+	if buyOfferErr != nil {
+		return nil, sellOfferErr
+	}
+
+	prices = append(prices, buyOfferResults...)
+
+	return prices, nil
 }

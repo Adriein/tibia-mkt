@@ -28,6 +28,8 @@ const (
 	TibiaCoinEntity           = "tibiaCoin"
 	SwamplingWoodEntity       = "swamplingWood"
 	BrokenShamanicStaffEntity = "brokenShamanicStaff"
+	SellOffer                 = "SELL"
+	BuyOffer                  = "BUY"
 )
 
 const (

@@ -9,25 +9,19 @@ import (
 type Presenter struct {
 }
 
-type ChartMetadataDto struct {
-	XAxisTick []string    `json:"xAxisTick"`
-	YAxisTick []ChartTick `json:"yAxisTick"`
-}
-
 type Response struct {
 	Prices map[string]PricesChart `json:"prices"`
 }
 
 type PricesChart struct {
-	Wiki         string           `json:"wiki"`
-	Prices       []PriceDto       `json:"prices"`
-	Chart        ChartMetadataDto `json:"chartMetadata"`
-	PagePosition int8             `json:"pagePosition"`
+	Wiki         string     `json:"wiki"`
+	BuyOffer     []PriceDto `json:"buyOffer"`
+	SellOffer    []PriceDto `json:"sellOffer"`
+	PagePosition int8       `json:"pagePosition"`
 }
 
 type PriceDto struct {
-	BuyOffer  int    `json:"buyOffer"`
-	SellOffer int    `json:"sellOffer"`
+	UnitPrice int    `json:"unitPrice"`
 	Amount    int    `json:"amount"`
 	CreatedAt string `json:"createdAt"`
 	World     string `json:"world"`
@@ -38,11 +32,6 @@ type PriceConfig struct {
 	Position int8
 	Columns  int8
 	Rows     int8
-}
-
-type ChartTick struct {
-	Price int    `json:"price"`
-	Date  string `json:"date"`
 }
 
 func NewPresenter() *Presenter {
@@ -56,75 +45,36 @@ func (p *Presenter) Format(data [][]*Price) gin.H {
 		cogSkuList := data[i]
 
 		var (
-			buyOfferTotal      int
-			sellOfferTotal     int
-			cogSkuResponseList []PriceDto
-			highestSellPrice   ChartTick
-			lowestBuyPrice     ChartTick
-			yAxisDomain        []ChartTick
-			xAxisDomain        []string
+			buyOfferResponses  []PriceDto
+			sellOfferResponses []PriceDto
 		)
 
-		highestSellPrice = ChartTick{Price: cogSkuList[0].SellPrice, Date: cogSkuList[0].CreatedAt.Format(time.DateOnly)}
-		lowestBuyPrice = ChartTick{Price: cogSkuList[0].BuyPrice, Date: cogSkuList[0].CreatedAt.Format(time.DateOnly)}
-
 		for _, cogSku := range cogSkuList {
-			buyOfferTotal = buyOfferTotal + cogSku.BuyPrice
-			sellOfferTotal = sellOfferTotal + cogSku.SellPrice
+			if cogSku.OfferType == constants.SellOffer {
+				sellOfferResponses = append(sellOfferResponses, PriceDto{
+					UnitPrice: cogSku.UnitPrice,
+					Amount:    cogSku.GoodAmount,
+					CreatedAt: cogSku.CreatedAt.Format(time.DateOnly),
+					World:     cogSku.World,
+				})
 
-			if highestSellPrice.Price < cogSku.SellPrice {
-				highestSellPrice.Price = cogSku.SellPrice
-				highestSellPrice.Date = cogSku.CreatedAt.Format(time.DateOnly)
+				continue
 			}
 
-			if lowestBuyPrice.Price > cogSku.BuyPrice {
-				lowestBuyPrice.Price = cogSku.BuyPrice
-				lowestBuyPrice.Date = cogSku.CreatedAt.Format(time.DateOnly)
-			}
-
-			cogSkuResponseList = append(cogSkuResponseList, PriceDto{
-				BuyOffer:  cogSku.BuyPrice,
-				SellOffer: cogSku.SellPrice,
-				Amount:    0,
+			buyOfferResponses = append(buyOfferResponses, PriceDto{
+				UnitPrice: cogSku.UnitPrice,
+				Amount:    cogSku.GoodAmount,
 				CreatedAt: cogSku.CreatedAt.Format(time.DateOnly),
 				World:     cogSku.World,
 			})
 		}
 
-		yAxisDomain = append(yAxisDomain, lowestBuyPrice, highestSellPrice)
-
-		xAxisDomain = append(
-			xAxisDomain,
-			constants.Day1,
-			constants.Day10,
-			constants.Day20,
-			constants.Day30,
-			constants.Day31,
-		)
-
 		pageConfig := p.getPagePosition(cogSkuList[0])
 
-		if len(cogSkuList) <= 0 {
-			homeResponseMap[cogSkuList[0].GoodName] = PricesChart{
-				Wiki:   "cog.Link",
-				Prices: cogSkuResponseList,
-				Chart: ChartMetadataDto{
-					YAxisTick: yAxisDomain,
-					XAxisTick: xAxisDomain,
-				},
-				PagePosition: pageConfig.Position,
-			}
-
-			continue
-		}
-
 		homeResponseMap[cogSkuList[0].GoodName] = PricesChart{
-			Wiki:   "cog.Link",
-			Prices: cogSkuResponseList,
-			Chart: ChartMetadataDto{
-				YAxisTick: yAxisDomain,
-				XAxisTick: xAxisDomain,
-			},
+			Wiki:         "cog.Link",
+			BuyOffer:     buyOfferResponses,
+			SellOffer:    sellOfferResponses,
 			PagePosition: pageConfig.Position,
 		}
 	}

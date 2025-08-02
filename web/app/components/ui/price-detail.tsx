@@ -221,6 +221,7 @@ function PriceDetailStatsCard({title, trend, change, value, info}: PriceDetailSt
 
 
 function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) {
+    const startDataPoint = prices.prices.at(0)!.createdAt;
     return (
         <div className="min-h-screen p-6">
             <div className="max-w-7xl mx-auto space-y-6">
@@ -233,7 +234,9 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                             </Avatar>
                             <div>
                                 <h1 className="text-3xl font-bold">Honeycomb Analytics</h1>
-                                <p className="text-sm mt-1">Data series {formatDate(prices.prices.at(0)!.createdAt)} - {formatDate(prices.prices.at(-1)!.createdAt)}</p>
+                                <p className="text-sm mt-1">
+                                    Data series {formatDate(prices.prices.at(0)!.createdAt)} - {formatDate(prices.prices.at(-1)!.createdAt)}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -245,27 +248,10 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                         Live Data
                     </Badge>
                 </div>
-                {/*<div className="flex items-center justify-between">
-                    <div>
-                        <div className="flex justify-center items-center justify-items-center gap-1">
-                            <h1 className="text-3xl font-bold">Honeycomb Analytics</h1>
-                            <Avatar>
-                                <AvatarImage src={HoneycombGif} />
-                            </Avatar>
-                        </div>
-                        <p className="mt-1">Honeycomb Trading Data</p>
-                    </div>
-                    <Badge
-                        variant="secondary"
-                        className="flex items-center gap-2 bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 dark:border-green-500/30"
-                    >
-                        <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full animate-pulse"></div>
-                        Live Data
-                    </Badge>
-                </div>*/}
 
                 {/* Market Summary */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
                     {/* Market Overview Card */}
                     <Card className="relative overflow-hidden">
                         <CardHeader>

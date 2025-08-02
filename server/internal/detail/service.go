@@ -2,6 +2,7 @@ package detail
 
 import (
 	"github.com/adriein/tibia-mkt/internal/price"
+	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/statistics"
 )
 
@@ -24,12 +25,19 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 		return nil, getPricesErr
 	}
 
-	sellPrices := make([]int, len(prices))
-	buyPrices := make([]int, len(prices))
+	var (
+		sellPrices []int
+		buyPrices  []int
+	)
 
 	for _, p := range prices {
-		sellPrices = append(sellPrices, p.SellPrice)
-		buyPrices = append(buyPrices, p.BuyPrice)
+		if p.OfferType == constants.SellOffer {
+			sellPrices = append(sellPrices, p.UnitPrice)
+
+			continue
+		}
+
+		buyPrices = append(buyPrices, p.UnitPrice)
 	}
 
 	buyOfferMean := s.stats.Mean(buyPrices)

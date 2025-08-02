@@ -4,6 +4,7 @@ import (
 	"github.com/adriein/tibia-mkt/internal/price"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/google/uuid"
+	"math/rand"
 )
 
 type Service struct {
@@ -39,13 +40,19 @@ func (s *Service) SeedPrices() error {
 		for _, row := range csvRow {
 			id := uuid.New().String()
 
+			randomAmount := rand.Intn(100) + 1
+
 			registeredPrice := &price.Price{
-				Id:        id,
-				GoodName:  good,
-				World:     constants.WorldSecura,
-				BuyPrice:  row.SellPrice - 1000,
-				SellPrice: row.SellPrice,
-				CreatedAt: row.CreatedAt,
+				Id:         id,
+				OfferType:  constants.SellOffer,
+				GoodName:   good,
+				World:      constants.WorldSecura,
+				CreatedBy:  "anonymous",
+				GoodAmount: randomAmount,
+				UnitPrice:  row.SellPrice,
+				TotalPrice: row.SellPrice * randomAmount,
+				EndAt:      row.CreatedAt.AddDate(0, 0, 30),
+				CreatedAt:  row.CreatedAt,
 			}
 
 			if saveErr := s.pricesRepository.Save(registeredPrice); saveErr != nil {
