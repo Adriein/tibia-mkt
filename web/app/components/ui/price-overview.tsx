@@ -51,7 +51,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>{beautifyCamelCase(good)}</CardTitle>
-                <CardDescription>{presentTimeSpan(data.prices)}</CardDescription>
+                <CardDescription>{presentTimeSpan(data.sellOffer)}</CardDescription>
                 <CardAction className="flex gap-3">
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -88,7 +88,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                 <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
                     <LineChart
                         accessibilityLayer
-                        data={data.prices}
+                        data={data.sellOffer}
                         margin={{
                             top: 20,
                             left: 12,
@@ -115,7 +115,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                             }
                         />
                         <Line
-                            dataKey="buyOffer"
+                            dataKey="unitPrice"
                             type="natural"
                             stroke="var(--chart-theme-1)"
                             strokeWidth={2}
@@ -126,8 +126,8 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                                 r: 6,
                             }}
                         />
-                        <Line
-                            dataKey="sellOffer"
+                        {/*<Line
+                            dataKey="buyOffer"
                             type="natural"
                             stroke="var(--chart-theme-2)"
                             strokeWidth={2}
@@ -137,7 +137,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                             activeDot={{
                                 r: 6,
                             }}
-                        />
+                        />*/}
                     </LineChart>
                 </ChartContainer>
             </CardContent>

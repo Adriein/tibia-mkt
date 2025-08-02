@@ -39,11 +39,11 @@ export function orderByPagePosition(unOrderedResults: ApiResponse<HomePageData>)
 
 export function getRelevantPrices(data: HomePageData): HomePageData {
     return Object.keys(data).reduce((acc: HomePageData, goodName: string): HomePageData => {
-        const ticks: string[] = getTimeTicks(data[goodName].prices);
+        const ticks: string[] = getTimeTicks(data[goodName].sellOffer);
 
-        const prices: Price[] = data[goodName].prices.filter((p: Price): boolean => ticks.includes(p.createdAt));
+        const prices: Price[] = data[goodName].sellOffer.filter((p: Price): boolean => ticks.includes(p.createdAt));
 
-        acc[goodName] = {...data[goodName], prices};
+        acc[goodName] = {...data[goodName], sellOffer: prices, buyOffer: []};
 
         return acc;
     }, {})

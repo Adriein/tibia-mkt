@@ -64,23 +64,45 @@ const transformValueNumberToLocale = (value: number|string): string => {
 function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps): React.ReactElement {
     const [timeRange, setTimeRange] = React.useState(isMobile? "7d" : "90d");
 
-    const filteredData: Price[] = data.prices.filter((item: Price): boolean => {
-        const date = new Date(item.createdAt);
+    let filteredData: Price[];
 
-        let daysToSubtract = 90;
+    if (type === SELL_CHART) {
+        filteredData = data.sellOffer.filter((item: Price): boolean => {
+            const date = new Date(item.createdAt);
 
-        if (timeRange === "30d") {
-            daysToSubtract = 30
-        } else if (timeRange === "7d") {
-            daysToSubtract = 7
-        }
+            let daysToSubtract = 90;
 
-        const startDate = new Date(data.prices.at(-1)?.createdAt!);
+            if (timeRange === "30d") {
+                daysToSubtract = 30
+            } else if (timeRange === "7d") {
+                daysToSubtract = 7
+            }
 
-        startDate.setDate(startDate.getDate() - daysToSubtract)
+            const startDate = new Date(data.sellOffer.at(-1)?.createdAt!);
 
-        return date >= startDate
-    });
+            startDate.setDate(startDate.getDate() - daysToSubtract);
+
+            return date >= startDate
+        });
+    } else {
+        filteredData = data.buyOffer.filter((item: Price): boolean => {
+            const date = new Date(item.createdAt);
+
+            let daysToSubtract = 90;
+
+            if (timeRange === "30d") {
+                daysToSubtract = 30
+            } else if (timeRange === "7d") {
+                daysToSubtract = 7
+            }
+
+            const startDate = new Date(data.buyOffer.at(-1)?.createdAt!);
+
+            startDate.setDate(startDate.getDate() - daysToSubtract)
+
+            return date >= startDate
+        });
+    }
 
     return (
         <Card className="w-full @container/card">
@@ -152,7 +174,7 @@ function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps
                             }
                         />
                         {type === BUY_CHART? <Line
-                                dataKey="buyOffer"
+                                dataKey="unitPrice"
                                 type="natural"
                                 stroke="var(--chart-theme-1)"
                                 strokeWidth={2}
@@ -164,7 +186,7 @@ function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps
                                 }}
                             /> :
                             <Line
-                                dataKey="sellOffer"
+                                dataKey="unitPrice"
                                 type="natural"
                                 stroke="var(--chart-theme-2)"
                                 strokeWidth={2}
@@ -221,7 +243,6 @@ function PriceDetailStatsCard({title, trend, change, value, info}: PriceDetailSt
 
 
 function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) {
-    const startDataPoint = prices.prices.at(0)!.createdAt;
     return (
         <div className="min-h-screen p-6">
             <div className="max-w-7xl mx-auto space-y-6">
@@ -235,7 +256,7 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                             <div>
                                 <h1 className="text-3xl font-bold">Honeycomb Analytics</h1>
                                 <p className="text-sm mt-1">
-                                    Data series {formatDate(prices.prices.at(0)!.createdAt)} - {formatDate(prices.prices.at(-1)!.createdAt)}
+                                    Data series {formatDate(prices.sellOffer.at(0)!.createdAt)} - {formatDate(prices.sellOffer.at(-1)!.createdAt)}
                                 </p>
                             </div>
                         </div>

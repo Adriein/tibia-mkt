@@ -40,22 +40,44 @@ func (s *Service) SeedPrices() error {
 		for _, row := range csvRow {
 			id := uuid.New().String()
 
-			randomAmount := rand.Intn(100) + 1
+			randomSellAmount := rand.Intn(100) + 1
 
-			registeredPrice := &price.Price{
+			sellRegisteredPrice := &price.Price{
 				Id:         id,
 				OfferType:  constants.SellOffer,
 				GoodName:   good,
 				World:      constants.WorldSecura,
 				CreatedBy:  "anonymous",
-				GoodAmount: randomAmount,
+				GoodAmount: randomSellAmount,
 				UnitPrice:  row.SellPrice,
-				TotalPrice: row.SellPrice * randomAmount,
+				TotalPrice: row.SellPrice * randomSellAmount,
 				EndAt:      row.CreatedAt.AddDate(0, 0, 30),
 				CreatedAt:  row.CreatedAt,
 			}
 
-			if saveErr := s.pricesRepository.Save(registeredPrice); saveErr != nil {
+			if saveErr := s.pricesRepository.Save(sellRegisteredPrice); saveErr != nil {
+				return saveErr
+			}
+
+			id = uuid.New().String()
+
+			randomBuyPrice := rand.Intn(3000) + 1
+			randomBuyAmount := rand.Intn(100) + 1
+
+			buyRegisteredPrice := &price.Price{
+				Id:         id,
+				OfferType:  constants.BuyOffer,
+				GoodName:   good,
+				World:      constants.WorldSecura,
+				CreatedBy:  "anonymous",
+				GoodAmount: randomBuyAmount,
+				UnitPrice:  row.SellPrice - randomBuyPrice,
+				TotalPrice: row.SellPrice * randomBuyAmount,
+				EndAt:      row.CreatedAt.AddDate(0, 0, 30),
+				CreatedAt:  row.CreatedAt,
+			}
+
+			if saveErr := s.pricesRepository.Save(buyRegisteredPrice); saveErr != nil {
 				return saveErr
 			}
 		}
