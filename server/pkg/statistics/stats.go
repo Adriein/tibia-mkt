@@ -39,7 +39,11 @@ func (s *Statistics) StdDeviation(data []int) float64 {
 func (s *Statistics) Median(data []int) int {
 	length := float64(len(data))
 
-	sort.Ints(data)
+	dataCopyToSort := make([]int, len(data))
+
+	copy(dataCopyToSort, data)
+
+	sort.Ints(dataCopyToSort)
 
 	if length == 0 {
 		return 0
@@ -47,9 +51,9 @@ func (s *Statistics) Median(data []int) int {
 
 	middle := int(length / 2)
 
-	if len(data)%2 == 1 {
-		return data[middle]
+	if len(dataCopyToSort)%2 == 1 {
+		return dataCopyToSort[middle]
 	}
 
-	return int((float64(data[middle-1] + data[middle])) / 2)
+	return int((float64(dataCopyToSort[middle-1] + dataCopyToSort[middle])) / 2)
 }

@@ -22,7 +22,7 @@ func NewPgPriceRepository(connection *sql.DB) *PgPriceRepository {
 }
 
 func (r *PgPriceRepository) FindNewestOfferByGoodAndWorld(worldName string, good string, offerType string) ([]*Price, error) {
-	statement, err := r.connection.Prepare("SELECT DISTINCT ON (good_name, created_at) * FROM prices WHERE world = $1 AND good_name = $2 AND offer_type = $3 ORDER BY good_name, created_at;")
+	statement, err := r.connection.Prepare("SELECT DISTINCT ON (created_at) * FROM prices WHERE world = $1 AND good_name = $2 AND offer_type = $3 ORDER BY created_at;")
 
 	if err != nil {
 		return nil, eris.New(err.Error())
@@ -64,7 +64,7 @@ func (r *PgPriceRepository) FindNewestOfferByGoodAndWorld(worldName string, good
 			return nil, eris.New(createdAtTimeParseErr.Error())
 		}
 
-		endAt, endAtTimeParseErr := time.Parse(time.RFC3339Nano, created_at)
+		endAt, endAtTimeParseErr := time.Parse(time.RFC3339Nano, end_at)
 
 		if endAtTimeParseErr != nil {
 			return nil, eris.New(endAtTimeParseErr.Error())

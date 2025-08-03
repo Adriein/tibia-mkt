@@ -41,7 +41,7 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 				marketCap += p.GoodAmount * p.UnitPrice
 			}
 
-			if p.EndAt.After(twentyFourHoursAgo) && p.EndAt.Before(time.Now()) {
+			if p.CreatedAt.After(twentyFourHoursAgo) && p.CreatedAt.Before(time.Now()) {
 				twentyFourHourMarketCap += p.GoodAmount * p.UnitPrice
 			}
 
@@ -68,7 +68,7 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 	buySellSpread := mostRecentSellOffer - mostRecentBuyOffer
 	spreadPercentage := (float64(buySellSpread) / float64(mostRecentSellOffer)) * 100
 
-	stdDeviationRelativeToMean := (float64(sellOfferStdDeviation) / float64(sellOfferMean)) * 100
+	stdDeviationRelativeToMean := (sellOfferStdDeviation / sellOfferMean) * 100
 
 	marketStatus := s.assertMarketStatus(stdDeviationRelativeToMean, spreadPercentage)
 
