@@ -59,6 +59,26 @@ const MARKET_STATUS_COLORS = {
     "Volatile": "bg-red-500/10 text-red-400 border-red-500/20",
 } as Record<string, string>;
 
+const getStatusBarWith = (percentage: number): string => {
+    if (percentage >= 95) return 'w-full';
+    if (percentage >= 80) return 'w-4/5'; // or w-[80%]
+    if (percentage >= 75) return 'w-3/4';
+    if (percentage >= 60) return 'w-3/5'; // or w-[60%]
+    if (percentage >= 50) return 'w-1/2';
+    if (percentage >= 40) return 'w-2/5'; // or w-[40%]
+    if (percentage >= 25) return 'w-1/4';
+    if (percentage >= 20) return 'w-1/5'; // or w-[20%]
+    if (percentage > 0) return 'w-1/12'; // Smallest non-zero, or custom like w-[5%]
+    return 'w-0'; // For 0%
+};
+
+const marketPressure = (percentage: number): string => {
+    if (percentage >= 80) return 'Strong';
+    if (percentage >= 60) return 'High';
+    if (percentage >= 40) return 'Moderate';
+    return 'Low'
+}
+
 const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
     return <span>{formatDate(label)}</span>
 }
@@ -356,9 +376,11 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                                     </div>
                                     <div className="flex items-center gap-2 min-w-[100px]">
                                         <div className="w-16 h-2 bg-[var(--foreground)] rounded-full overflow-hidden">
-                                            <div className="w-3/4 h-full bg-[var(--primary)] rounded-full"></div>
+                                            <div className={`${getStatusBarWith(statistics.insights.buyPressure)} h-full bg-[var(--primary)] rounded-full`}/>
                                         </div>
-                                        <span className="text-xs text-[var(--primary)] font-medium w-16 text-right">Strong</span>
+                                        <span className="text-xs text-[var(--primary)] font-medium w-16 text-right">
+                                            {marketPressure(statistics.insights.buyPressure)}
+                                        </span>
                                     </div>
                                 </div>
 
@@ -369,9 +391,11 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                                     </div>
                                     <div className="flex items-center gap-2 min-w-[100px]">
                                         <div className="w-16 h-2 bg-[var(--foreground)] rounded-full overflow-hidden">
-                                            <div className="w-1/2 h-full bg-[var(--chart-theme-2)] rounded-full"></div>
+                                            <div className={`${getStatusBarWith(statistics.insights.sellPressure)} h-full bg-[var(--chart-theme-2)] rounded-full`}/>
                                         </div>
-                                        <span className="text-xs text-[var(--chart-theme-2)] font-medium w-16 text-right">Moderate</span>
+                                        <span className="text-xs text-[var(--chart-theme-2)] font-medium w-16 text-right">
+                                            {marketPressure(statistics.insights.sellPressure)}
+                                        </span>
                                     </div>
                                 </div>
 
@@ -382,9 +406,11 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                                     </div>
                                     <div className="flex items-center gap-2 min-w-[100px]">
                                         <div className="w-16 h-2 bg-[var(--foreground)] rounded-full overflow-hidden">
-                                            <div className="w-5/6 h-full bg-[var(--chart-2)] rounded-full"></div>
+                                            <div className={`${getStatusBarWith(statistics.insights.liquidity)} h-full bg-[var(--chart-2)] rounded-full`}></div>
                                         </div>
-                                        <span className="text-xs text-[var(--chart-2)] font-medium w-16 text-right">High</span>
+                                        <span className="text-xs text-[var(--chart-2)] font-medium w-16 text-right">
+                                            {marketPressure(statistics.insights.liquidity)}
+                                        </span>
                                     </div>
                                 </div>
                             </div>

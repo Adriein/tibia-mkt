@@ -4,6 +4,7 @@ import (
 	"github.com/adriein/tibia-mkt/internal/price"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/statistics"
+	"math"
 	"time"
 )
 
@@ -29,7 +30,8 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 	var (
 		sellPrices          []int
 		buyPrices           []int
-		marketCap           int
+		sellOfferMarketCap  int
+		buyOfferMarketCap   int
 		oneDayAgoMarketCap  int
 		twoDaysAgoMarketCap int
 		totalGoodsBeingSold int
@@ -41,7 +43,7 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 	for _, p := range prices {
 		if p.OfferType == constants.SellOffer {
 			if p.EndAt.After(time.Now()) {
-				marketCap += p.GoodAmount * p.UnitPrice
+				sellOfferMarketCap += p.GoodAmount * p.UnitPrice
 				totalGoodsBeingSold += p.GoodAmount
 			}
 
@@ -56,6 +58,10 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 			sellPrices = append(sellPrices, p.UnitPrice)
 
 			continue
+		}
+
+		if p.EndAt.After(time.Now()) {
+			buyOfferMarketCap += p.GoodAmount * p.UnitPrice
 		}
 
 		buyPrices = append(buyPrices, p.UnitPrice)
@@ -84,6 +90,14 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 
 	marketStatus := s.assertMarketStatus(stdDeviationRelativeToMean, spreadPercentage, marketVolumeTendencyPercentage)
 
+	buyPressurePercentage := math.Round(float64(buyOfferMarketCap) / (float64(buyOfferMarketCap) + float64(sellOfferMarketCap)) * 100)
+	sellPressurePercentage := math.Round(float64(sellOfferMarketCap) / (float64(buyOfferMarketCap) + float64(sellOfferMarketCap)) * 100)
+
+	spreadScore := math.Max(0, 1-spreadPercentage/0.15)
+	volumeScore := math.Max(float64(oneDayAgoMarketCap)/float64(sellOfferMarketCap), 1)
+
+	liquidity := int((spreadScore + volumeScore) / 2 * 100)
+
 	return &Detail{
 		Stats: DetailStats{
 			SellOffersMean:         int(sellOfferMean),
@@ -96,11 +110,17 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 		Overview: DetailOverview{
 			BuySellSpread:                  buySellSpread,
 			SpreadPercentage:               int(spreadPercentage),
-			MarketCap:                      marketCap,
+			MarketCap:                      sellOfferMarketCap,
 			LastTwentyFourHoursVolume:      oneDayAgoMarketCap,
 			MarketStatus:                   marketStatus,
 			MarketVolumePercentageTendency: int(marketVolumeTendencyPercentage),
 			TotalGoodsBeingSold:            totalGoodsBeingSold,
+		},
+		Insights: DetailInsights{
+			MarketType:   "unknown",
+			BuyPressure:  int(buyPressurePercentage),
+			SellPressure: int(sellPressurePercentage),
+			Liquidity:    liquidity,
 		},
 	}, nil
 }

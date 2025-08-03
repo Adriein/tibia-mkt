@@ -21,9 +21,17 @@ export type Overview = {
     totalGoodsBeingSold: number;
 }
 
+export type Insights = {
+    marketType: string;
+    buyPressure: number;
+    sellPressure: number;
+    liquidity: number;
+}
+
 export type DetailPagePricesData = { [key: string]: PriceChartData } & { [key: string]: any};
 
 export type DetailPageStatisticsData = {
     stats: Stats;
     overview: Overview;
+    insights: Insights;
 };
