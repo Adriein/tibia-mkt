@@ -27,22 +27,30 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 	}
 
 	var (
-		sellPrices              []int
-		buyPrices               []int
-		marketCap               int
-		twentyFourHourMarketCap int
+		sellPrices          []int
+		buyPrices           []int
+		marketCap           int
+		oneDayAgoMarketCap  int
+		twoDaysAgoMarketCap int
+		totalGoodsBeingSold int
 	)
 
-	twentyFourHoursAgo := time.Now().Add(time.Duration(-24) * time.Hour)
+	oneDayAgo := time.Now().Add(time.Duration(-24) * time.Hour)
+	twoDaysAgo := time.Now().Add(time.Duration(-48) * time.Hour)
 
 	for _, p := range prices {
 		if p.OfferType == constants.SellOffer {
 			if p.EndAt.After(time.Now()) {
 				marketCap += p.GoodAmount * p.UnitPrice
+				totalGoodsBeingSold += p.GoodAmount
 			}
 
-			if p.CreatedAt.After(twentyFourHoursAgo) && p.CreatedAt.Before(time.Now()) {
-				twentyFourHourMarketCap += p.GoodAmount * p.UnitPrice
+			if p.CreatedAt.After(oneDayAgo) && p.CreatedAt.Before(time.Now()) {
+				oneDayAgoMarketCap += p.GoodAmount * p.UnitPrice
+			}
+
+			if p.CreatedAt.After(twoDaysAgo) && p.CreatedAt.Before(oneDayAgo) {
+				twoDaysAgoMarketCap += p.GoodAmount * p.UnitPrice
 			}
 
 			sellPrices = append(sellPrices, p.UnitPrice)
@@ -70,7 +78,11 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 
 	stdDeviationRelativeToMean := (sellOfferStdDeviation / sellOfferMean) * 100
 
-	marketStatus := s.assertMarketStatus(stdDeviationRelativeToMean, spreadPercentage)
+	marketCapDelta := float64(oneDayAgoMarketCap - twoDaysAgoMarketCap)
+
+	marketVolumeTendencyPercentage := (marketCapDelta / float64(twoDaysAgoMarketCap)) * 100
+
+	marketStatus := s.assertMarketStatus(stdDeviationRelativeToMean, spreadPercentage, marketVolumeTendencyPercentage)
 
 	return &Detail{
 		Stats: DetailStats{
@@ -82,21 +94,53 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 			BuyOffersMedian:        buyOfferMedian,
 		},
 		Overview: DetailOverview{
-			BuySellSpread:             buySellSpread,
-			SpreadPercentage:          int(spreadPercentage),
-			MarketCap:                 marketCap,
-			LastTwentyFourHoursVolume: twentyFourHourMarketCap,
-			MarketStatus:              marketStatus,
+			BuySellSpread:                  buySellSpread,
+			SpreadPercentage:               int(spreadPercentage),
+			MarketCap:                      marketCap,
+			LastTwentyFourHoursVolume:      oneDayAgoMarketCap,
+			MarketStatus:                   marketStatus,
+			MarketVolumePercentageTendency: int(marketVolumeTendencyPercentage),
+			TotalGoodsBeingSold:            totalGoodsBeingSold,
 		},
 	}, nil
 }
 
-func (s *Service) assertMarketStatus(stdDeviationRelativeToMean float64, spreadPercentage float64) string {
-	if stdDeviationRelativeToMean >= 15 && spreadPercentage >= 8 {
+func (s *Service) assertMarketStatus(
+	stdDeviationRelativeToMean float64,
+	spreadPercentage float64,
+	marketVolumeTendencyPercentage float64,
+) string {
+	score := 0
+
+	if stdDeviationRelativeToMean >= 15 {
+		score += 2
+	}
+
+	if stdDeviationRelativeToMean >= 5 {
+		score += 1
+	}
+
+	if spreadPercentage >= 8 {
+		score += 2
+	}
+
+	if spreadPercentage >= 3 {
+		score += 1
+	}
+
+	if marketVolumeTendencyPercentage <= -50 {
+		score += 2
+	}
+
+	if marketVolumeTendencyPercentage <= -30 {
+		score += 1
+	}
+
+	if score >= 4 {
 		return constants.VolatileMarketStatus
 	}
 
-	if stdDeviationRelativeToMean >= 5 && spreadPercentage >= 3 {
+	if score >= 2 {
 		return constants.RiskyMarketStatus
 	}
 

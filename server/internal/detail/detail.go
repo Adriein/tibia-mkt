@@ -1,11 +1,14 @@
 package detail
 
 type DetailOverview struct {
-	BuySellSpread             int    `json:"buySellSpread"`
-	SpreadPercentage          int    `json:"spreadPercentage"`
-	MarketCap                 int    `json:"marketCap"`
-	LastTwentyFourHoursVolume int    `json:"lastTwentyFourHoursVolume"`
-	MarketStatus              string `json:"marketStatus"`
+	BuySellSpread                  int    `json:"buySellSpread"`
+	SpreadPercentage               int    `json:"spreadPercentage"`
+	MarketCap                      int    `json:"marketCap"`
+	LastTwentyFourHoursVolume      int    `json:"lastTwentyFourHoursVolume"`
+	MarketStatus                   string `json:"marketStatus"`
+	MarketVolumeTendency           string `json:"marketVolumeTendency"`
+	MarketVolumePercentageTendency int    `json:"marketVolumePercentageTendency"`
+	TotalGoodsBeingSold            int    `json:"totalGoodsBeingSold"`
 }
 type DetailStats struct {
 	SellOffersMean         int `json:"sellOffersMean"`

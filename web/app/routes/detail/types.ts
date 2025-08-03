@@ -17,6 +17,8 @@ export type Overview = {
     marketCap: number;
     lastTwentyFourHoursVolume: number;
     marketStatus: string;
+    marketVolumePercentageTendency: number;
+    totalGoodsBeingSold: number;
 }
 
 export type DetailPagePricesData = { [key: string]: PriceChartData } & { [key: string]: any};

@@ -287,48 +287,54 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                                 Market Overview
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="relative space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-sm">Bid-Ask Spread:</span>
-                                        <span className="font-medium">
-                                            {transformNumberToLocale(statistics.overview.buySellSpread)}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-sm">Spread %:</span>
-                                        <span className="font-medium">{statistics.overview.spreadPercentage}%</span>
-                                    </div>
+                        <CardContent className="relative space-y-6">
+                            {/* Key Metrics Row */}
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="space-y-1">
+                                    <p className="text-xs uppercase tracking-wide">Bid-Ask Spread</p>
+                                    <p className="text-xl font-bold">
+                                        {transformNumberToLocale(statistics.overview.buySellSpread)}
+                                    </p>
+                                    <p className="text-xs text-[var(--primary)] font-medium">
+                                        {statistics.overview.spreadPercentage}% relative to sell price
+                                    </p>
                                 </div>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-sm">Market Cap:</span>
-                                        <span className="font-medium">
-                                            {transformNumberToLocale(statistics.overview.marketCap)}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-sm">24h Volume:</span>
-                                        <span className="font-medium">
-                                            {transformNumberToLocale(statistics.overview.lastTwentyFourHoursVolume)}
-                                        </span>
-                                    </div>
+                                <div className="space-y-1">
+                                    <p className="text-xs uppercase tracking-wide">24h Volume</p>
+                                    <p className="text-xl font-bold">
+                                        {transformNumberToLocale(statistics.overview.lastTwentyFourHoursVolume)}
+                                    </p>
+                                    <p className="text-xs text-[var(--chart-theme-2)] font-medium">
+                                        {statistics.overview.marketVolumePercentageTendency}% from yesterday
+                                    </p>
                                 </div>
                             </div>
 
-                            <div className="pt-2 border-t border-[var(--secondary)]">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm">Market Status:</span>
-                                    <div className="flex items-center gap-2">
-                                        <Badge
-                                            variant={"secondary"}
-                                            className={`text-xs ${MARKET_STATUS_COLORS[statistics.overview.marketStatus]}`}
-                                        >
-                                            {`${statistics.overview.marketStatus} Trading`}
-                                        </Badge>
-                                    </div>
+                            {/* Secondary Metrics */}
+                            <div className="grid grid-cols-2 gap-6 pt-4 border-t border-[var(--secondary)]">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm">Market Cap</span>
+                                    <span className="font-semibold">
+                                        {transformNumberToLocale(statistics.overview.marketCap)}
+                                    </span>
                                 </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm">Goods in market</span>
+                                    <span className="font-semibold">{statistics.overview.totalGoodsBeingSold}</span>
+                                </div>
+                            </div>
+
+                            {/* Market Status */}
+                            <div className="flex items-center justify-between pt-4 border-t border-[var(--secondary)]">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm">Market Status</span>
+                                </div>
+                                <Badge
+                                    variant={"secondary"}
+                                    className={`text-xs ${MARKET_STATUS_COLORS[statistics.overview.marketStatus]}`}
+                                >
+                                    {`${statistics.overview.marketStatus} Trading`}
+                                </Badge>
                             </div>
                         </CardContent>
                     </Card>
@@ -430,7 +436,7 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                             </div>
                         </div>
 
-                        <div className="mt-4 pt-4 flex items-center justify-between">
+                        <div className="mt-4 pt-4 flex items-center justify-between border-t border-[var(--secondary)]">
                             <span className="text-sm">Last data refresh:</span>
                             <div className="flex items-center gap-2">
                                 <span className="text-sm">1 min ago</span>
