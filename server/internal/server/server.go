@@ -96,9 +96,10 @@ func (t *TibiaMkt) getPriceController() *price.Controller {
 
 func (t *TibiaMkt) getScriptController() *script.Controller {
 	csvDataRepository := script.NewCsvSecuraPricesRepository()
+	jsonDataRepository := script.NewJsonSecuraPricesRepository()
 	pricesRepository := price.NewPgPriceRepository(t.database)
 
-	service := script.NewService(csvDataRepository, pricesRepository)
+	service := script.NewService(csvDataRepository, jsonDataRepository, pricesRepository)
 
 	return script.NewController(service)
 }

@@ -19,7 +19,7 @@ func NewController(service *Service) *Controller {
 func (c *Controller) SeedPrices() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		if err := c.service.SeedPrices(); err != nil {
+		if err := c.service.SeedPricesFromExternalApiJson(); err != nil {
 			_ = ctx.Error(err)
 			return
 		}

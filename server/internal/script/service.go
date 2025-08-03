@@ -8,21 +8,24 @@ import (
 )
 
 type Service struct {
-	rawDataRepository SecuraPricesRepository
-	pricesRepository  price.PriceRepository
+	csvDataRepository  SecuraPricesCsvRepository
+	jsonDataRepository SecuraPricesJsonRepository
+	pricesRepository   price.PriceRepository
 }
 
 func NewService(
-	rawDataRepository SecuraPricesRepository,
+	csvDataRepository SecuraPricesCsvRepository,
+	jsonDataRepository SecuraPricesJsonRepository,
 	pricesRepository price.PriceRepository,
 ) *Service {
 	return &Service{
-		rawDataRepository: rawDataRepository,
-		pricesRepository:  pricesRepository,
+		csvDataRepository:  csvDataRepository,
+		jsonDataRepository: jsonDataRepository,
+		pricesRepository:   pricesRepository,
 	}
 }
 
-func (s *Service) SeedPrices() error {
+func (s *Service) SeedPricesFromCsv() error {
 	goods := [4]string{
 		constants.HoneycombEntity,
 		constants.SwamplingWoodEntity,
@@ -31,7 +34,7 @@ func (s *Service) SeedPrices() error {
 	}
 
 	for _, good := range goods {
-		csvRow, err := s.rawDataRepository.Get(good)
+		csvRow, err := s.csvDataRepository.Get(good)
 
 		if err != nil {
 			return err
@@ -75,6 +78,62 @@ func (s *Service) SeedPrices() error {
 				TotalPrice: row.SellPrice * randomBuyAmount,
 				EndAt:      row.CreatedAt.AddDate(0, 0, 30),
 				CreatedAt:  row.CreatedAt,
+			}
+
+			if saveErr := s.pricesRepository.Save(buyRegisteredPrice); saveErr != nil {
+				return saveErr
+			}
+		}
+	}
+
+	return nil
+}
+
+func (s *Service) SeedPricesFromExternalApiJson() error {
+	goods := [1]string{
+		constants.HoneycombEntity,
+	}
+
+	for _, good := range goods {
+		jsonObjs, err := s.jsonDataRepository.Get(good)
+
+		if err != nil {
+			return err
+		}
+
+		for _, row := range jsonObjs {
+			id := uuid.New().String()
+
+			sellRegisteredPrice := &price.Price{
+				Id:         id,
+				OfferType:  constants.SellOffer,
+				GoodName:   good,
+				World:      constants.WorldSecura,
+				CreatedBy:  "anonymous",
+				GoodAmount: row.SellOffers,
+				UnitPrice:  row.SellOffer,
+				TotalPrice: row.SellOffer * row.SellOffers,
+				EndAt:      row.Time.AddDate(0, 0, 30),
+				CreatedAt:  row.Time,
+			}
+
+			if saveErr := s.pricesRepository.Save(sellRegisteredPrice); saveErr != nil {
+				return saveErr
+			}
+
+			id = uuid.New().String()
+
+			buyRegisteredPrice := &price.Price{
+				Id:         id,
+				OfferType:  constants.BuyOffer,
+				GoodName:   good,
+				World:      constants.WorldSecura,
+				CreatedBy:  "anonymous",
+				GoodAmount: row.BuyOffers,
+				UnitPrice:  row.BuyOffer,
+				TotalPrice: row.BuyOffer * row.BuyOffers,
+				EndAt:      row.Time.AddDate(0, 0, 30),
+				CreatedAt:  row.Time,
 			}
 
 			if saveErr := s.pricesRepository.Save(buyRegisteredPrice); saveErr != nil {
