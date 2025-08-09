@@ -338,7 +338,7 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                                 Market Overview
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="relative space-y-6">
+                        <CardContent className="relative space-y-6 flex flex-col flex-1">
                             {/* Key Metrics Row */}
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-1">
@@ -376,7 +376,7 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                             </div>
 
                             {/* Market Status */}
-                            <div className="flex items-center justify-between pt-4 border-t border-[var(--secondary)]">
+                            <div className="flex flex-1 items-center justify-between pt-4 border-t border-[var(--secondary)]">
                                 <div className="flex items-center gap-2">
                                     <span className="text-sm">Market Status</span>
                                 </div>
