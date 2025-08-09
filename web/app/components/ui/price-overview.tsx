@@ -1,7 +1,7 @@
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "~/components/ui/card";
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
-import {beautifyCamelCase, formatDate} from "~/lib/utils";
+import {beautifyCamelCase, formatDateToShortForm} from "~/lib/utils";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
 import {Button} from "~/components/ui/button";
@@ -27,7 +27,7 @@ type PriceOverviewProps = {
 }
 
 const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
-    return <span>{formatDate(label)}</span>
+    return <span>{formatDateToShortForm(label)}</span>
 }
 
 const transformValueNumberToLocale = (value: number|string): string => {
@@ -102,7 +102,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                             axisLine={false}
                             tickMargin={8}
                             interval="preserveStartEnd"
-                            tickFormatter={formatDate}
+                            tickFormatter={formatDateToShortForm}
                         />
                         <ChartTooltip
                             cursor={false}

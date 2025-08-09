@@ -1,7 +1,7 @@
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "~/components/ui/card";
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
-import {beautifyCamelCase, formatDate} from "~/lib/utils";
+import {beautifyCamelCase, formatDateToElegantForm, formatDateToShortForm} from "~/lib/utils";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
 import type {Price, PriceChartData} from "~/lib/types";
@@ -123,7 +123,7 @@ const getMarketTendencyIcon = (tendency: string) => {
 }
 
 const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
-    return <span>{formatDate(label)}</span>
+    return <span>{formatDateToShortForm(label)}</span>
 }
 
 const transformNumberToLocale = (value: number|string): string => {
@@ -230,7 +230,7 @@ function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps
                             axisLine={false}
                             tickMargin={8}
                             interval="preserveStartEnd"
-                            tickFormatter={formatDate}
+                            tickFormatter={formatDateToShortForm}
                         />
                         <ChartTooltip
                             cursor={false}
@@ -313,7 +313,7 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                             <div>
                                 <h1 className="text-3xl font-bold">Honeycomb Detail</h1>
                                 <p className="text-sm mt-1">
-                                    Data series from {formatDate(prices.sellOffer.at(0)!.createdAt)} to {formatDate(prices.sellOffer.at(-1)!.createdAt)}
+                                    Data series from {formatDateToElegantForm(prices.sellOffer.at(0)!.createdAt)} to {formatDateToElegantForm(prices.sellOffer.at(-1)!.createdAt)}
                                 </p>
                             </div>
                         </div>
