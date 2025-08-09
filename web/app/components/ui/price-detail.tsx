@@ -399,9 +399,9 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                                 </div>
                                 <Badge
                                     variant={"secondary"}
-                                    className={`text-xs ${MARKET_STATUS_COLORS[statistics.overview.marketStatus]}`}
+                                    className={`text-xs ${MARKET_STATUS_COLORS[statistics.insights.marketStatus]}`}
                                 >
-                                    {`${statistics.overview.marketStatus} Trading`}
+                                    {`${statistics.insights.marketStatus} Trading`}
                                 </Badge>
                             </div>
                         </CardContent>
@@ -417,12 +417,12 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {/* Market Tendency - Featured Row */}
-                            <div className="p-2 bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-lg border border-gray-700/50">
+                            <div className="p-2 bg-gradient-to-r from-[var(--card)] to-[color-mix(in_oklab,var(--card) 90%, var(--primary) 10%)] rounded-lg border border-[var(--border)]">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         <div>
                                             <span className="text-sm font-medium">Market Tendency</span>
-                                            <p className="text-xs text-gray-400 mt-0.5">Overall market direction</p>
+                                            <p className="text-xs text-gray-300 mt-0.5">Overall market direction</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">

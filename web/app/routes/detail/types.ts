@@ -16,12 +16,12 @@ export type Overview = {
     spreadPercentage: number;
     marketCap: number;
     lastTwentyFourHoursVolume: number;
-    marketStatus: string;
     marketVolumePercentageTendency: number;
     totalGoodsBeingSold: number;
 }
 
 export type Insights = {
+    marketStatus: string;
     marketType: string;
     buyPressure: number;
     sellPressure: number;

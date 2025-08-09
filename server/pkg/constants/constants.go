@@ -32,6 +32,12 @@ const (
 	VolatileMarketStatus      = "Volatile"
 	StableMarketStatus        = "Stable"
 	RiskyMarketStatus         = "Risky"
+	BullMarketType            = "Bull"
+	BearMarketType            = "Bear"
+	SidewaysMarketType        = "Sideways"
+	BullExhaustionMarketType  = "Bull Exhaustion"
+	PullbackMarketType        = "Pullback"
+	UnclearMarketType         = "Unclear"
 )
 
 const (
