@@ -3,6 +3,10 @@ package server
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"log/slog"
+	"os"
+
 	"github.com/adriein/tibia-mkt/internal/detail"
 	"github.com/adriein/tibia-mkt/internal/health"
 	"github.com/adriein/tibia-mkt/internal/price"
@@ -13,9 +17,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/rotisserie/eris"
-	"log"
-	"log/slog"
-	"os"
 )
 
 type TibiaMkt struct {
@@ -39,9 +40,9 @@ func New(port string) *TibiaMkt {
 	app.routeSetup()
 
 	if ginErr := engine.Run(port); ginErr != nil {
-		pingrateErr := eris.Wrap(ginErr, "Error starting HTTP server")
+		err := eris.Wrap(ginErr, "Error starting HTTP server")
 
-		log.Fatal(eris.ToString(pingrateErr, true))
+		log.Fatal(eris.ToString(err, true))
 	}
 
 	slog.Info("Starting the PingrateApiServer at " + port)

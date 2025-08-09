@@ -1,13 +1,14 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/adriein/tibia-mkt/internal/server"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/helper"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"log"
-	"os"
 )
 
 func main() {
@@ -20,7 +21,6 @@ func main() {
 	}
 
 	checker := helper.NewEnvVarChecker(
-		constants.DatabaseIp,
 		constants.DatabaseUser,
 		constants.DatabasePassword,
 		constants.DatabaseName,
