@@ -19,13 +19,8 @@ const SELL_CHART = "sell";
 const BUY_CHART = "buy";
 
 const chartConfig = {
-    buyOffer: {
-        label: "Buy Offer",
-        color: "var(--chart-1)",
-    },
-    sellOffer: {
-        label: "Sell Offer",
-        color: "var(--chart-2)",
+    unitPrice: {
+        label: "Price",
     },
 } satisfies ChartConfig
 
@@ -278,7 +273,7 @@ function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps
     );
 }
 
-function PriceDetailStatsCard({title, trend, change, value, info}: PriceDetailStatsCardProps) {
+function PriceDetailStatsCard({title, value, info}: PriceDetailStatsCardProps) {
     return (
         <Card className="relative">
             <CardHeader className="pb-2">
@@ -294,18 +289,6 @@ function PriceDetailStatsCard({title, trend, change, value, info}: PriceDetailSt
                             </TooltipContent>
                         </Tooltip>
                     </div>
-                    {trend && (
-                        <Badge className={`flex items-center gap-1 text-xs font-medium ${
-                            trend === "up"
-                                ? "text-green-600 dark:text-green-400"
-                                : trend === "down"
-                                    ? "text-red-600 dark:text-red-400"
-                                    : "text-gray-600 dark:text-gray-400"
-                        }`} variant="outline">
-                            {trend === "up" ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                            {change && `${change > 0 ? "+" : ""}${change}%`}
-                        </Badge>
-                    )}
                 </CardTitle>
             </CardHeader>
             <CardContent>
@@ -328,9 +311,9 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                                 <AvatarImage src={HoneycombGif} />
                             </Avatar>
                             <div>
-                                <h1 className="text-3xl font-bold">Honeycomb Analytics</h1>
+                                <h1 className="text-3xl font-bold">Honeycomb Detail</h1>
                                 <p className="text-sm mt-1">
-                                    Data series {formatDate(prices.sellOffer.at(0)!.createdAt)} - {formatDate(prices.sellOffer.at(-1)!.createdAt)}
+                                    Data series from {formatDate(prices.sellOffer.at(0)!.createdAt)} to {formatDate(prices.sellOffer.at(-1)!.createdAt)}
                                 </p>
                             </div>
                         </div>
@@ -538,34 +521,22 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                     <div className="flex items-center gap-3">
                         <div className="w-3 h-3 bg-[var(--chart-theme-1)] rounded-full shadow-lg shadow-amber-500/50"></div>
                         <h2 className="text-xl font-semibold">Buy Offers</h2>
-                        <Badge
-                            variant="outline"
-                            className="text-amber-600 dark:text-amber-400 border-amber-500/50"
-                        >
-                            Trending Up
-                        </Badge>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <PriceDetailStatsCard
                             title={t.averagePrice}
                             value={statistics.stats.buyOffersMean}
-                            trend={"up"}
-                            change={10}
                             info={t.averagePriceInfo}
                         />
                         <PriceDetailStatsCard
                             title={t.medianPrice}
                             value={statistics.stats.buyOffersMedian}
-                            trend={"up"}
-                            change={10}
                             info={t.medianPriceInfo}
                         />
                         <PriceDetailStatsCard
                             title={t.stdDeviation}
                             value={statistics.stats.buyOffersStdDeviation}
-                            trend={"up"}
-                            change={10}
                             info={t.stdDeviationInfo}
                         />
                     </div>
@@ -578,34 +549,22 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                     <div className="flex items-center gap-3">
                         <div className="w-3 h-3 bg-[var(--chart-theme-2)] rounded-full shadow-lg shadow-blue-500/50"></div>
                         <h2 className="text-xl font-semibold">Sell Offers</h2>
-                        <Badge
-                            variant="outline"
-                            className="text-red-600 dark:text-red-400 border-red-500/30 dark:border-red-500/50"
-                        >
-                            Trending Down
-                        </Badge>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <PriceDetailStatsCard
                             title={t.averagePrice}
                             value={statistics.stats.sellOffersMean}
-                            trend={"up"}
-                            change={10}
                             info={t.averagePriceInfo}
                         />
                         <PriceDetailStatsCard
                             title={t.medianPrice}
                             value={statistics.stats.sellOffersMedian}
-                            trend={"up"}
-                            change={10}
                             info={t.medianPriceInfo}
                         />
                         <PriceDetailStatsCard
                             title={t.stdDeviation}
                             value={statistics.stats.sellOffersStdDeviation}
-                            trend={"up"}
-                            change={10}
                             info={t.stdDeviationInfo}
                         />
                     </div>

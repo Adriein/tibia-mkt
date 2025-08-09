@@ -69,6 +69,10 @@ func (s *Service) aggregatePrices(prices []*price.Price, now time.Time) marketMe
 	twoDaysAgo := now.Add(-48 * time.Hour)
 
 	for _, p := range prices {
+		if p.UnitPrice == -1 {
+			continue
+		}
+
 		if p.OfferType == constants.SellOffer {
 			if p.EndAt.After(now) {
 				m.sellOfferMarketCap += p.GoodAmount * p.UnitPrice

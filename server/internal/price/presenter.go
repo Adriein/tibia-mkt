@@ -1,9 +1,10 @@
 package price
 
 import (
+	"time"
+
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/gin-gonic/gin"
-	"time"
 )
 
 type Presenter struct {
@@ -50,6 +51,10 @@ func (p *Presenter) Format(data [][]*Price) gin.H {
 		)
 
 		for _, cogSku := range cogSkuList {
+			if cogSku.UnitPrice == -1 {
+				continue
+			}
+
 			if cogSku.OfferType == constants.SellOffer {
 				sellOfferResponses = append(sellOfferResponses, PriceDto{
 					UnitPrice: cogSku.UnitPrice,
