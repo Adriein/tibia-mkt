@@ -10,7 +10,7 @@ import type {DetailTranslations} from "~/locale/loc";
 import type {DetailPageStatisticsData} from "~/routes/detail/types";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {Badge} from "~/components/ui/badge";
-import {TrendingUp, TrendingDown, CircleQuestionMark, ChartNoAxesCombined, CalendarClock} from "lucide-react";
+import {TrendingUp, TrendingDown, CircleQuestionMark, ChartNoAxesCombined, CalendarClock, TriangleAlert, Scale} from "lucide-react";
 import {Avatar, AvatarImage} from "~/components/ui/avatar";
 import HoneycombGif from "~/assets/honeycomb.gif";
 import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
@@ -77,6 +77,54 @@ const marketPressure = (percentage: number): string => {
     if (percentage >= 60) return 'High';
     if (percentage >= 40) return 'Moderate';
     return 'Low'
+}
+
+const getMarketTendencyIcon = (tendency: string) => {
+    if (tendency.includes("exhaustion") || tendency.includes("pullback")) {
+        return (
+            <Badge
+                variant="outline"
+                className="text-amber-400 border-amber-500/40 bg-amber-500/10 text-sm font-medium px-3 py-1"
+            >
+                <TriangleAlert className="w-3 h-3 mr-1"/>
+                {tendency}
+            </Badge>
+        );
+    }
+
+    if (tendency.includes("bull")) {
+        return (
+            <Badge
+            variant="outline"
+            className="text-green-400 border-green-500/40 bg-green-500/10 text-sm font-medium px-3 py-1"
+            >
+                <TrendingUp className="w-3 h-3 mr-1"/>
+                {tendency}
+            </Badge>
+        );
+    }
+
+    if (tendency.includes("bear")) {
+        return (
+            <Badge
+                variant="outline"
+                className="text-red-400 border-red-500/40 bg-red-500/10 text-sm font-medium px-3 py-1"
+            >
+                <TrendingDown className="w-3 h-3 mr-1"/>
+                {tendency}
+            </Badge>
+        );
+    }
+
+    return (
+        <Badge
+            variant="outline"
+            className="text-blue-400 border-blue-500/40 bg-blue-500/10 text-sm font-medium px-3 py-1"
+        >
+            <Scale className="w-3 h-3 mr-1"/>
+            {tendency}
+        </Badge>
+    );
 }
 
 const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
@@ -316,7 +364,7 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                                         {transformNumberToLocale(statistics.overview.buySellSpread)}
                                     </p>
                                     <p className="text-xs text-[var(--primary)] font-medium">
-                                        {statistics.overview.spreadPercentage}% relative to sell price
+                                        {statistics.overview.spreadPercentage}% of sell price
                                     </p>
                                 </div>
                                 <div className="space-y-1">
@@ -368,6 +416,20 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
+                            {/* Market Tendency - Featured Row */}
+                            <div className="p-2 bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-lg border border-gray-700/50">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div>
+                                            <span className="text-sm font-medium">Market Tendency</span>
+                                            <p className="text-xs text-gray-400 mt-0.5">Overall market direction</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        {getMarketTendencyIcon(statistics.insights.marketType)}
+                                    </div>
+                                </div>
+                            </div>
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between p-3 bg-[var(--secondary)] rounded-lg">
                                     <div className="flex items-center gap-2 min-w-0 flex-1">

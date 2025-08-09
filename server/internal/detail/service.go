@@ -1,11 +1,12 @@
 package detail
 
 import (
+	"math"
+	"time"
+
 	"github.com/adriein/tibia-mkt/internal/price"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/adriein/tibia-mkt/pkg/statistics"
-	"math"
-	"time"
 )
 
 type Service struct {
@@ -98,6 +99,8 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 
 	liquidity := int((spreadScore + volumeScore) / 2 * 100)
 
+	marketType := s.assertMarketTendency(marketVolumeTendencyPercentage, buyPressurePercentage)
+
 	return &Detail{
 		Stats: DetailStats{
 			SellOffersMean:         int(sellOfferMean),
@@ -117,12 +120,36 @@ func (s *Service) GetDetail(world string, good string) (*Detail, error) {
 			TotalGoodsBeingSold:            totalGoodsBeingSold,
 		},
 		Insights: DetailInsights{
-			MarketType:   "unknown",
+			MarketType:   marketType,
 			BuyPressure:  int(buyPressurePercentage),
 			SellPressure: int(sellPressurePercentage),
 			Liquidity:    liquidity,
 		},
 	}, nil
+}
+
+func (s *Service) assertMarketTendency(marketVolumeTendencyPercentage float64, buyPressurePercentage float64) string {
+	if marketVolumeTendencyPercentage < 10 && buyPressurePercentage > 55 {
+		return "bull"
+	}
+
+	if marketVolumeTendencyPercentage < -10 && buyPressurePercentage < 45 {
+		return "bear"
+	}
+
+	if math.Abs(marketVolumeTendencyPercentage) < 0.1 {
+		return "sideways"
+	}
+
+	if marketVolumeTendencyPercentage > 10 && buyPressurePercentage < 45 {
+		return "bull exhaustion"
+	}
+
+	if marketVolumeTendencyPercentage < -10 && buyPressurePercentage > 55 {
+		return "pullback"
+	}
+
+	return "unclear"
 }
 
 func (s *Service) assertMarketStatus(
