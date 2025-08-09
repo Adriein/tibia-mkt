@@ -80,7 +80,7 @@ const marketPressure = (percentage: number): string => {
 }
 
 const getMarketTendencyIcon = (tendency: string) => {
-    if (tendency.includes("exhaustion") || tendency.includes("pullback")) {
+    if (tendency.includes("Exhaustion") || tendency.includes("Pullback")) {
         return (
             <Badge
                 variant="outline"
@@ -92,7 +92,7 @@ const getMarketTendencyIcon = (tendency: string) => {
         );
     }
 
-    if (tendency.includes("bull")) {
+    if (tendency.includes("Bull")) {
         return (
             <Badge
             variant="outline"
@@ -104,7 +104,7 @@ const getMarketTendencyIcon = (tendency: string) => {
         );
     }
 
-    if (tendency.includes("bear")) {
+    if (tendency.includes("Bear")) {
         return (
             <Badge
                 variant="outline"
