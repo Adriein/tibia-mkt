@@ -4,6 +4,8 @@ import "time"
 
 type Price struct {
 	Id         string
+	BatchId    int
+	MarketId   string
 	OfferType  string
 	GoodName   string
 	World      string

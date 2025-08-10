@@ -110,7 +110,7 @@ func (s *Service) aggregatePrices(prices []*price.Price, now time.Time) marketMe
 	if m.twoDaysAgoMarketCap > 0 {
 		delta := float64(m.oneDayAgoMarketCap - m.twoDaysAgoMarketCap)
 
-		m.marketVolumeTendencyPercent = (delta / float64(m.twoDaysAgoMarketCap)) * 100
+		m.marketVolumeTendencyPercent = helper.PercentSafe(delta, m.twoDaysAgoMarketCap)
 	}
 
 	return m
@@ -133,14 +133,14 @@ func (s *Service) calculateInsights(m marketMetrics, stats DetailStats) DetailIn
 	spreadPercentage := helper.PercentSafe(buySellSpread, m.mostRecentSellOffer)
 
 	stdDeviationRelativeToMean := helper.PercentSafe(
-		float64(stats.SellOffersStdDeviation),
-		float64(stats.SellOffersMean),
+		stats.SellOffersStdDeviation,
+		stats.SellOffersMean,
 	)
 
 	marketStatus := s.assertMarketStatus(stdDeviationRelativeToMean, spreadPercentage, m.marketVolumeTendencyPercent)
 
-	buyPressure := helper.PercentSafe(float64(m.buyOfferMarketCap), float64(m.buyOfferMarketCap+m.sellOfferMarketCap))
-	sellPressure := helper.PercentSafe(float64(m.sellOfferMarketCap), float64(m.buyOfferMarketCap+m.sellOfferMarketCap))
+	buyPressure := helper.PercentSafe(m.buyOfferMarketCap, m.buyOfferMarketCap+m.sellOfferMarketCap)
+	sellPressure := helper.PercentSafe(m.sellOfferMarketCap, m.buyOfferMarketCap+m.sellOfferMarketCap)
 
 	spreadScore := math.Max(0, 1-spreadPercentage/0.15)
 

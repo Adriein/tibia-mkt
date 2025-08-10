@@ -2,8 +2,10 @@ package price
 
 import (
 	"database/sql"
-	"github.com/rotisserie/eris"
+	"strings"
 	"time"
+
+	"github.com/rotisserie/eris"
 )
 
 type PriceRepository interface {
@@ -22,7 +24,7 @@ func NewPgPriceRepository(connection *sql.DB) *PgPriceRepository {
 }
 
 func (r *PgPriceRepository) FindNewestOfferByGoodAndWorld(worldName string, good string, offerType string) ([]*Price, error) {
-	statement, err := r.connection.Prepare("SELECT DISTINCT ON (created_at) * FROM prices WHERE world = $1 AND good_name = $2 AND offer_type = $3 ORDER BY created_at;")
+	statement, err := r.connection.Prepare("SELECT * FROM prices WHERE world = $1 AND good_name = $2 AND offer_type = $3 ORDER BY created_at;")
 
 	if err != nil {
 		return nil, eris.New(err.Error())
@@ -30,6 +32,8 @@ func (r *PgPriceRepository) FindNewestOfferByGoodAndWorld(worldName string, good
 
 	var (
 		id          string
+		batch_id    int
+		market_id   string
 		offer_type  string
 		good_name   string
 		world       string
@@ -52,7 +56,7 @@ func (r *PgPriceRepository) FindNewestOfferByGoodAndWorld(worldName string, good
 	var results []*Price
 
 	for rows.Next() {
-		scanErr := rows.Scan(&id, &offer_type, &good_name, &world, &created_by, &good_amount, &unit_price, &total_price, &end_at, &created_at)
+		scanErr := rows.Scan(&id, &batch_id, &market_id, &offer_type, &good_name, &world, &created_by, &good_amount, &unit_price, &total_price, &end_at, &created_at)
 
 		if scanErr != nil {
 			return nil, eris.New(scanErr.Error())
@@ -72,6 +76,8 @@ func (r *PgPriceRepository) FindNewestOfferByGoodAndWorld(worldName string, good
 
 		results = append(results, &Price{
 			Id:         id,
+			BatchId:    batch_id,
+			MarketId:   market_id,
 			OfferType:  offer_type,
 			GoodName:   good_name,
 			World:      world,
@@ -88,11 +94,19 @@ func (r *PgPriceRepository) FindNewestOfferByGoodAndWorld(worldName string, good
 }
 
 func (r *PgPriceRepository) Save(price *Price) error {
-	var query = "INSERT INTO prices (id, offer_type, good_name, world, created_by, good_amount, unit_price, total_price, end_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
+	var b strings.Builder
+	b.WriteString("INSERT INTO prices (")
+	b.WriteString("id, batch_id, market_id, offer_type, good_name, world, created_by, good_amount, unit_price, ")
+	b.WriteString("total_price, end_at, created_at")
+	b.WriteString(") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)")
+
+	var query = b.String()
 
 	_, err := r.connection.Exec(
 		query,
 		price.Id,
+		price.BatchId,
+		price.MarketId,
 		price.OfferType,
 		price.GoodName,
 		price.World,

@@ -1,10 +1,14 @@
 package script
 
 import (
+	"fmt"
+	"math/rand"
+	"strconv"
+	"strings"
+
 	"github.com/adriein/tibia-mkt/internal/price"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/google/uuid"
-	"math/rand"
 )
 
 type Service struct {
@@ -41,12 +45,25 @@ func (s *Service) SeedPricesFromCsv() error {
 		}
 
 		for _, row := range csvRow {
+			var sb strings.Builder
 			id := uuid.New().String()
+			endAt := row.CreatedAt.AddDate(0, 0, 30)
+
+			sb.WriteString(fmt.Sprintf("%d", endAt.Unix()))
+			sb.WriteString(constants.SellOffer)
+			sb.WriteString(constants.WorldSecura)
+			sb.WriteString(strconv.Itoa(row.SellPrice))
+
+			marketId := sb.String()
+
+			sb.Reset()
 
 			randomSellAmount := rand.Intn(100) + 1
 
 			sellRegisteredPrice := &price.Price{
 				Id:         id,
+				BatchId:    1,
+				MarketId:   marketId,
 				OfferType:  constants.SellOffer,
 				GoodName:   good,
 				World:      constants.WorldSecura,
@@ -54,7 +71,7 @@ func (s *Service) SeedPricesFromCsv() error {
 				GoodAmount: randomSellAmount,
 				UnitPrice:  row.SellPrice,
 				TotalPrice: row.SellPrice * randomSellAmount,
-				EndAt:      row.CreatedAt.AddDate(0, 0, 30),
+				EndAt:      endAt,
 				CreatedAt:  row.CreatedAt,
 			}
 
@@ -67,6 +84,15 @@ func (s *Service) SeedPricesFromCsv() error {
 			randomBuyPrice := rand.Intn(3000) + 1
 			randomBuyAmount := rand.Intn(100) + 1
 
+			unitPrice := row.SellPrice - randomBuyPrice
+
+			sb.WriteString(fmt.Sprintf("%d", endAt.Unix()))
+			sb.WriteString(constants.BuyOffer)
+			sb.WriteString(constants.WorldSecura)
+			sb.WriteString(strconv.Itoa(unitPrice))
+
+			marketId = sb.String()
+
 			buyRegisteredPrice := &price.Price{
 				Id:         id,
 				OfferType:  constants.BuyOffer,
@@ -74,9 +100,9 @@ func (s *Service) SeedPricesFromCsv() error {
 				World:      constants.WorldSecura,
 				CreatedBy:  "anonymous",
 				GoodAmount: randomBuyAmount,
-				UnitPrice:  row.SellPrice - randomBuyPrice,
+				UnitPrice:  unitPrice,
 				TotalPrice: row.SellPrice * randomBuyAmount,
-				EndAt:      row.CreatedAt.AddDate(0, 0, 30),
+				EndAt:      endAt,
 				CreatedAt:  row.CreatedAt,
 			}
 
@@ -101,11 +127,26 @@ func (s *Service) SeedPricesFromExternalApiJson() error {
 			return err
 		}
 
+		batchId := 1
+
 		for _, row := range jsonObjs {
+			var sb strings.Builder
 			id := uuid.New().String()
+			endAt := row.Time.AddDate(0, 0, 30)
+
+			sb.WriteString(fmt.Sprintf("%d", endAt.Unix()))
+			sb.WriteString(constants.SellOffer)
+			sb.WriteString(constants.WorldSecura)
+			sb.WriteString(strconv.Itoa(row.SellOffer))
+
+			marketId := sb.String()
+
+			sb.Reset()
 
 			sellRegisteredPrice := &price.Price{
 				Id:         id,
+				BatchId:    batchId,
+				MarketId:   marketId,
 				OfferType:  constants.SellOffer,
 				GoodName:   good,
 				World:      constants.WorldSecura,
@@ -113,7 +154,7 @@ func (s *Service) SeedPricesFromExternalApiJson() error {
 				GoodAmount: row.SellOffers,
 				UnitPrice:  row.SellOffer,
 				TotalPrice: row.SellOffer * row.SellOffers,
-				EndAt:      row.Time.AddDate(0, 0, 30),
+				EndAt:      endAt,
 				CreatedAt:  row.Time,
 			}
 
@@ -123,8 +164,17 @@ func (s *Service) SeedPricesFromExternalApiJson() error {
 
 			id = uuid.New().String()
 
+			sb.WriteString(fmt.Sprintf("%d", endAt.Unix()))
+			sb.WriteString(constants.BuyOffer)
+			sb.WriteString(constants.WorldSecura)
+			sb.WriteString(strconv.Itoa(row.BuyOffer))
+
+			marketId = sb.String()
+
 			buyRegisteredPrice := &price.Price{
 				Id:         id,
+				BatchId:    batchId,
+				MarketId:   marketId,
 				OfferType:  constants.BuyOffer,
 				GoodName:   good,
 				World:      constants.WorldSecura,
@@ -132,13 +182,15 @@ func (s *Service) SeedPricesFromExternalApiJson() error {
 				GoodAmount: row.BuyOffers,
 				UnitPrice:  row.BuyOffer,
 				TotalPrice: row.BuyOffer * row.BuyOffers,
-				EndAt:      row.Time.AddDate(0, 0, 30),
+				EndAt:      endAt,
 				CreatedAt:  row.Time,
 			}
 
 			if saveErr := s.pricesRepository.Save(buyRegisteredPrice); saveErr != nil {
 				return saveErr
 			}
+
+			batchId++
 		}
 	}
 
