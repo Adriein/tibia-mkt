@@ -78,14 +78,13 @@ func (r *PgEventRepository) FindByWorldAndGood(worldName string, good string) ([
 func (r *PgEventRepository) Save(Event *Event) error {
 	var b strings.Builder
 	b.WriteString("INSERT INTO Events (")
-	b.WriteString("id, name, good_name, world, description, occurred_at")
-	b.WriteString(") VALUES ($1, $2, $3, $4, $5, $6)")
+	b.WriteString("name, good_name, world, description, occurred_at")
+	b.WriteString(") VALUES ($1, $2, $3, $4, $5)")
 
 	var query = b.String()
 
 	_, err := r.connection.Exec(
 		query,
-		Event.Id,
 		Event.Name,
 		Event.GoodName,
 		Event.GoodName,

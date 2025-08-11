@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS events (
-    id UUID PRIMARY KEY, -- Unique identifier (UUID)
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     good_name TEXT NOT NULL,
     world TEXT NOT NULL,

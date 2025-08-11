@@ -5,7 +5,9 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/adriein/tibia-mkt/internal/event"
 	"github.com/adriein/tibia-mkt/internal/price"
 	"github.com/adriein/tibia-mkt/pkg/constants"
 	"github.com/google/uuid"
@@ -15,17 +17,20 @@ type Service struct {
 	csvDataRepository  SecuraPricesCsvRepository
 	jsonDataRepository SecuraPricesJsonRepository
 	pricesRepository   price.PriceRepository
+	eventsRepository   event.EventRepository
 }
 
 func NewService(
 	csvDataRepository SecuraPricesCsvRepository,
 	jsonDataRepository SecuraPricesJsonRepository,
 	pricesRepository price.PriceRepository,
+	eventsRepository event.EventRepository,
 ) *Service {
 	return &Service{
 		csvDataRepository:  csvDataRepository,
 		jsonDataRepository: jsonDataRepository,
 		pricesRepository:   pricesRepository,
+		eventsRepository:   eventsRepository,
 	}
 }
 
@@ -188,6 +193,18 @@ func (s *Service) SeedPricesFromExternalApiJson() error {
 
 			if saveErr := s.pricesRepository.Save(buyRegisteredPrice); saveErr != nil {
 				return saveErr
+			}
+
+			priceRegisteredEvent := &event.Event{
+				Name:        constants.EventDataIngestion,
+				GoodName:    good,
+				World:       constants.WorldSecura,
+				Description: "",
+				OccurredAt:  time.Now(),
+			}
+
+			if saveEventErr := s.eventsRepository.Save(priceRegisteredEvent); saveEventErr != nil {
+				return saveEventErr
 			}
 
 			batchId++
