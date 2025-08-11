@@ -195,19 +195,19 @@ func (s *Service) SeedPricesFromExternalApiJson() error {
 				return saveErr
 			}
 
-			priceRegisteredEvent := &event.Event{
-				Name:        constants.EventDataIngestion,
-				GoodName:    good,
-				World:       constants.WorldSecura,
-				Description: "",
-				OccurredAt:  time.Now(),
-			}
-
-			if saveEventErr := s.eventsRepository.Save(priceRegisteredEvent); saveEventErr != nil {
-				return saveEventErr
-			}
-
 			batchId++
+		}
+
+		priceRegisteredEvent := &event.Event{
+			Name:        constants.EventDataIngestion,
+			GoodName:    good,
+			World:       constants.WorldSecura,
+			Description: "",
+			OccurredAt:  time.Now(),
+		}
+
+		if saveEventErr := s.eventsRepository.Save(priceRegisteredEvent); saveEventErr != nil {
+			return saveEventErr
 		}
 	}
 
