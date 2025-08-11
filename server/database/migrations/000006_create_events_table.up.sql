@@ -6,3 +6,5 @@ CREATE TABLE IF NOT EXISTS events (
     description TEXT NOT NULL,
     occurred_at TIMESTAMP(0) NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_events_world_good_occurred ON prices(world, good_name, occurred_at);
