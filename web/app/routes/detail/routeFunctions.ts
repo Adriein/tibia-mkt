@@ -1,13 +1,19 @@
 import type {ApiResponse} from "~/lib/types";
-import type {DetailPageData, DetailPagePricesData, DetailPageStatisticsData} from "~/routes/detail/types";
+import type {
+    DetailPageData,
+    DetailPageEventsData,
+    DetailPagePricesData,
+    DetailPageStatisticsData
+} from "~/routes/detail/types";
 
 export async function fetchDetailData(good: string): Promise<ApiResponse<DetailPageData>> {
-    const [pricesRes, statRes] = await Promise.all([
+    const [pricesRes, statRes, eventsRes] = await Promise.all([
         fetchGoodPrices(good),
-        fetchStatisticsData(good)
+        fetchStatisticsData(good),
+        fetchEventsData(good),
     ]);
 
-    if (!pricesRes.ok || !pricesRes.data || !statRes.ok || !statRes.data) {
+    if (!pricesRes.ok || !pricesRes.data || !statRes.ok || !statRes.data || !eventsRes.ok || !eventsRes.data) {
         return {
             ok: false,
             error: "Error while fetching data",
@@ -18,7 +24,8 @@ export async function fetchDetailData(good: string): Promise<ApiResponse<DetailP
         ok: true,
         data: {
             prices: pricesRes.data,
-            statistics: statRes.data
+            statistics: statRes.data,
+            events: eventsRes.data,
         }
     }
 }
@@ -39,6 +46,19 @@ async function fetchStatisticsData(good: string): Promise<ApiResponse<DetailPage
     const req: Request = new Request(
         `${process.env.API_PROTOCOL}://${process.env.API_URL}` +
         "/details?" +
+        "world=Secura&" +
+        `good=${good}`
+    );
+
+    const response = await fetch(req);
+
+    return await response.json();
+}
+
+async function fetchEventsData(good: string): Promise<ApiResponse<DetailPageEventsData[]>> {
+    const req: Request = new Request(
+        `${process.env.API_PROTOCOL}://${process.env.API_URL}` +
+        "/events?" +
         "world=Secura&" +
         `good=${good}`
     );

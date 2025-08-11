@@ -4,11 +4,17 @@ import {type DetailTranslations, English, loc} from "~/locale/loc";
 import type {ApiResponse, PriceChartData} from "~/lib/types";
 import {beautifyCamelCase} from "~/lib/utils";
 import {fetchDetailData} from "~/routes/detail/routeFunctions";
-import type {DetailPageData, DetailPageStatisticsData} from "~/routes/detail/types";
+import type {DetailPageData, DetailPageEventsData, DetailPageStatisticsData} from "~/routes/detail/types";
 import {redirect} from "react-router";
 import {PriceDetail} from "~/components/ui/price-detail";
 
-type LoaderData = { t: DetailTranslations; prices: PriceChartData, statistics: DetailPageStatisticsData, isMobile: boolean };
+type LoaderData = {
+    t: DetailTranslations;
+    prices: PriceChartData;
+    statistics: DetailPageStatisticsData;
+    events: DetailPageEventsData[];
+    isMobile: boolean
+};
 
 export function meta({params}: Route.MetaArgs) {
     return [
@@ -30,19 +36,21 @@ export async function loader({params, request}: Route.LoaderArgs): Promise<Loade
     return {
         prices: res.data.prices[params.good],
         statistics: res.data.statistics,
+        events: res.data.events,
         t: loc(English, "Detail"),
         isMobile,
     };
 }
 
 export default function Detail({loaderData, params}: Route.ComponentProps): React.ReactElement {
-    const { prices, statistics, t, isMobile } = loaderData;
+    const { prices, statistics, events, t, isMobile } = loaderData;
     return (
         <main>
             <PriceDetail
                 good={params.good}
                 prices={prices}
                 statistics={statistics}
+                events={events}
                 t={t}
                 isMobile={isMobile}
             />

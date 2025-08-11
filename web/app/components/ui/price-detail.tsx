@@ -7,7 +7,7 @@ import React from "react";
 import type {Price, PriceChartData} from "~/lib/types";
 import {ToggleGroup, ToggleGroupItem} from "~/components/ui/toggle-group";
 import type {DetailTranslations} from "~/locale/loc";
-import type {DetailPageStatisticsData} from "~/routes/detail/types";
+import type {DetailPageEventsData, DetailPageStatisticsData} from "~/routes/detail/types";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {Badge} from "~/components/ui/badge";
 import {TrendingUp, TrendingDown, CircleQuestionMark, ChartNoAxesCombined, CalendarClock, TriangleAlert, Scale} from "lucide-react";
@@ -28,6 +28,7 @@ type PriceDetailProps = {
     good: string;
     prices: PriceChartData;
     statistics: DetailPageStatisticsData;
+    events: DetailPageEventsData[];
     t: DetailTranslations;
     isMobile: boolean;
 }
@@ -299,7 +300,7 @@ function PriceDetailStatsCard({title, value, info}: PriceDetailStatsCardProps) {
 }
 
 
-function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) {
+function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetailProps) {
     return (
         <div className="min-h-screen p-6">
             <div className="max-w-7xl mx-auto space-y-6">
@@ -473,6 +474,20 @@ function PriceDetail({good, prices, statistics, t, isMobile}: PriceDetailProps) 
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-3">
+                            {events.map((event: DetailPageEventsData) => {
+                                return (
+                                    <div className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                            <span className="text-xs">2 min ago</span>
+                                        </div>
+                                        <span className="text-sm">Large buy order executed at 1580</span>
+                                        <Badge variant="outline" className="text-green-400 border-green-500/30 text-xs">
+                                            +2.1%
+                                        </Badge>
+                                    </div>
+                                );
+                            })}
                             <div className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
                                 <div className="flex items-center gap-2">
                                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
