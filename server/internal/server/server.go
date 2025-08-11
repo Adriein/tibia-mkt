@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/adriein/tibia-mkt/internal/detail"
+	"github.com/adriein/tibia-mkt/internal/event"
 	"github.com/adriein/tibia-mkt/internal/health"
 	"github.com/adriein/tibia-mkt/internal/price"
 	"github.com/adriein/tibia-mkt/internal/script"
@@ -85,6 +86,11 @@ func (t *TibiaMkt) routeSetup() {
 	detailController := t.getDetailController()
 
 	t.router.GET("/details", detailController.Get())
+
+	//EVENT
+	eventController := t.getEventController()
+
+	t.router.GET("/events", eventController.Get())
 }
 
 func (t *TibiaMkt) getPriceController() *price.Controller {
@@ -113,4 +119,13 @@ func (t *TibiaMkt) getDetailController() *detail.Controller {
 	presenter := detail.NewPresenter()
 
 	return detail.NewController(service, presenter)
+}
+
+func (t *TibiaMkt) getEventController() *event.Controller {
+	repository := event.NewPgEventRepository(t.database)
+	service := event.NewService(repository)
+
+	presenter := event.NewPresenter()
+
+	return event.NewController(service, presenter)
 }
