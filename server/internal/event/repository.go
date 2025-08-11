@@ -87,7 +87,6 @@ func (r *PgEventRepository) Save(Event *Event) error {
 		query,
 		Event.Name,
 		Event.GoodName,
-		Event.GoodName,
 		Event.World,
 		Event.Description,
 		Event.OccurredAt.Format(time.DateTime),
