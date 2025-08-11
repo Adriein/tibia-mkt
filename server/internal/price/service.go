@@ -15,7 +15,7 @@ func NewService(repository PriceRepository) *Service {
 func (s *Service) GetPrices(world string, good string) ([]*Price, error) {
 	var prices []*Price
 
-	sellOfferResults, sellOfferErr := s.repository.FindNewestOfferByGoodAndWorld(world, good, constants.SellOffer)
+	sellOfferResults, sellOfferErr := s.repository.FindOffersByGoodAndWorld(world, good, constants.SellOffer)
 
 	if sellOfferErr != nil {
 		return nil, sellOfferErr
@@ -23,7 +23,7 @@ func (s *Service) GetPrices(world string, good string) ([]*Price, error) {
 
 	prices = append(prices, sellOfferResults...)
 
-	buyOfferResults, buyOfferErr := s.repository.FindNewestOfferByGoodAndWorld(world, good, constants.BuyOffer)
+	buyOfferResults, buyOfferErr := s.repository.FindOffersByGoodAndWorld(world, good, constants.BuyOffer)
 
 	if buyOfferErr != nil {
 		return nil, sellOfferErr

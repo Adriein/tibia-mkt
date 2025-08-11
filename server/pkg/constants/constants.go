@@ -41,6 +41,10 @@ const (
 )
 
 const (
+	EventDataIngestion = "DATA_INGESTION"
+)
+
+const (
 	Day1  = "01"
 	Day10 = "10"
 	Day20 = "20"

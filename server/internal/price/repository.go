@@ -9,7 +9,7 @@ import (
 )
 
 type PriceRepository interface {
-	FindNewestOfferByGoodAndWorld(world string, good string, offerType string) ([]*Price, error)
+	FindOffersByGoodAndWorld(world string, good string, offerType string) ([]*Price, error)
 	Save(price *Price) error
 }
 
@@ -23,7 +23,7 @@ func NewPgPriceRepository(connection *sql.DB) *PgPriceRepository {
 	}
 }
 
-func (r *PgPriceRepository) FindNewestOfferByGoodAndWorld(worldName string, good string, offerType string) ([]*Price, error) {
+func (r *PgPriceRepository) FindOffersByGoodAndWorld(worldName string, good string, offerType string) ([]*Price, error) {
 	statement, err := r.connection.Prepare("SELECT * FROM prices WHERE world = $1 AND good_name = $2 AND offer_type = $3 ORDER BY created_at;")
 
 	if err != nil {
