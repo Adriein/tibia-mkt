@@ -8,5 +8,5 @@ type Event struct {
 	GoodName    string    `json:"goodName"`
 	World       string    `json:"world"`
 	Description string    `json:"description"`
-	OccurredAt  time.Time `json:"occurred_at"`
+	OccurredAt  time.Time `json:"occurredAt"`
 }

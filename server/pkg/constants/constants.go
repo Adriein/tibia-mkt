@@ -41,7 +41,8 @@ const (
 )
 
 const (
-	EventDataIngestion = "DATA_INGESTION"
+	EventDataIngestion            = "DATA_INGESTION"
+	EventDataIngestionDescription = "Ingested market data"
 )
 
 const (

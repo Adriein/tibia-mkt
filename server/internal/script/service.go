@@ -202,7 +202,7 @@ func (s *Service) SeedPricesFromExternalApiJson() error {
 			Name:        constants.EventDataIngestion,
 			GoodName:    good,
 			World:       constants.WorldSecura,
-			Description: "",
+			Description: constants.EventDataIngestionDescription,
 			OccurredAt:  time.Now(),
 		}
 

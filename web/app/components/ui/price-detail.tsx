@@ -1,7 +1,7 @@
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "~/components/ui/card";
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
-import {beautifyCamelCase, formatDateToElegantForm, formatDateToShortForm} from "~/lib/utils";
+import {beautifyCamelCase, formatDateToElegantForm, formatDateToShortForm, formatTimeAgo} from "~/lib/utils";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
 import type {Price, PriceChartData} from "~/lib/types";
@@ -478,10 +478,10 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                                 return (
                                     <div className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                            <span className="text-xs">2 min ago</span>
+                                            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                                            <span className="text-xs">{formatTimeAgo(new Date(event.occurredAt))}</span>
                                         </div>
-                                        <span className="text-sm">Large buy order executed at 1580</span>
+                                        <span className="text-sm">{event.description}</span>
                                         <Badge variant="outline" className="text-green-400 border-green-500/30 text-xs">
                                             +2.1%
                                         </Badge>
