@@ -21,7 +21,7 @@ export function orderByPagePosition(unOrderedResults: HomePageData): HomePageDat
 
             return result.set(price.pagePosition, goodName);
         }, new Map<number, string>());
-    console.log(pricesMap);
+
     let result: HomePageData = {};
 
     for (let i: number = 0; i < Object.keys(unOrderedResults).length; i++) {
