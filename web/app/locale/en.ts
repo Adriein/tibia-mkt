@@ -29,5 +29,8 @@ export default {
         buyPressure: "Buy Pressure",
         sellPressure: "Sell Pressure",
         liquidity: "Liquidity",
+        recentMarketActivity: "Recent Market Activity",
+        lastDataRefresh: "Last Data Refresh",
+        never: "Never"
     }
 } as const;

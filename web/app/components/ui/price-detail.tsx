@@ -501,7 +501,7 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">
                         <div className="w-3 h-3 bg-[var(--chart-theme-1)] rounded-full shadow-lg shadow-amber-500/50"></div>
-                        <h2 className="text-xl font-semibold">Buy Offers</h2>
+                        <h2 className="text-xl font-semibold">{t.sellOffer}</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -529,7 +529,7 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">
                         <div className="w-3 h-3 bg-[var(--chart-theme-2)] rounded-full shadow-lg shadow-blue-500/50"></div>
-                        <h2 className="text-xl font-semibold">Sell Offers</h2>
+                        <h2 className="text-xl font-semibold">{t.buyOffer}</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

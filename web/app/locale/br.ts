@@ -28,6 +28,9 @@ export default {
         marketDirection: "Direção geral do mercado",
         buyPressure: "Pressão de compra",
         sellPressure: "Pressão de venda",
-        liquidity: "Liquidez"
+        liquidity: "Liquidez",
+        recentMarketActivity: "Atividade recente do mercado",
+        lastDataRefresh: "Última atualização de dados",
+        never: "Nunca"
     }
 };
