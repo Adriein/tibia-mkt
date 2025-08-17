@@ -32,7 +32,7 @@ export const formatDateToElegantForm: (value: string) => string = (value: string
  * @param {string} locale - The language locale (e.g., 'en', 'es').
  * @returns {string} The formatted relative time string.
  */
-export function formatTimeAgo(date: Date, locale = 'en'): string {
+export function formatTimeAgo(date: Date, locale: string = 'en'): string {
     const now = new Date();
     const seconds: number = Math.floor((now.getTime() - date.getTime()) / 1000)
 

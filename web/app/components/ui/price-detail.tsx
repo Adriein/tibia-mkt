@@ -301,6 +301,7 @@ function PriceDetailStatsCard({title, value, info}: PriceDetailStatsCardProps) {
 
 
 function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetailProps) {
+    const lastDataRefreshEvent: DetailPageEventsData|null = events.find((event: DetailPageEventsData): boolean => event.name === 'DATA_INGESTION') ?? null;
     return (
         <div className="min-h-screen p-6">
             <div className="max-w-7xl mx-auto space-y-6">
@@ -473,59 +474,24 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="space-y-3">
+                        <div className="max-h-64 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
                             {events.map((event: DetailPageEventsData) => {
                                 return (
-                                    <div className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
+                                    <div key={event.id} className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                                             <span className="text-xs">{formatTimeAgo(new Date(event.occurredAt))}</span>
                                         </div>
                                         <span className="text-sm">{event.description}</span>
-                                        <Badge variant="outline" className="text-green-400 border-green-500/30 text-xs">
-                                            +2.1%
-                                        </Badge>
                                     </div>
                                 );
                             })}
-                            <div className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                    <span className="text-xs">2 min ago</span>
-                                </div>
-                                <span className="text-sm">Large buy order executed at 1580</span>
-                                <Badge variant="outline" className="text-green-400 border-green-500/30 text-xs">
-                                    +2.1%
-                                </Badge>
-                            </div>
-
-                            <div className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                                    <span className="text-xs">8 min ago</span>
-                                </div>
-                                <span className="text-sm text-gray-300">Market volatility decreased by 15%</span>
-                                <Badge variant="outline" className="text-blue-400 border-blue-500/30 text-xs">
-                                    Stable
-                                </Badge>
-                            </div>
-
-                            <div className="flex items-center gap-4 p-3 bg-[var(--secondary)] rounded-lg">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
-                                    <span className="text-xs">15 min ago</span>
-                                </div>
-                                <span className="text-sm">Trading volume increased by 23%</span>
-                                <Badge variant="outline" className="text-amber-400 border-amber-500/30 text-xs">
-                                    Volume
-                                </Badge>
-                            </div>
                         </div>
 
                         <div className="mt-4 pt-4 flex items-center justify-between border-t border-[var(--secondary)]">
                             <span className="text-sm">Last data refresh:</span>
                             <div className="flex items-center gap-2">
-                                <span className="text-sm">1 min ago</span>
+                                <span className="text-sm">{lastDataRefreshEvent? formatTimeAgo(new Date(lastDataRefreshEvent.occurredAt)) : "Never"}</span>
                             </div>
                         </div>
                     </CardContent>
