@@ -1,5 +1,5 @@
 import type {ApiResponse, Price, PriceChartData} from "~/lib/types";
-import type {HomePageData} from "~/routes/home/types";
+import type {HomePageData, HomePagePriceDataPoint, MergedHomePageData} from "~/routes/home/types";
 
 
 export async function fetchPrices(): Promise<ApiResponse<HomePageData>> {
@@ -14,44 +14,76 @@ export async function fetchPrices(): Promise<ApiResponse<HomePageData>> {
     return await response.json();
 }
 
-export function orderByPagePosition(unOrderedResults: ApiResponse<HomePageData>): HomePageData {
-    if (!unOrderedResults.ok || !unOrderedResults.data) {
-        return {};
-    }
-
-    const pricesMap: Map<number, string> = Object.keys(unOrderedResults.data)
+export function orderByPagePosition(unOrderedResults: HomePageData): HomePageData {
+    const pricesMap: Map<number, string> = Object.keys(unOrderedResults)
         .reduce((result: Map<number, string>, goodName: string): Map<number, string> => {
-            const price: PriceChartData = unOrderedResults.data![goodName];
+            const price: PriceChartData = unOrderedResults[goodName];
 
             return result.set(price.pagePosition, goodName);
         }, new Map<number, string>());
-
+    console.log(pricesMap);
     let result: HomePageData = {};
 
-    for (let i: number = 0; i < Object.keys(unOrderedResults.data).length; i++) {
+    for (let i: number = 0; i < Object.keys(unOrderedResults).length; i++) {
         const goodName: string = pricesMap.get(i + 1)!;
 
-        result = {...result, [goodName]: unOrderedResults.data[goodName]};
+        result = {...result, [goodName]: unOrderedResults[goodName]};
     }
 
     return result;
 }
 
-export function getRelevantPrices(data: HomePageData): HomePageData {
-    return Object.keys(data).reduce((acc: HomePageData, goodName: string): HomePageData => {
-        const ticks: string[] = getTimeTicks(data[goodName].sellOffer);
+export function mergeSellAndBuyOffers(orderedResults: HomePageData): MergedHomePageData {
+    return Object.keys(orderedResults).reduce((acc: MergedHomePageData, good: string): MergedHomePageData => {
+        const chartData: PriceChartData = orderedResults[good];
 
-        const prices: Price[] = data[goodName].sellOffer.filter((p: Price): boolean => ticks.includes(p.createdAt));
+        const specificGoodMergedPrices: HomePagePriceDataPoint[] = chartData
+            .buyOffer
+            .map((bo: Price): HomePagePriceDataPoint => {
+                const sellOffer: Price|undefined = chartData
+                    .sellOffer
+                    .find((so: Price): boolean => so.createdAt === bo.createdAt);
 
-        acc[goodName] = {...data[goodName], sellOffer: prices, buyOffer: []};
+                if (!sellOffer) {
+                    throw new Error();
+                }
+
+                return {
+                    sellPrice: sellOffer.unitPrice,
+                    buyPrice: bo.unitPrice,
+                    createdAt: bo.createdAt,
+                    world: bo.world
+                }
+            });
+
+        return {
+            ...acc,
+            [good]: {
+                wikiLink: chartData.wikiLink,
+                dataPoints: specificGoodMergedPrices,
+                pagePosition: chartData.pagePosition
+            }
+        };
+    }, {} as MergedHomePageData)
+}
+
+export function getRelevantPrices(data: MergedHomePageData): MergedHomePageData {
+    return Object.keys(data).reduce((acc: MergedHomePageData, goodName: string): MergedHomePageData => {
+        const ticks: string[] = getTimeTicks(data[goodName].dataPoints);
+
+        const prices: HomePagePriceDataPoint[] = data[goodName]
+            .dataPoints
+            .filter((p: HomePagePriceDataPoint): boolean => ticks.includes(p.createdAt));
+
+        acc[goodName] = {...data[goodName], dataPoints: prices};
 
         return acc;
     }, {})
 }
 
-function getTimeTicks(data: Price[], desiredTicks = 16): string[] {
+function getTimeTicks(data: HomePagePriceDataPoint[], desiredTicks = 16): string[] {
     if (data.length <= desiredTicks) {
-        return data.map((p: Price) => p.createdAt);
+        return data.map((p: HomePagePriceDataPoint) => p.createdAt);
     }
 
     const start = new Date(data[0].createdAt);

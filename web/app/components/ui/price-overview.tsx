@@ -9,6 +9,7 @@ import {Book, Eye} from "lucide-react";
 import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
 import {Link} from "react-router";
 import type {Price, PriceChartData} from "~/lib/types";
+import type {HomePagePriceDataPoint, HomePriceChartData} from "~/routes/home/types";
 
 const chartConfig = {
     buyOffer: {
@@ -23,7 +24,7 @@ const chartConfig = {
 
 type PriceOverviewProps = {
     good: string;
-    data: PriceChartData;
+    data: HomePriceChartData;
 }
 
 const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
@@ -34,7 +35,7 @@ const transformValueNumberToLocale = (value: number|string): string => {
     return Intl.NumberFormat("es-Es").format(value as number).toString()
 };
 
-function presentTimeSpan(data: Price[]): string {
+function presentTimeSpan(data: HomePagePriceDataPoint[]): string {
     const start: string = Intl
         .DateTimeFormat('es-ES', {year: "numeric", month: "short"})
         .format(new Date(data[0].createdAt));
@@ -51,7 +52,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>{beautifyCamelCase(good)}</CardTitle>
-                <CardDescription>{presentTimeSpan(data.sellOffer)}</CardDescription>
+                <CardDescription>{presentTimeSpan(data.dataPoints)}</CardDescription>
                 <CardAction className="flex gap-3">
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -88,7 +89,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                 <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
                     <LineChart
                         accessibilityLayer
-                        data={data.sellOffer}
+                        data={data.dataPoints}
                         margin={{
                             top: 20,
                             left: 12,
@@ -115,7 +116,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                             }
                         />
                         <Line
-                            dataKey="unitPrice"
+                            dataKey="sellPrice"
                             type="natural"
                             stroke="var(--chart-theme-1)"
                             strokeWidth={2}
@@ -126,8 +127,8 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                                 r: 6,
                             }}
                         />
-                        {/*<Line
-                            dataKey="buyOffer"
+                        <Line
+                            dataKey="buyPrice"
                             type="natural"
                             stroke="var(--chart-theme-2)"
                             strokeWidth={2}
@@ -137,7 +138,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                             activeDot={{
                                 r: 6,
                             }}
-                        />*/}
+                        />
                     </LineChart>
                 </ChartContainer>
             </CardContent>

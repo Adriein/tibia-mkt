@@ -102,7 +102,7 @@ func (p *Presenter) getPagePosition(item *Price) PriceConfig {
 	case constants.HoneycombEntity:
 		return PriceConfig{
 			CogId:    item.Id,
-			Position: 2,
+			Position: 1,
 			Columns:  6,
 			Rows:     1,
 		}
