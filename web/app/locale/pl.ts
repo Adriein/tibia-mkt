@@ -14,5 +14,20 @@ export default {
         averagePriceInfo: "Suma wszystkich cen podzielona przez ich liczbę. Jest to typowa cena.",
         medianPriceInfo: "Środkowa cena w posortowanej liście cen. Połowa cen jest wyższa, połowa niższa.",
         stdDeviationInfo: "Jak bardzo cena aktywa ma tendencję do wahania się w czasie. Wysoka zmienność oznacza duże, szybkie zmiany cen.",
+        to: "do",
+        liveData: "Dane na żywo",
+        marketOverview: "Przegląd Rynku",
+        bidAskSpread: "Różnica cen kupna i sprzedaży",
+        ofSellPrice: "ceny sprzedaży",
+        fromYesterday: "od wczoraj",
+        marketCap: "Kapitalizacja rynkowa",
+        goodsInMarket: "Towary na rynku",
+        marketStatus: "Status rynku",
+        tradingInsights: "Wnioski z handlu",
+        marketTendency: "Tendencja rynkowa",
+        marketDirection: "Ogólny kierunek rynku",
+        buyPressure: "Presja kupna",
+        sellPressure: "Presja sprzedaży",
+        liquidity: "Płynność"
     }
 };

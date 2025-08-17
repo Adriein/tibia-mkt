@@ -313,9 +313,9 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                                 <AvatarImage src={HoneycombGif} />
                             </Avatar>
                             <div>
-                                <h1 className="text-3xl font-bold">Honeycomb Detail</h1>
+                                <h1 className="text-3xl font-bold">Honeycomb</h1>
                                 <p className="text-sm mt-1">
-                                    Data series from {formatDateToElegantForm(prices.sellOffer.at(0)!.createdAt)} to {formatDateToElegantForm(prices.sellOffer.at(-1)!.createdAt)}
+                                    Data series from {formatDateToElegantForm(prices.sellOffer.at(0)!.createdAt)} {t.to} {formatDateToElegantForm(prices.sellOffer.at(-1)!.createdAt)}
                                 </p>
                             </div>
                         </div>
@@ -325,7 +325,7 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                         className="flex items-center gap-2 bg-green-500/10 text-green-400 border-green-500/30"
                     >
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                        Live Data
+                        {t.liveData}
                     </Badge>
                 </div>
 
@@ -337,19 +337,19 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                         <CardHeader>
                             <CardTitle className="relative flex items-center gap-2">
                                 <ChartNoAxesCombined className="w-5 h-5" />
-                                Market Overview
+                                {t.marketOverview}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="relative space-y-6 flex flex-col flex-1">
                             {/* Key Metrics Row */}
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-1">
-                                    <p className="text-xs uppercase tracking-wide">Bid-Ask Spread</p>
+                                    <p className="text-xs uppercase tracking-wide">{t.bidAskSpread}</p>
                                     <p className="text-xl font-bold">
                                         {transformNumberToLocale(statistics.overview.buySellSpread)}
                                     </p>
                                     <p className="text-xs text-[var(--primary)] font-medium">
-                                        {statistics.overview.spreadPercentage}% of sell price
+                                        {statistics.overview.spreadPercentage}% {t.ofSellPrice}
                                     </p>
                                 </div>
                                 <div className="space-y-1">
@@ -358,7 +358,7 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                                         {transformNumberToLocale(statistics.overview.lastTwentyFourHoursVolume)}
                                     </p>
                                     <p className="text-xs text-[var(--chart-theme-2)] font-medium">
-                                        {statistics.overview.marketVolumePercentageTendency}% from yesterday
+                                        {statistics.overview.marketVolumePercentageTendency}% {t.fromYesterday}
                                     </p>
                                 </div>
                             </div>
@@ -366,13 +366,13 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                             {/* Secondary Metrics */}
                             <div className="grid grid-cols-2 gap-6 pt-4 border-t border-[var(--secondary)]">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-sm">Market Cap</span>
+                                    <span className="text-sm">{t.marketCap}</span>
                                     <span className="font-semibold">
                                         {transformNumberToLocale(statistics.overview.marketCap)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="text-sm">Goods in market</span>
+                                    <span className="text-sm">{t.goodsInMarket}</span>
                                     <span className="font-semibold">{statistics.overview.totalGoodsBeingSold}</span>
                                 </div>
                             </div>
@@ -380,7 +380,7 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                             {/* Market Status */}
                             <div className="flex flex-1 items-center justify-between pt-4 border-t border-[var(--secondary)]">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm">Market Status</span>
+                                    <span className="text-sm">{t.marketStatus}</span>
                                 </div>
                                 <Badge
                                     variant={"secondary"}
@@ -397,7 +397,7 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <TrendingUp className="w-5 h-5" />
-                                Trading Insights
+                                {t.tradingInsights}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -406,8 +406,8 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         <div>
-                                            <span className="text-sm font-medium">Market Tendency</span>
-                                            <p className="text-xs text-gray-300 mt-0.5">Overall market direction</p>
+                                            <span className="text-sm font-medium">{t.marketTendency}</span>
+                                            <p className="text-xs text-gray-300 mt-0.5">{t.marketDirection}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
@@ -419,7 +419,7 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                                 <div className="flex items-center justify-between p-3 bg-[var(--secondary)] rounded-lg">
                                     <div className="flex items-center gap-2 min-w-0 flex-1">
                                         <div className="w-2 h-2 bg-[var(--primary)] rounded-full flex-shrink-0"></div>
-                                        <span className="text-sm">Buy Pressure</span>
+                                        <span className="text-sm">{t.buyPressure}</span>
                                     </div>
                                     <div className="flex items-center gap-2 min-w-[100px]">
                                         <div className="w-16 h-2 bg-[var(--foreground)] rounded-full overflow-hidden">
@@ -434,7 +434,7 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                                 <div className="flex items-center justify-between p-3 bg-[var(--secondary)] rounded-lg">
                                     <div className="flex items-center gap-2 min-w-0 flex-1">
                                         <div className="w-2 h-2 bg-[var(--chart-theme-2)] rounded-full flex-shrink-0"></div>
-                                        <span className="text-sm">Sell Pressure</span>
+                                        <span className="text-sm">{t.sellPressure}</span>
                                     </div>
                                     <div className="flex items-center gap-2 min-w-[100px]">
                                         <div className="w-16 h-2 bg-[var(--foreground)] rounded-full overflow-hidden">
@@ -449,7 +449,7 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                                 <div className="flex items-center justify-between p-3 bg-[var(--secondary)] rounded-lg">
                                     <div className="flex items-center gap-2 min-w-0 flex-1">
                                         <div className="w-2 h-2 bg-[var(--chart-2)] rounded-full flex-shrink-0"></div>
-                                        <span className="text-sm">Liquidity</span>
+                                        <span className="text-sm">{t.liquidity}</span>
                                     </div>
                                     <div className="flex items-center gap-2 min-w-[100px]">
                                         <div className="w-16 h-2 bg-[var(--foreground)] rounded-full overflow-hidden">
