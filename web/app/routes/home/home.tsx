@@ -4,12 +4,41 @@ import type {HomePageData, MergedHomePageData} from "~/routes/home/types";
 import {PriceOverview} from "~/components/ui/price-overview";
 import {English, type HomeTranslations, loc} from "~/locale/loc";
 import type {Route} from "@/.react-router/types/app/routes/home/+types/home";
-import React from "react";
-import {Activity, Bell, DollarSign, Globe, Search, Server, TrendingDown, TrendingUp} from "lucide-react";
+import React, {useEffect, useState} from "react";
+import {
+    AlertTriangle,
+    Bell, ChevronLeft, ChevronRight, Clock,
+    Search,
+    Server,
+    TrendingUp,
+    Zap
+} from "lucide-react";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {Button} from "~/components/ui/button";
 import {Input} from "~/components/ui/input";
-import {Card, CardContent} from "~/components/ui/card";
+import {Card, CardContent, CardHeader} from "~/components/ui/card";
+import {Badge} from "~/components/ui/badge";
+
+export function meta({}: Route.MetaArgs) {
+    return [
+        { title: "Tibia Mkt" },
+        { name: "description", content: "Welcome to Tibia Mkt!" },
+    ];
+}
+
+export async function loader(): Promise<{data: MergedHomePageData, t: HomeTranslations}> {
+    const prices: ApiResponse<HomePageData> = await fetchPrices();
+
+    if (!prices.ok || !prices.data) {
+        return {data: {}, t: loc(English, "Home")};
+    }
+
+    const orderedPrices: HomePageData = orderByPagePosition(prices.data);
+
+    const results: MergedHomePageData = mergeSellAndBuyOffers(orderedPrices);
+
+    return {data: getRelevantPrices(results), t: loc(English, "Home")};
+}
 
 export function Header() {
     return (
@@ -26,29 +55,29 @@ export function Header() {
                         </div>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-6">
+                        {/* Search section */}
                         <div className="relative hidden md:block">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <Input placeholder="Search items..." className="pl-10 w-64" />
                         </div>
 
-                        <div className="flex items-center space-x-2">
-                            <Globe className="w-4 h-4 text-muted-foreground" />
-                            <Select defaultValue="en">
-                                <SelectTrigger className="w-20 h-9 border-0 bg-transparent">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="en">EN</SelectItem>
-                                    <SelectItem value="es">ES</SelectItem>
-                                    <SelectItem value="pt">PT</SelectItem>
-                                    <SelectItem value="pl">PL</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                        <Select defaultValue="en">
+                            <SelectTrigger className="w-16 h-9 text-sm font-medium">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="en">🇺🇸 EN</SelectItem>
+                                <SelectItem value="es">🇪🇸 ES</SelectItem>
+                                <SelectItem value="pt">🇧🇷 PT</SelectItem>
+                                <SelectItem value="pl">🇵🇱 PL</SelectItem>
+                            </SelectContent>
+                        </Select>
 
-                        <Button variant="ghost" size="icon">
+                        {/* Notification section */}
+                        <Button variant="outline" size="icon" className="relative">
                             <Bell className="w-5 h-5" />
+                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></span>
                         </Button>
                     </div>
                 </div>
@@ -57,92 +86,183 @@ export function Header() {
     )
 }
 
-export function StatsOverview() {
-    const stats = [
+export function GameNews() {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const news = [
         {
-            title: "Total Volume",
-            value: "2.4M",
-            change: "+12.5%",
-            changeType: "positive" as const,
-            icon: DollarSign,
+            title: "Summer Update 2025 Released",
+            summary: "New hunting grounds and rare items added. Expect price fluctuations on creature products.",
+            date: "2 hours ago",
+            category: "Update",
+            impact: "high" as const,
+            icon: Zap,
         },
         {
-            title: "Active Items",
-            value: "1,247",
-            change: "+3.2%",
-            changeType: "positive" as const,
-            icon: Activity,
-        },
-        {
-            title: "Top Gainer",
-            value: "Honeycomb",
-            change: "+15.2%",
-            changeType: "positive" as const,
+            title: "Double XP Weekend Announced",
+            summary: "Increased demand for supplies and equipment expected this weekend.",
+            date: "5 hours ago",
+            category: "Event",
+            impact: "medium" as const,
             icon: TrendingUp,
         },
         {
-            title: "Top Loser",
-            value: "Swampling Wood",
-            change: "-3.1%",
-            changeType: "negative" as const,
-            icon: TrendingDown,
+            title: "Server Maintenance Scheduled",
+            summary: "Antica and Luminera will be offline for 2 hours. Trading may be affected.",
+            date: "1 day ago",
+            category: "Maintenance",
+            impact: "low" as const,
+            icon: AlertTriangle,
+        },
+        {
+            title: "Rare Item Drop Rate Adjusted",
+            summary: "Demon Horn and other rare drops have been rebalanced. Monitor price changes closely.",
+            date: "2 days ago",
+            category: "Balance",
+            impact: "high" as const,
+            icon: TrendingUp,
+        },
+        {
+            title: "Summer Update 2025 Released",
+            summary: "New hunting grounds and rare items added. Expect price fluctuations on creature products.",
+            date: "2 hours ago",
+            category: "Update",
+            impact: "high" as const,
+            icon: Zap,
+        },
+        {
+            title: "Double XP Weekend Announced",
+            summary: "Increased demand for supplies and equipment expected this weekend.",
+            date: "5 hours ago",
+            category: "Event",
+            impact: "medium" as const,
+            icon: TrendingUp,
+        },
+        {
+            title: "Server Maintenance Scheduled",
+            summary: "Antica and Luminera will be offline for 2 hours. Trading may be affected.",
+            date: "1 day ago",
+            category: "Maintenance",
+            impact: "low" as const,
+            icon: AlertTriangle,
+        },
+        {
+            title: "Rare Item Drop Rate Adjusted",
+            summary: "Demon Horn and other rare drops have been rebalanced. Monitor price changes closely.",
+            date: "2 days ago",
+            category: "Balance",
+            impact: "high" as const,
+            icon: TrendingUp,
         },
     ]
 
+    const getImpactColor = (impact: string) => {
+        switch (impact) {
+            case "high":
+                return "bg-red-500/10 text-red-500 border-red-500/20"
+            case "medium":
+                return "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+            case "low":
+                return "bg-blue-500/10 text-blue-500 border-blue-500/20"
+            default:
+                return "bg-muted text-muted-foreground"
+        }
+    }
+
+    const getIconColor = (impact: string) => {
+        switch (impact) {
+            case "high":
+                return "text-red-500"
+            case "medium":
+                return "text-yellow-500"
+            case "low":
+                return "text-blue-500"
+            default:
+                return "text-muted-foreground"
+        }
+    }
+
+    const nextSlide = () => {
+        setCurrentIndex((prev) => (prev + 1) % Math.ceil(news.length / 4))
+    }
+
+    const prevSlide = () => {
+        setCurrentIndex((prev) => (prev - 1 + Math.ceil(news.length / 4)) % Math.ceil(news.length / 4))
+    }
+
+    const goToSlide = (index: number) => {
+        setCurrentIndex(index)
+    }
+
     return (
-        <section>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {stats.map((stat) => {
-                    const Icon = stat.icon
-                    return (
-                        <Card key={stat.title} className="bg-card border-border">
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-muted-foreground">{stat.title}</p>
-                                        <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                                        <p
-                                            className={`text-sm font-medium ${
-                                                stat.changeType === "positive" ? "text-green-500" : "text-red-500"
-                                            }`}
-                                        >
-                                            {stat.change}
-                                        </p>
-                                    </div>
-                                    <div
-                                        className={`p-3 rounded-lg ${stat.changeType === "positive" ? "bg-green-500/10" : "bg-red-500/10"}`}
+        <section className="relative">
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex gap-2">
+                    {Array.from({ length: Math.ceil(news.length / 4) === 1 ? 2 : Math.ceil(news.length / 4) }).map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={(): void => goToSlide(index)}
+                            className={`w-2 h-2 rounded-full transition-colors ${
+                                currentIndex === index ? "bg-foreground" : "bg-muted-foreground/30"
+                            }`}
+                        />
+                    ))}
+                </div>
+                <div className="flex gap-1">
+                    <Button variant="ghost" size="sm" onClick={prevSlide} className="h-8 w-8 p-0 cursor-pointer">
+                        <ChevronLeft className="w-4 h-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={nextSlide} className="h-8 w-8 p-0 cursor-pointer">
+                        <ChevronRight className="w-4 h-4" />
+                    </Button>
+                </div>
+            </div>
+
+            <div className="overflow-hidden">
+                <div
+                    className="flex transition-transform duration-700 ease-out gap-4"
+                    style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                >
+                    {Array.from({ length: Math.ceil(news.length / 4) }).map((_, slideIndex: number) => (
+                        <div key={slideIndex} className="flex gap-4 min-w-full px-4">
+                            {news.slice(slideIndex * 4, slideIndex * 4 + 4).map((article, index) => {
+                                const Icon = article.icon
+                                return (
+                                    <Card
+                                        key={slideIndex * 2 + index}
+                                        className="bg-card border-border hover:bg-muted/50 transition-colors flex-1 max-w-md min-w-0"
                                     >
-                                        <Icon className={`w-6 h-6 ${stat.changeType === "positive" ? "text-green-500" : "text-red-500"}`} />
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )
-                })}
+                                        <CardHeader className="pb-3">
+                                            <div className="flex items-start justify-between gap-3">
+                                                <div className="flex-1">
+                                                    <h3 className="font-semibold text-foreground leading-tight mb-2">{article.title}</h3>
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <Badge variant="outline" className={getImpactColor(article.impact)}>
+                                                            {article.category}
+                                                        </Badge>
+                                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                                            <Clock className="w-3 h-3" />
+                                                            {article.date}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className={`p-2 rounded-lg bg-muted/50`}>
+                                                    <Icon className={`w-5 h-5 ${getIconColor(article.impact)}`} />
+                                                </div>
+                                            </div>
+                                        </CardHeader>
+                                        <CardContent className="pt-0">
+                                            <p className="text-sm text-muted-foreground leading-relaxed">{article.summary}</p>
+                                        </CardContent>
+                                    </Card>
+                                )
+                            })}
+                        </div>
+                    ))}
+                </div>
             </div>
         </section>
     )
-}
-
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Tibia Mkt" },
-    { name: "description", content: "Welcome to Tibia Mkt!" },
-  ];
-}
-
-export async function loader(): Promise<{data: MergedHomePageData, t: HomeTranslations}> {
-  const prices: ApiResponse<HomePageData> = await fetchPrices();
-
-    if (!prices.ok || !prices.data) {
-        return {data: {}, t: loc(English, "Home")};
-    }
-
-    const orderedPrices: HomePageData = orderByPagePosition(prices.data);
-
-    const results: MergedHomePageData = mergeSellAndBuyOffers(orderedPrices);
-
-  return {data: getRelevantPrices(results), t: loc(English, "Home")};
 }
 
 export default function Home({loaderData}: Route.ComponentProps) {
@@ -152,21 +272,21 @@ export default function Home({loaderData}: Route.ComponentProps) {
       <div className="min-h-screen">
           <Header />
           <main className="container mx-auto px-4 py-8 space-y-8">
-              <StatsOverview />
+              <GameNews />
               <section>
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex flex-col space-y-4 mb-6 md:flex-row md:items-center md:justify-between md:space-y-0">
                       <div>
                           <h2 className="text-2xl font-bold text-foreground">Market Overview</h2>
                           <p className="text-muted-foreground">Track the latest prices and trends</p>
                       </div>
 
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-3 self-start md:self-auto">
                           <div className="flex items-center space-x-2 text-muted-foreground">
                               <Server className="w-4 h-4" />
                               <span className="text-sm font-medium">Server:</span>
                           </div>
                           <Select defaultValue="secura">
-                              <SelectTrigger className="w-40">
+                              <SelectTrigger className="w-32 md:w-40">
                                   <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -213,7 +333,7 @@ export default function Home({loaderData}: Route.ComponentProps) {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                       {Object.keys(data).map((good: string, index: number) => {
                           return (
-                              <PriceOverview good={good} data={data[good]}/>
+                              <PriceOverview key={index} good={good} data={data[good]}/>
                           );
                       })}
                   </div>

@@ -49,7 +49,7 @@ function presentTimeSpan(data: HomePagePriceDataPoint[]): string {
 
 function PriceOverview({good, data}: PriceOverviewProps) {
     return (
-        <Card className="w-full">
+        <Card className="w-full hover:bg-muted/50">
             <CardHeader>
                 <CardTitle>{beautifyCamelCase(good)}</CardTitle>
                 <CardDescription>{presentTimeSpan(data.dataPoints)}</CardDescription>
