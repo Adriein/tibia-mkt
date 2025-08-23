@@ -121,8 +121,10 @@ func (s *Service) SeedPricesFromCsv() error {
 }
 
 func (s *Service) SeedPricesFromExternalApiJson() error {
-	goods := [1]string{
+	goods := [3]string{
+		constants.TibiaCoinEntity,
 		constants.HoneycombEntity,
+		constants.SwamplingWoodEntity,
 	}
 
 	for _, good := range goods {
