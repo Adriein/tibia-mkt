@@ -4,7 +4,7 @@ import type {HomePageData, MergedHomePageData} from "~/routes/home/types";
 import {PriceOverview} from "~/components/ui/price-overview";
 import {English, type HomeTranslations, loc} from "~/locale/loc";
 import type {Route} from "@/.react-router/types/app/routes/home/+types/home";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {
     AlertTriangle,
     Bell, ChevronLeft, ChevronRight, Clock,
@@ -18,6 +18,8 @@ import {Button} from "~/components/ui/button";
 import {Input} from "~/components/ui/input";
 import {Card, CardContent, CardHeader} from "~/components/ui/card";
 import {Badge} from "~/components/ui/badge";
+import {Carousel, CarouselContent, CarouselItem} from "~/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay"
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -87,8 +89,6 @@ export function Header() {
 }
 
 export function GameNews() {
-    const [currentIndex, setCurrentIndex] = useState(0);
-
     const news = [
         {
             title: "Summer Update 2025 Released",
@@ -122,40 +122,7 @@ export function GameNews() {
             impact: "high" as const,
             icon: TrendingUp,
         },
-        {
-            title: "Summer Update 2025 Released",
-            summary: "New hunting grounds and rare items added. Expect price fluctuations on creature products.",
-            date: "2 hours ago",
-            category: "Update",
-            impact: "high" as const,
-            icon: Zap,
-        },
-        {
-            title: "Double XP Weekend Announced",
-            summary: "Increased demand for supplies and equipment expected this weekend.",
-            date: "5 hours ago",
-            category: "Event",
-            impact: "medium" as const,
-            icon: TrendingUp,
-        },
-        {
-            title: "Server Maintenance Scheduled",
-            summary: "Antica and Luminera will be offline for 2 hours. Trading may be affected.",
-            date: "1 day ago",
-            category: "Maintenance",
-            impact: "low" as const,
-            icon: AlertTriangle,
-        },
-        {
-            title: "Rare Item Drop Rate Adjusted",
-            summary: "Demon Horn and other rare drops have been rebalanced. Monitor price changes closely.",
-            date: "2 days ago",
-            category: "Balance",
-            impact: "high" as const,
-            icon: TrendingUp,
-        },
     ]
-
     const getImpactColor = (impact: string) => {
         switch (impact) {
             case "high":
@@ -182,85 +149,56 @@ export function GameNews() {
         }
     }
 
-    const nextSlide = () => {
-        setCurrentIndex((prev) => (prev + 1) % Math.ceil(news.length / 4))
-    }
-
-    const prevSlide = () => {
-        setCurrentIndex((prev) => (prev - 1 + Math.ceil(news.length / 4)) % Math.ceil(news.length / 4))
-    }
-
-    const goToSlide = (index: number) => {
-        setCurrentIndex(index)
-    }
-
     return (
         <section className="relative">
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex gap-2">
-                    {Array.from({ length: Math.ceil(news.length / 4) === 1 ? 2 : Math.ceil(news.length / 4) }).map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={(): void => goToSlide(index)}
-                            className={`w-2 h-2 rounded-full transition-colors ${
-                                currentIndex === index ? "bg-foreground" : "bg-muted-foreground/30"
-                            }`}
-                        />
-                    ))}
-                </div>
-                <div className="flex gap-1">
-                    <Button variant="ghost" size="sm" onClick={prevSlide} className="h-8 w-8 p-0 cursor-pointer">
-                        <ChevronLeft className="w-4 h-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={nextSlide} className="h-8 w-8 p-0 cursor-pointer">
-                        <ChevronRight className="w-4 h-4" />
-                    </Button>
-                </div>
-            </div>
-
-            <div className="overflow-hidden">
-                <div
-                    className="flex transition-transform duration-700 ease-out gap-4"
-                    style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-                >
-                    {Array.from({ length: Math.ceil(news.length / 4) }).map((_, slideIndex: number) => (
-                        <div key={slideIndex} className="flex gap-4 min-w-full px-4">
-                            {news.slice(slideIndex * 4, slideIndex * 4 + 4).map((article, index) => {
-                                const Icon = article.icon
-                                return (
-                                    <Card
-                                        key={slideIndex * 2 + index}
-                                        className="bg-card border-border hover:bg-muted/50 transition-colors flex-1 max-w-md min-w-0"
-                                    >
-                                        <CardHeader className="pb-3">
-                                            <div className="flex items-start justify-between gap-3">
-                                                <div className="flex-1">
-                                                    <h3 className="font-semibold text-foreground leading-tight mb-2">{article.title}</h3>
-                                                    <div className="flex items-center gap-2 mb-2">
-                                                        <Badge variant="outline" className={getImpactColor(article.impact)}>
-                                                            {article.category}
-                                                        </Badge>
-                                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                                            <Clock className="w-3 h-3" />
-                                                            {article.date}
-                                                        </div>
+            <Carousel
+                opts={{
+                    align: "start",
+                    loop: true,
+                }}
+                plugins={[
+                    Autoplay({
+                        delay: 6000,
+                    }),
+                ]}
+                className="w-full mx-auto"
+            >
+                <CarouselContent className="-ml-1 md:-ml-4">
+                    {news.map((article, index) => {
+                        const Icon = article.icon
+                        return (
+                            <CarouselItem key={index} className="pl-1 md:pl-4 basis-full md:basis-1/2 max-w-md">
+                                <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer h-full">
+                                    <CardHeader className="pb-3">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="flex-1">
+                                                <h3 className="font-semibold text-foreground leading-tight mb-2 text-sm md:text-base">
+                                                    {article.title}
+                                                </h3>
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <Badge variant="outline" className={getImpactColor(article.impact)}>
+                                                        {article.category}
+                                                    </Badge>
+                                                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                                        <Clock className="w-3 h-3" />
+                                                        {article.date}
                                                     </div>
                                                 </div>
-                                                <div className={`p-2 rounded-lg bg-muted/50`}>
-                                                    <Icon className={`w-5 h-5 ${getIconColor(article.impact)}`} />
-                                                </div>
                                             </div>
-                                        </CardHeader>
-                                        <CardContent className="pt-0">
-                                            <p className="text-sm text-muted-foreground leading-relaxed">{article.summary}</p>
-                                        </CardContent>
-                                    </Card>
-                                )
-                            })}
-                        </div>
-                    ))}
-                </div>
-            </div>
+                                            <div className={`p-2 rounded-lg bg-muted/50`}>
+                                                <Icon className={`w-4 h-4 md:w-5 md:h-5 ${getIconColor(article.impact)}`} />
+                                            </div>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="pt-0">
+                                        <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">{article.summary}</p>
+                                    </CardContent>
+                                </Card>
+                            </CarouselItem>
+                        )
+                    })}
+                </CarouselContent>
+            </Carousel>
         </section>
     )
 }
