@@ -5,21 +5,10 @@ import {PriceOverview} from "~/components/ui/price-overview";
 import {English, type HomeTranslations, loc} from "~/locale/loc";
 import type {Route} from "@/.react-router/types/app/routes/home/+types/home";
 import React from "react";
-import {
-    AlertTriangle,
-    Bell, ChevronLeft, ChevronRight, Clock,
-    Search,
-    Server,
-    TrendingUp,
-    Zap
-} from "lucide-react";
+import {Server} from "lucide-react";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
-import {Button} from "~/components/ui/button";
-import {Input} from "~/components/ui/input";
-import {Card, CardContent, CardHeader} from "~/components/ui/card";
-import {Badge} from "~/components/ui/badge";
-import {Carousel, CarouselContent, CarouselItem} from "~/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay"
+import {HomeHeader} from "~/components/ui/home-header";
+import {HomeGameNews} from "~/components/ui/home-news";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -42,175 +31,16 @@ export async function loader(): Promise<{data: MergedHomePageData, t: HomeTransl
     return {data: getRelevantPrices(results), t: loc(English, "Home")};
 }
 
-export function Header() {
-    return (
-        <header className="border-b border-border bg-card">
-            <div className="container mx-auto px-4 py-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                        <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-lg">
-                            <TrendingUp className="w-6 h-6 text-primary-foreground" />
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold text-foreground">Tibia Mkt</h1>
-                            <p className="text-sm text-muted-foreground">Trading Market</p>
-                        </div>
-                    </div>
 
-                    <div className="flex items-center space-x-6">
-                        {/* Search section */}
-                        <div className="relative hidden md:block">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                            <Input placeholder="Search items..." className="pl-10 w-64" />
-                        </div>
-
-                        <Select defaultValue="en">
-                            <SelectTrigger className="w-16 h-9 text-sm font-medium">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="en">🇺🇸 EN</SelectItem>
-                                <SelectItem value="es">🇪🇸 ES</SelectItem>
-                                <SelectItem value="pt">🇧🇷 PT</SelectItem>
-                                <SelectItem value="pl">🇵🇱 PL</SelectItem>
-                            </SelectContent>
-                        </Select>
-
-                        {/* Notification section */}
-                        <Button variant="outline" size="icon" className="relative">
-                            <Bell className="w-5 h-5" />
-                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></span>
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </header>
-    )
-}
-
-export function GameNews() {
-    const news = [
-        {
-            title: "Summer Update 2025 Released",
-            summary: "New hunting grounds and rare items added. Expect price fluctuations on creature products.",
-            date: "2 hours ago",
-            category: "Update",
-            impact: "high" as const,
-            icon: Zap,
-        },
-        {
-            title: "Double XP Weekend Announced",
-            summary: "Increased demand for supplies and equipment expected this weekend.",
-            date: "5 hours ago",
-            category: "Event",
-            impact: "medium" as const,
-            icon: TrendingUp,
-        },
-        {
-            title: "Server Maintenance Scheduled",
-            summary: "Antica and Luminera will be offline for 2 hours. Trading may be affected.",
-            date: "1 day ago",
-            category: "Maintenance",
-            impact: "low" as const,
-            icon: AlertTriangle,
-        },
-        {
-            title: "Rare Item Drop Rate Adjusted",
-            summary: "Demon Horn and other rare drops have been rebalanced. Monitor price changes closely.",
-            date: "2 days ago",
-            category: "Balance",
-            impact: "high" as const,
-            icon: TrendingUp,
-        },
-    ]
-    const getImpactColor = (impact: string) => {
-        switch (impact) {
-            case "high":
-                return "bg-red-500/10 text-red-500 border-red-500/20"
-            case "medium":
-                return "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
-            case "low":
-                return "bg-blue-500/10 text-blue-500 border-blue-500/20"
-            default:
-                return "bg-muted text-muted-foreground"
-        }
-    }
-
-    const getIconColor = (impact: string) => {
-        switch (impact) {
-            case "high":
-                return "text-red-500"
-            case "medium":
-                return "text-yellow-500"
-            case "low":
-                return "text-blue-500"
-            default:
-                return "text-muted-foreground"
-        }
-    }
-
-    return (
-        <section className="relative">
-            <Carousel
-                opts={{
-                    align: "start",
-                    loop: true,
-                }}
-                plugins={[
-                    Autoplay({
-                        delay: 6000,
-                    }),
-                ]}
-                className="w-full mx-auto"
-            >
-                <CarouselContent className="-ml-1 md:-ml-4">
-                    {news.map((article, index) => {
-                        const Icon = article.icon
-                        return (
-                            <CarouselItem key={index} className="pl-1 md:pl-4 basis-full md:basis-1/2 max-w-md">
-                                <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer h-full">
-                                    <CardHeader className="pb-3">
-                                        <div className="flex items-start justify-between gap-3">
-                                            <div className="flex-1">
-                                                <h3 className="font-semibold text-foreground leading-tight mb-2 text-sm md:text-base">
-                                                    {article.title}
-                                                </h3>
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <Badge variant="outline" className={getImpactColor(article.impact)}>
-                                                        {article.category}
-                                                    </Badge>
-                                                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                                        <Clock className="w-3 h-3" />
-                                                        {article.date}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className={`p-2 rounded-lg bg-muted/50`}>
-                                                <Icon className={`w-4 h-4 md:w-5 md:h-5 ${getIconColor(article.impact)}`} />
-                                            </div>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent className="pt-0">
-                                        <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">{article.summary}</p>
-                                    </CardContent>
-                                </Card>
-                            </CarouselItem>
-                        )
-                    })}
-                </CarouselContent>
-            </Carousel>
-        </section>
-    )
-}
 
 export default function Home({loaderData}: Route.ComponentProps) {
   const { data, t } = loaderData;
 
   return (
       <div className="min-h-screen">
-          <Header />
+          <HomeHeader />
           <main className="container mx-auto px-4 py-8 space-y-8">
-              <GameNews />
+              <HomeGameNews />
               <section>
                   <div className="flex flex-col space-y-4 mb-6 md:flex-row md:items-center md:justify-between md:space-y-0">
                       <div>
