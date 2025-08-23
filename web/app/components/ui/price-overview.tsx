@@ -7,9 +7,10 @@ import React from "react";
 import {Button} from "~/components/ui/button";
 import {Book, Eye} from "lucide-react";
 import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
-import {Link} from "react-router";
+import {Link, useSearchParams} from "react-router";
 import type {Price, PriceChartData} from "~/lib/types";
 import type {HomePagePriceDataPoint, HomePriceChartData} from "~/routes/home/types";
+import * as sea from "node:sea";
 
 const chartConfig = {
     buyOffer: {
@@ -48,6 +49,9 @@ function presentTimeSpan(data: HomePagePriceDataPoint[]): string {
 }
 
 function PriceOverview({good, data}: PriceOverviewProps) {
+    const [searchParams] = useSearchParams();
+    const lang: string|null = searchParams.get("lang");
+
     return (
         <Card className="w-full hover:bg-muted/50">
             <CardHeader>
@@ -57,7 +61,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <Button asChild variant="secondary" size="icon" className="size-8">
-                                <Link to={`/${good}/detail`}>
+                                <Link to={lang?`/${good}/detail?lang=${lang}` : `/${good}/detail`}>
                                     <Eye/>
                                 </Link>
                             </Button>

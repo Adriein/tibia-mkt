@@ -2,7 +2,7 @@ import {fetchPrices, getRelevantPrices, mergeSellAndBuyOffers, orderByPagePositi
 import type {ApiResponse} from "~/lib/types";
 import type {HomePageData, MergedHomePageData} from "~/routes/home/types";
 import {PriceOverview} from "~/components/ui/price-overview";
-import {English, type HomeTranslations, loc} from "~/locale/loc";
+import {BeautyLocale, type HomeTranslations, loc} from "~/locale/loc";
 import type {Route} from "@/.react-router/types/app/routes/home/+types/home";
 import React from "react";
 import {Server} from "lucide-react";
@@ -17,21 +17,22 @@ export function meta({}: Route.MetaArgs) {
     ];
 }
 
-export async function loader(): Promise<{data: MergedHomePageData, t: HomeTranslations}> {
+export async function loader({ request }: Route.LoaderArgs): Promise<{data: MergedHomePageData, t: HomeTranslations}> {
+    const url = new URL(request.url);
+    const language: string = url.searchParams.get('lang') || BeautyLocale.English;
+
     const prices: ApiResponse<HomePageData> = await fetchPrices();
 
     if (!prices.ok || !prices.data) {
-        return {data: {}, t: loc(English, "Home")};
+        return {data: {}, t: loc(language, "Home")};
     }
 
     const orderedPrices: HomePageData = orderByPagePosition(prices.data);
 
     const results: MergedHomePageData = mergeSellAndBuyOffers(orderedPrices);
 
-    return {data: getRelevantPrices(results), t: loc(English, "Home")};
+    return {data: getRelevantPrices(results), t: loc(language, "Home")};
 }
-
-
 
 export default function Home({loaderData}: Route.ComponentProps) {
   const { data, t } = loaderData;

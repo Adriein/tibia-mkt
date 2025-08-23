@@ -1,6 +1,6 @@
 import React from "react";
 import type {Route} from "@/.react-router/types/app/routes/detail/+types/detail";
-import {type DetailTranslations, English, loc} from "~/locale/loc";
+import {BeautyLocale, type DetailTranslations, languageConverter, loc} from "~/locale/loc";
 import type {ApiResponse, PriceChartData} from "~/lib/types";
 import {beautifyCamelCase} from "~/lib/utils";
 import {fetchDetailData} from "~/routes/detail/routeFunctions";
@@ -24,6 +24,9 @@ export function meta({params}: Route.MetaArgs) {
 }
 
 export async function loader({params, request}: Route.LoaderArgs): Promise<LoaderData | Response> {
+    const url = new URL(request.url);
+    const language: string = url.searchParams.get('lang') || BeautyLocale.English;
+
     const userAgent: string = request.headers.get('user-agent') || '';
     const isMobile: boolean = /Mobi|Android|IPhone/i.test(userAgent);
 
@@ -37,7 +40,7 @@ export async function loader({params, request}: Route.LoaderArgs): Promise<Loade
         prices: res.data.prices[params.good],
         statistics: res.data.statistics,
         events: res.data.events,
-        t: loc(English, "Detail"),
+        t: loc(languageConverter(language), "Detail"),
         isMobile,
     };
 }
