@@ -26,6 +26,7 @@ func main() {
 		constants.DatabaseName,
 		constants.ServerPort,
 		constants.TibiaMktApiKey,
+		constants.Env,
 	)
 
 	if envCheckerErr := checker.Check(); envCheckerErr != nil {
