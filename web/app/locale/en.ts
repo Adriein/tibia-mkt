@@ -1,0 +1,36 @@
+export default {
+    Home: {
+        welcome: "Welcome to Tibia Mkt!",
+    },
+    Detail: {
+        timeSpan3Months: "Last 3 months",
+        timeSpan30Days: "Last 30 days",
+        timeSpan7ays: "Last 7 days",
+        buyOffer: "Buy offer",
+        sellOffer: "Sell offer",
+        averagePrice: "Average price",
+        medianPrice: "Median price",
+        stdDeviation: "Price Volatility",
+        averagePriceInfo: "The sum of all prices divided by the number of prices. It's the typical price.",
+        medianPriceInfo: "The middle price in a sorted list of prices. Half the prices are above it, half are below.",
+        stdDeviationInfo: "How much the price of an asset tends to fluctuate over time. High volatility means large, rapid price changes.",
+        to: "to",
+        liveData: "Live Data",
+        marketOverview: "Market Overview",
+        bidAskSpread: "Bid-Ask Spread",
+        ofSellPrice: "of sell price",
+        fromYesterday: "from yesterday",
+        marketCap: "Market Cap",
+        goodsInMarket: "Goods in Market",
+        marketStatus: "Market Status",
+        tradingInsights: "Trading Insights",
+        marketTendency: "Market Tendency",
+        marketDirection: "Overall market direction",
+        buyPressure: "Buy Pressure",
+        sellPressure: "Sell Pressure",
+        liquidity: "Liquidity",
+        recentMarketActivity: "Recent Market Activity",
+        lastDataRefresh: "Last Data Refresh",
+        never: "Never"
+    }
+} as const;

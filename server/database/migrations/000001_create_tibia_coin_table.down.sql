@@ -1,1 +1,0 @@
-DROP TABLE tibia_coin;

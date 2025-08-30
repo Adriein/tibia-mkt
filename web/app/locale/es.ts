@@ -1,0 +1,36 @@
+export default {
+    Home: {
+       welcome: "Bienvenido a Tibia Mkt!",
+    },
+    Detail: {
+        timeSpan3Months: "Últimos 3 meses",
+        timeSpan30Days: "Últimos 30 días",
+        timeSpan7ays: "Últimos 7 días",
+        buyOffer: "Oferta de compra",
+        sellOffer: "Oferta de venta",
+        averagePrice: "Precio medio",
+        medianPrice: "Precio mediano",
+        stdDeviation: "Volatilidad del precio",
+        averagePriceInfo: "La suma de todos los precios dividida por el número de precios. Es el precio típico.",
+        medianPriceInfo: "El precio central en una lista de precios ordenada. La mitad de los precios están por encima, la mitad por debajo.",
+        stdDeviationInfo: "Cuánto tiende a fluctuar el precio de un activo a lo largo del tiempo. Alta volatilidad significa cambios de precio grandes y rápidos.",
+        to: "a",
+        liveData: "Datos en tiempo real",
+        marketOverview: "Resumen del Mercado",
+        bidAskSpread: "Diferencial de compra-venta",
+        ofSellPrice: "del precio de venta",
+        fromYesterday: "de ayer",
+        marketCap: "Capitalización de mercado",
+        goodsInMarket: "Productos en el mercado",
+        marketStatus: "Estado del mercado",
+        tradingInsights: "Análisis del mercado",
+        marketTendency: "Tendencia del mercado",
+        marketDirection: "Dirección general del mercado",
+        buyPressure: "Presión de compra",
+        sellPressure: "Presión de venta",
+        liquidity: "Liquidez",
+        recentMarketActivity: "Actividad reciente del mercado",
+        lastDataRefresh: "Última actualización de datos",
+        never: "Nunca"
+    }
+};

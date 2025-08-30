@@ -2,7 +2,7 @@ package helper
 
 import (
 	"fmt"
-	"github.com/adriein/tibia-mkt/pkg/types"
+	"github.com/rotisserie/eris"
 	"os"
 )
 
@@ -21,11 +21,7 @@ func (evc *EnvVarChecker) Check() error {
 		_, exists := os.LookupEnv(key)
 
 		if !exists {
-			return types.ApiError{
-				Msg:      fmt.Sprintf("Env var %s not set", key),
-				Function: "Check",
-				File:     "env-var-checker.go",
-			}
+			return eris.New(fmt.Sprintf("Env var %s not set", key))
 		}
 	}
 
