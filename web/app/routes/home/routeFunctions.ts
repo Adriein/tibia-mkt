@@ -2,7 +2,7 @@ import type {ApiResponse, Price, PriceChartData} from "~/lib/types";
 import type {
     PricesHomePageData,
     HomePagePriceDataPoint,
-    LatestTibiaNewsData,
+    TibiaArticleData,
     LatestTibiaNewsRes,
     MergedHomePageData, TibiaArticleRes
 } from "~/routes/home/types";
@@ -113,14 +113,14 @@ function getTimeTicks(data: HomePagePriceDataPoint[], desiredTicks = 16): string
     return ticks;
 }
 
-export async function fetchTibiaNews(): Promise<LatestTibiaNewsData[]> {
+export async function fetchTibiaNews(): Promise<TibiaArticleData[]> {
     const req: Request = new Request(`${process.env.OFFICIAL_TIBIA_API_URL}/v4/news/latest`);
 
     const response: Response = await fetch(req);
 
     const res: LatestTibiaNewsRes = await response.json();
 
-    return res.news.map((r: TibiaArticleRes): LatestTibiaNewsData => {
+    return res.news.map((r: TibiaArticleRes): TibiaArticleData => {
         return {
             title: r.news,
             date: formatTimeAgo(new Date(r.date)),

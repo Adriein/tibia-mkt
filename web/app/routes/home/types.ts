@@ -13,7 +13,7 @@ export type HomePriceChartData = { wikiLink: string, dataPoints: HomePagePriceDa
 
 export type MergedHomePageData = {[key: string]: HomePriceChartData}
 
-export type HomePageData = {prices: MergedHomePageData, news: LatestTibiaNewsData[]}
+export type HomePageData = {prices: MergedHomePageData, news: TibiaArticleData[]}
 
 export type TibiaArticleRes = {
     category: string,
@@ -29,7 +29,7 @@ export type LatestTibiaNewsRes = {
     news: TibiaArticleRes[]
 };
 
-export type LatestTibiaNewsData = {
+export type TibiaArticleData = {
     title: string,
     date: string,
     category: string,

@@ -4,10 +4,10 @@ import Autoplay from "embla-carousel-autoplay";
 import {Card, CardContent, CardHeader} from "~/components/ui/card";
 import {Badge} from "~/components/ui/badge";
 import React from "react";
-import type {LatestTibiaNewsData} from "~/routes/home/types";
+import type {TibiaArticleData} from "~/routes/home/types";
 
 interface HomeTibiaNewsProps {
-    news: LatestTibiaNewsData[]
+    news: TibiaArticleData[]
 }
 
 export function HomeTibiaNews({ news }: HomeTibiaNewsProps) {
@@ -67,12 +67,18 @@ export function HomeTibiaNews({ news }: HomeTibiaNewsProps) {
         }
     }
 
-    const getIcon = (category: string) => {
+    const getIcon = (category: string): string => {
         switch (category) {
             case "community":
-                return Zap;
+                return "https://static.tibia.com/images/global/content/newsicon_community_big.png";
             case "development":
-                return Zap;
+                return "https://static.tibia.com/images/global/content/newsicon_development_big.png";
+            case "cipsoft":
+                return "https://static.tibia.com/images/global/content/newsicon_cipsoft_big.png";
+            case "support":
+                return "https://static.tibia.com/images/global/content/newsicon_support_big.png";
+            default:
+                return "https://static.tibia.com/images/global/content/newsicon_technical_big.png"
         }
     }
 
@@ -91,7 +97,7 @@ export function HomeTibiaNews({ news }: HomeTibiaNewsProps) {
                 className="w-full mx-auto"
             >
                 <CarouselContent className="-ml-1 md:-ml-4">
-                    {news.map((article: LatestTibiaNewsData, index) => {
+                    {news.map((article: TibiaArticleData, index) => {
                         const Icon = getIcon(article.category) as unknown as any
                         return (
                             <CarouselItem key={index} className="pl-1 md:pl-4 basis-full md:basis-1/2 max-w-md">
@@ -99,7 +105,7 @@ export function HomeTibiaNews({ news }: HomeTibiaNewsProps) {
                                     <CardHeader className="pb-3">
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex-1">
-                                                <h3 className="font-semibold text-foreground leading-tight mb-2 text-sm md:text-base">
+                                                <h3 className="font-semibold text-foreground leading-tight mb-3 text-sm md:text-base">
                                                     {article.title}
                                                 </h3>
                                                 <div className="flex items-center gap-2 mb-2">
@@ -113,7 +119,7 @@ export function HomeTibiaNews({ news }: HomeTibiaNewsProps) {
                                                 </div>
                                             </div>
                                             <div className={`p-2 rounded-lg bg-muted/50`}>
-                                                <Icon className={`w-4 h-4 md:w-5 md:h-5 ${getIconColor(article.category)}`} />
+                                                <img src={getIcon(article.category)} className={`w-8 h-8 md:w-8 md:h-8`}  alt="category_icon"/>
                                             </div>
                                         </div>
                                     </CardHeader>
