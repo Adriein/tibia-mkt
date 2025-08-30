@@ -4,9 +4,14 @@ import Autoplay from "embla-carousel-autoplay";
 import {Card, CardContent, CardHeader} from "~/components/ui/card";
 import {Badge} from "~/components/ui/badge";
 import React from "react";
+import type {LatestTibiaNewsData} from "~/routes/home/types";
 
-export function HomeGameNews() {
-    const news = [
+interface HomeTibiaNewsProps {
+    news: LatestTibiaNewsData[]
+}
+
+export function HomeTibiaNews({ news }: HomeTibiaNewsProps) {
+    /*const news = [
         {
             title: "Summer Update 2025 Released",
             summary: "New hunting grounds and rare items added. Expect price fluctuations on creature products.",
@@ -39,30 +44,35 @@ export function HomeGameNews() {
             impact: "high" as const,
             icon: TrendingUp,
         },
-    ]
-    const getImpactColor = (impact: string) => {
-        switch (impact) {
-            case "high":
-                return "bg-red-500/10 text-red-500 border-red-500/20"
-            case "medium":
+    ]*/
+    const getImpactColor = (category: string) => {
+        switch (category) {
+            case "community":
                 return "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
-            case "low":
+            case "development":
                 return "bg-blue-500/10 text-blue-500 border-blue-500/20"
             default:
                 return "bg-muted text-muted-foreground"
         }
     }
 
-    const getIconColor = (impact: string) => {
-        switch (impact) {
-            case "high":
-                return "text-red-500"
-            case "medium":
+    const getIconColor = (category: string) => {
+        switch (category) {
+            case "community":
                 return "text-yellow-500"
-            case "low":
+            case "development":
                 return "text-blue-500"
             default:
                 return "text-muted-foreground"
+        }
+    }
+
+    const getIcon = (category: string) => {
+        switch (category) {
+            case "community":
+                return Zap;
+            case "development":
+                return Zap;
         }
     }
 
@@ -81,8 +91,8 @@ export function HomeGameNews() {
                 className="w-full mx-auto"
             >
                 <CarouselContent className="-ml-1 md:-ml-4">
-                    {news.map((article, index) => {
-                        const Icon = article.icon
+                    {news.map((article: LatestTibiaNewsData, index) => {
+                        const Icon = getIcon(article.category) as unknown as any
                         return (
                             <CarouselItem key={index} className="pl-1 md:pl-4 basis-full md:basis-1/2 max-w-md">
                                 <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer h-full">
@@ -93,7 +103,7 @@ export function HomeGameNews() {
                                                     {article.title}
                                                 </h3>
                                                 <div className="flex items-center gap-2 mb-2">
-                                                    <Badge variant="outline" className={getImpactColor(article.impact)}>
+                                                    <Badge variant="outline" className={getImpactColor(article.category)}>
                                                         {article.category}
                                                     </Badge>
                                                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -103,13 +113,10 @@ export function HomeGameNews() {
                                                 </div>
                                             </div>
                                             <div className={`p-2 rounded-lg bg-muted/50`}>
-                                                <Icon className={`w-4 h-4 md:w-5 md:h-5 ${getIconColor(article.impact)}`} />
+                                                <Icon className={`w-4 h-4 md:w-5 md:h-5 ${getIconColor(article.category)}`} />
                                             </div>
                                         </div>
                                     </CardHeader>
-                                    <CardContent className="pt-0">
-                                        <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">{article.summary}</p>
-                                    </CardContent>
                                 </Card>
                             </CarouselItem>
                         )

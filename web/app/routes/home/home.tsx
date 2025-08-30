@@ -1,6 +1,12 @@
-import {fetchPrices, getRelevantPrices, mergeSellAndBuyOffers, orderByPagePosition} from "~/routes/home/routeFunctions";
+import {
+    fetchPrices,
+    fetchTibiaNews,
+    getRelevantPrices,
+    mergeSellAndBuyOffers,
+    orderByPagePosition
+} from "~/routes/home/routeFunctions";
 import type {ApiResponse} from "~/lib/types";
-import type {HomePageData, MergedHomePageData} from "~/routes/home/types";
+import type {PricesHomePageData, MergedHomePageData, HomePageData} from "~/routes/home/types";
 import {PriceOverview} from "~/components/ui/price-overview";
 import {BeautyLocale, type HomeTranslations, loc} from "~/locale/loc";
 import type {Route} from "@/.react-router/types/app/routes/home/+types/home";
@@ -8,7 +14,7 @@ import React from "react";
 import {Server} from "lucide-react";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {HomeHeader} from "~/components/ui/home-header";
-import {HomeGameNews} from "~/components/ui/home-news";
+import {HomeTibiaNews} from "~/components/ui/home-news";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -17,21 +23,29 @@ export function meta({}: Route.MetaArgs) {
     ];
 }
 
-export async function loader({ request }: Route.LoaderArgs): Promise<{data: MergedHomePageData, t: HomeTranslations}> {
+export async function loader({ request }: Route.LoaderArgs): Promise<{data: HomePageData, t: HomeTranslations}> {
     const url = new URL(request.url);
     const language: string = url.searchParams.get('lang') || BeautyLocale.English;
 
-    const prices: ApiResponse<HomePageData> = await fetchPrices();
+    const [news, prices] = await Promise.all([await fetchTibiaNews(), await fetchPrices()]);
+
+    //const prices: ApiResponse<HomePageData> = await fetchPrices();
 
     if (!prices.ok || !prices.data) {
-        return {data: {}, t: loc(language, "Home")};
+        return {data: {news, prices: {}}, t: loc(language, "Home")};
     }
 
-    const orderedPrices: HomePageData = orderByPagePosition(prices.data);
+    const orderedPrices: PricesHomePageData = orderByPagePosition(prices.data);
 
     const results: MergedHomePageData = mergeSellAndBuyOffers(orderedPrices);
 
-    return {data: getRelevantPrices(results), t: loc(language, "Home")};
+    return {
+        data: {
+            prices: getRelevantPrices(results),
+            news,
+        },
+        t: loc(language, "Home")
+    };
 }
 
 export default function Home({loaderData}: Route.ComponentProps) {
@@ -41,7 +55,7 @@ export default function Home({loaderData}: Route.ComponentProps) {
       <div className="min-h-screen">
           <HomeHeader />
           <main className="container mx-auto px-4 py-8 space-y-8">
-              <HomeGameNews />
+              <HomeTibiaNews news={data.news} />
               <section>
                   <div className="flex flex-col space-y-4 mb-6 md:flex-row md:items-center md:justify-between md:space-y-0">
                       <div>
@@ -100,9 +114,9 @@ export default function Home({loaderData}: Route.ComponentProps) {
                   </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                      {Object.keys(data).map((good: string, index: number) => {
+                      {Object.keys(data.prices).map((good: string, index: number) => {
                           return (
-                              <PriceOverview key={index} good={good} data={data[good]}/>
+                              <PriceOverview key={index} good={good} data={data.prices[good]}/>
                           );
                       })}
                   </div>

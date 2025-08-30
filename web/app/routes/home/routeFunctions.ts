@@ -1,8 +1,15 @@
 import type {ApiResponse, Price, PriceChartData} from "~/lib/types";
-import type {HomePageData, HomePagePriceDataPoint, MergedHomePageData} from "~/routes/home/types";
+import type {
+    PricesHomePageData,
+    HomePagePriceDataPoint,
+    LatestTibiaNewsData,
+    LatestTibiaNewsRes,
+    MergedHomePageData, TibiaArticleRes
+} from "~/routes/home/types";
+import {formatTimeAgo} from "~/lib/utils";
 
 
-export async function fetchPrices(): Promise<ApiResponse<HomePageData>> {
+export async function fetchPrices(): Promise<ApiResponse<PricesHomePageData>> {
     const homeRequest: Request = new Request(
         `${process.env.API_PROTOCOL}://${process.env.API_URL}` +
         "/prices?" +
@@ -14,7 +21,7 @@ export async function fetchPrices(): Promise<ApiResponse<HomePageData>> {
     return await response.json();
 }
 
-export function orderByPagePosition(unOrderedResults: HomePageData): HomePageData {
+export function orderByPagePosition(unOrderedResults: PricesHomePageData): PricesHomePageData {
     const pricesMap: Map<number, string> = Object.keys(unOrderedResults)
         .reduce((result: Map<number, string>, goodName: string): Map<number, string> => {
             const price: PriceChartData = unOrderedResults[goodName];
@@ -22,7 +29,7 @@ export function orderByPagePosition(unOrderedResults: HomePageData): HomePageDat
             return result.set(price.pagePosition, goodName);
         }, new Map<number, string>());
 
-    let result: HomePageData = {};
+    let result: PricesHomePageData = {};
 
     for (let i: number = 0; i < Object.keys(unOrderedResults).length; i++) {
         const goodName: string = pricesMap.get(i + 1)!;
@@ -33,7 +40,7 @@ export function orderByPagePosition(unOrderedResults: HomePageData): HomePageDat
     return result;
 }
 
-export function mergeSellAndBuyOffers(orderedResults: HomePageData): MergedHomePageData {
+export function mergeSellAndBuyOffers(orderedResults: PricesHomePageData): MergedHomePageData {
     return Object.keys(orderedResults).reduce((acc: MergedHomePageData, good: string): MergedHomePageData => {
         const chartData: PriceChartData = orderedResults[good];
 
@@ -104,4 +111,20 @@ function getTimeTicks(data: HomePagePriceDataPoint[], desiredTicks = 16): string
     }
 
     return ticks;
+}
+
+export async function fetchTibiaNews(): Promise<LatestTibiaNewsData[]> {
+    const req: Request = new Request(`${process.env.OFFICIAL_TIBIA_API_URL}/v4/news/latest`);
+
+    const response: Response = await fetch(req);
+
+    const res: LatestTibiaNewsRes = await response.json();
+
+    return res.news.map((r: TibiaArticleRes): LatestTibiaNewsData => {
+        return {
+            title: r.news,
+            date: formatTimeAgo(new Date(r.date)),
+            category: r.category,
+        };
+    });
 }
