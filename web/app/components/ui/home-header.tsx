@@ -30,7 +30,7 @@ export function HomeHeader() {
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold text-foreground">Tibia Mkt</h1>
-                            <p className="text-sm text-muted-foreground">Making trade easy</p>
+                            <p className="text-sm text-muted-foreground">Trade made easy</p>
                         </div>
                     </div>
 
