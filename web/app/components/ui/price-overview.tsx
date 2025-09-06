@@ -9,6 +9,7 @@ import {Book, Eye} from "lucide-react";
 import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
 import {Link, useSearchParams} from "react-router";
 import type {HomePagePriceDataPoint, HomePriceChartData} from "~/routes/home/types";
+import {BeautyLocale, languageConverter} from "~/locale/loc";
 
 const chartConfig = {
     buyOffer: {
@@ -34,13 +35,13 @@ const transformValueNumberToLocale = (value: number|string): string => {
     return Intl.NumberFormat("es-Es").format(value as number).toString()
 };
 
-function presentTimeSpan(data: HomePagePriceDataPoint[]): string {
+function presentTimeSpan(data: HomePagePriceDataPoint[], loc: string|null): string {
     const start: string = Intl
-        .DateTimeFormat('es-ES', {year: "numeric", month: "short"})
+        .DateTimeFormat(languageConverter(loc ?? BeautyLocale.English), {year: "numeric", month: "short"})
         .format(new Date(data[0].createdAt));
 
     const end: string = Intl
-        .DateTimeFormat('es-ES', {year: "numeric", month: "short"})
+        .DateTimeFormat(languageConverter(loc ?? BeautyLocale.English), {year: "numeric", month: "short"})
         .format(new Date(data[data.length - 1].createdAt));
 
     return `${start} - ${end}`;
@@ -54,7 +55,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
         <Card className="w-full hover:bg-muted/50">
             <CardHeader>
                 <CardTitle>{camelCaseToTitle(good)}</CardTitle>
-                <CardDescription>{presentTimeSpan(data.dataPoints)}</CardDescription>
+                <CardDescription>{presentTimeSpan(data.dataPoints, lang)}</CardDescription>
                 <CardAction className="flex gap-3">
                     <Tooltip>
                         <TooltipTrigger asChild>
