@@ -35,11 +35,13 @@ func NewService(
 }
 
 func (s *Service) SeedPricesFromCsv() error {
-	goods := [4]string{
+	goods := [6]string{
 		constants.HoneycombEntity,
 		constants.SwamplingWoodEntity,
 		constants.TibiaCoinEntity,
 		constants.BrokenShamanicStaffEntity,
+		constants.TurtleShell,
+		constants.CobraRod,
 	}
 
 	for _, good := range goods {

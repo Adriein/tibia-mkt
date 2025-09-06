@@ -27,6 +27,8 @@ const (
 	TibiaCoinEntity           = "tibiaCoin"
 	SwamplingWoodEntity       = "swamplingWood"
 	BrokenShamanicStaffEntity = "brokenShamanicStaff"
+	TurtleShell               = "turtleShell"
+	CobraRod                  = "cobraRod"
 	SellOffer                 = "SELL"
 	BuyOffer                  = "BUY"
 	VolatileMarketStatus      = "Volatile"
