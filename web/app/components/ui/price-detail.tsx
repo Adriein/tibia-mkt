@@ -6,13 +6,11 @@ import type {NameType, Payload, ValueType} from "recharts/types/component/Defaul
 import React from "react";
 import type {Price, PriceChartData} from "~/lib/types";
 import {ToggleGroup, ToggleGroupItem} from "~/components/ui/toggle-group";
-import type {DetailTranslations} from "~/locale/loc";
+import {BeautyLocale, type DetailTranslations, languageConverter} from "~/locale/loc";
 import type {DetailPageEventsData, DetailPageStatisticsData} from "~/routes/detail/types";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {Badge} from "~/components/ui/badge";
 import {TrendingUp, TrendingDown, CircleQuestionMark, ChartNoAxesCombined, CalendarClock, TriangleAlert, Scale} from "lucide-react";
-import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
-import HoneycombGif from "~/assets/honeycomb.gif";
 import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
 
 const SELL_CHART = "sell";
@@ -31,6 +29,7 @@ type PriceDetailProps = {
     events: DetailPageEventsData[];
     t: DetailTranslations;
     isMobile: boolean;
+    loc: string;
 }
 
 type PriceDetailChartProps = {
@@ -39,6 +38,7 @@ type PriceDetailChartProps = {
     type: typeof SELL_CHART | typeof BUY_CHART
     t: DetailTranslations;
     isMobile: boolean;
+    loc: string;
 }
 
 type PriceDetailStatsCardProps = {
@@ -47,6 +47,7 @@ type PriceDetailStatsCardProps = {
     change?: number;
     value: number | string;
     info: string;
+    loc: string;
 }
 
 const MARKET_STATUS_COLORS = {
@@ -123,15 +124,19 @@ const getMarketTendencyIcon = (tendency: string) => {
     );
 }
 
-const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
-    return <span>{formatDateToShortForm(label)}</span>
+const labelFormatter = (loc: string|null) => (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
+    return <span>{formatDateToShortForm(label, loc)}</span>
 }
 
-const transformNumberToLocale = (value: number|string): string => {
-    return Intl.NumberFormat("es-Es").format(value as number).toString()
+const tickFormatter = (loc: string|null) => (value: string) => formatDateToShortForm(value, loc);
+
+const valueFormatter = (loc: string) => (value: string|number) => transformNumberToLocale(value, loc)
+
+const transformNumberToLocale = (value: number|string, loc: string|null): string => {
+    return Intl.NumberFormat(languageConverter(loc ?? BeautyLocale.English)).format(value as number).toString()
 };
 
-function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps): React.ReactElement {
+function PriceDetailChart({good, type, data, t, isMobile, loc}: PriceDetailChartProps): React.ReactElement {
     const [timeRange, setTimeRange] = React.useState(isMobile? "7d" : "90d");
 
     let filteredData: Price[];
@@ -231,15 +236,15 @@ function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps
                             axisLine={false}
                             tickMargin={8}
                             interval="preserveStartEnd"
-                            tickFormatter={formatDateToShortForm}
+                            tickFormatter={tickFormatter(loc)}
                         />
                         <ChartTooltip
                             cursor={false}
                             content={
                                 <ChartTooltipContent
                                     indicator="line"
-                                    labelFormatter={labelFormatter}
-                                    valueFormatter={transformNumberToLocale}
+                                    labelFormatter={labelFormatter(loc)}
+                                    valueFormatter={valueFormatter(loc)}
                                     className="w-[150px]"/>
                             }
                         />
@@ -274,7 +279,7 @@ function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps
     );
 }
 
-function PriceDetailStatsCard({title, value, info}: PriceDetailStatsCardProps) {
+function PriceDetailStatsCard({title, value, info, loc}: PriceDetailStatsCardProps) {
     return (
         <Card className="relative">
             <CardHeader className="pb-2">
@@ -293,14 +298,14 @@ function PriceDetailStatsCard({title, value, info}: PriceDetailStatsCardProps) {
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">{transformNumberToLocale(value)}</div>
+                <div className="text-2xl font-bold">{transformNumberToLocale(value, loc)}</div>
             </CardContent>
         </Card>
     );
 }
 
 
-async function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetailProps) {
+async function PriceDetail({good, prices, statistics, events, t, isMobile, loc}: PriceDetailProps) {
     const lastDataRefreshEvent: DetailPageEventsData|null = events.find((event: DetailPageEventsData): boolean => event.name === 'DATA_INGESTION') ?? null;
     return (
         <div className="min-h-screen p-6">
@@ -315,7 +320,7 @@ async function PriceDetail({good, prices, statistics, events, t, isMobile}: Pric
                             <div>
                                 <h1 className="text-3xl font-bold">{camelCaseToTitle(good)}</h1>
                                 <p className="text-sm mt-1">
-                                    Data series from {formatDateToElegantForm(prices.sellOffer.at(0)!.createdAt)} {t.to} {formatDateToElegantForm(prices.sellOffer.at(-1)!.createdAt)}
+                                    Data series from {formatDateToElegantForm(prices.sellOffer.at(0)!.createdAt, loc)} {t.to} {formatDateToElegantForm(prices.sellOffer.at(-1)!.createdAt, loc)}
                                 </p>
                             </div>
                         </div>
@@ -346,7 +351,7 @@ async function PriceDetail({good, prices, statistics, events, t, isMobile}: Pric
                                 <div className="space-y-1">
                                     <p className="text-xs uppercase tracking-wide">{t.bidAskSpread}</p>
                                     <p className="text-xl font-bold">
-                                        {transformNumberToLocale(statistics.overview.buySellSpread)}
+                                        {transformNumberToLocale(statistics.overview.buySellSpread, loc)}
                                     </p>
                                     <p className="text-xs text-[var(--primary)] font-medium">
                                         {statistics.overview.spreadPercentage}% {t.ofSellPrice}
@@ -355,7 +360,7 @@ async function PriceDetail({good, prices, statistics, events, t, isMobile}: Pric
                                 <div className="space-y-1">
                                     <p className="text-xs uppercase tracking-wide">24h Volume</p>
                                     <p className="text-xl font-bold">
-                                        {transformNumberToLocale(statistics.overview.lastTwentyFourHoursVolume)}
+                                        {transformNumberToLocale(statistics.overview.lastTwentyFourHoursVolume, loc)}
                                     </p>
                                     <p className="text-xs text-[var(--chart-theme-2)] font-medium">
                                         {statistics.overview.marketVolumePercentageTendency}% {t.fromYesterday}
@@ -368,7 +373,7 @@ async function PriceDetail({good, prices, statistics, events, t, isMobile}: Pric
                                 <div className="flex justify-between items-center">
                                     <span className="text-sm">{t.marketCap}</span>
                                     <span className="font-semibold">
-                                        {transformNumberToLocale(statistics.overview.marketCap)}
+                                        {transformNumberToLocale(statistics.overview.marketCap, loc)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">
@@ -509,20 +514,23 @@ async function PriceDetail({good, prices, statistics, events, t, isMobile}: Pric
                             title={t.averagePrice}
                             value={statistics.stats.buyOffersMean}
                             info={t.averagePriceInfo}
+                            loc={loc}
                         />
                         <PriceDetailStatsCard
                             title={t.medianPrice}
                             value={statistics.stats.buyOffersMedian}
                             info={t.medianPriceInfo}
+                            loc={loc}
                         />
                         <PriceDetailStatsCard
                             title={t.stdDeviation}
                             value={statistics.stats.buyOffersStdDeviation}
                             info={t.stdDeviationInfo}
+                            loc={loc}
                         />
                     </div>
 
-                    <PriceDetailChart good={good} type={BUY_CHART} data={prices} t={t} isMobile={isMobile}/>
+                    <PriceDetailChart good={good} type={BUY_CHART} data={prices} t={t} isMobile={isMobile} loc={loc}/>
                 </div>
 
                 {/* Sell Offers Section */}
@@ -537,19 +545,22 @@ async function PriceDetail({good, prices, statistics, events, t, isMobile}: Pric
                             title={t.averagePrice}
                             value={statistics.stats.sellOffersMean}
                             info={t.averagePriceInfo}
+                            loc={loc}
                         />
                         <PriceDetailStatsCard
                             title={t.medianPrice}
                             value={statistics.stats.sellOffersMedian}
                             info={t.medianPriceInfo}
+                            loc={loc}
                         />
                         <PriceDetailStatsCard
                             title={t.stdDeviation}
                             value={statistics.stats.sellOffersStdDeviation}
                             info={t.stdDeviationInfo}
+                            loc={loc}
                         />
                     </div>
-                    <PriceDetailChart good={good} type={SELL_CHART} data={prices} t={t} isMobile={isMobile}/>
+                    <PriceDetailChart good={good} type={SELL_CHART} data={prices} t={t} isMobile={isMobile} loc={loc}/>
                 </div>
             </div>
         </div>

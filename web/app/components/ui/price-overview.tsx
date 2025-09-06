@@ -25,10 +25,15 @@ const chartConfig = {
 type PriceOverviewProps = {
     good: string;
     data: HomePriceChartData;
+    loc: string;
 }
 
 const labelFormatter = (label: string, _: Array<Payload<ValueType, NameType>>): React.ReactNode => {
     return <span>{formatDateToShortForm(label)}</span>
+}
+
+const tickFormatter = (loc: string|null) => (value: string) => {
+    return formatDateToShortForm(value, loc)
 }
 
 const transformValueNumberToLocale = (value: number|string): string => {
@@ -47,7 +52,7 @@ function presentTimeSpan(data: HomePagePriceDataPoint[], loc: string|null): stri
     return `${start} - ${end}`;
 }
 
-function PriceOverview({good, data}: PriceOverviewProps) {
+function PriceOverview({good, data, loc}: PriceOverviewProps) {
     const [searchParams] = useSearchParams();
     const lang: string|null = searchParams.get("lang");
 
@@ -106,7 +111,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
                             axisLine={false}
                             tickMargin={8}
                             interval="preserveStartEnd"
-                            tickFormatter={formatDateToShortForm}
+                            tickFormatter={tickFormatter(loc)}
                         />
                         <ChartTooltip
                             cursor={false}

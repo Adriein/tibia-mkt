@@ -23,7 +23,7 @@ export function meta({}: Route.MetaArgs) {
     ];
 }
 
-export async function loader({ request }: Route.LoaderArgs): Promise<{data: HomePageData, t: HomeTranslations}> {
+export async function loader({ request }: Route.LoaderArgs): Promise<{data: HomePageData, t: HomeTranslations, loc: string}> {
     const url = new URL(request.url);
     const language: string = url.searchParams.get('lang') || BeautyLocale.English;
 
@@ -32,7 +32,7 @@ export async function loader({ request }: Route.LoaderArgs): Promise<{data: Home
     //const prices: ApiResponse<HomePageData> = await fetchPrices();
 
     if (!prices.ok || !prices.data) {
-        return {data: {news, prices: {}}, t: loc(language, "Home")};
+        return {data: {news, prices: {}}, t: loc(language, "Home"), loc: language};
     }
 
     const orderedPrices: PricesHomePageData = orderByPagePosition(prices.data);
@@ -44,12 +44,13 @@ export async function loader({ request }: Route.LoaderArgs): Promise<{data: Home
             prices: getRelevantPrices(results),
             news,
         },
-        t: loc(language, "Home")
+        t: loc(language, "Home"),
+        loc: language
     };
 }
 
 export default function Home({loaderData}: Route.ComponentProps) {
-  const { data, t } = loaderData;
+  const { data, t, loc } = loaderData;
 
   return (
       <div className="min-h-screen">
@@ -116,7 +117,7 @@ export default function Home({loaderData}: Route.ComponentProps) {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                       {Object.keys(data.prices).map((good: string, index: number) => {
                           return (
-                              <PriceOverview key={index} good={good} data={data.prices[good]}/>
+                              <PriceOverview key={index} good={good} data={data.prices[good]} loc={loc}/>
                           );
                       })}
                   </div>

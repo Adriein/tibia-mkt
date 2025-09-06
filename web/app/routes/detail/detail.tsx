@@ -13,7 +13,8 @@ type LoaderData = {
     prices: PriceChartData;
     statistics: DetailPageStatisticsData;
     events: DetailPageEventsData[];
-    isMobile: boolean
+    isMobile: boolean;
+    loc: string;
 };
 
 export function meta({params}: Route.MetaArgs) {
@@ -41,12 +42,13 @@ export async function loader({params, request}: Route.LoaderArgs): Promise<Loade
         statistics: res.data.statistics,
         events: res.data.events,
         t: loc(languageConverter(language), "Detail"),
+        loc: language,
         isMobile,
     };
 }
 
 export default function Detail({loaderData, params}: Route.ComponentProps): React.ReactElement {
-    const { prices, statistics, events, t, isMobile } = loaderData;
+    const { prices, statistics, events, t, isMobile, loc } = loaderData;
     return (
         <main>
             <PriceDetail
@@ -56,6 +58,7 @@ export default function Detail({loaderData, params}: Route.ComponentProps): Reac
                 events={events}
                 t={t}
                 isMobile={isMobile}
+                loc={loc}
             />
         </main>
     );

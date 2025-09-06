@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from "dayjs";
+import {BeautyLocale, languageConverter} from "~/locale/loc";
 
 const gifs = import.meta.glob('../assets/*.gif');
 
@@ -15,16 +16,16 @@ export function cn(...inputs: ClassValue[]) {
 
 //DATES
 
-export const formatDateToShortForm: (value: string) => string = (value: string): string => {
-  return new Intl.DateTimeFormat("es-ES", {
+export const formatDateToShortForm = (value: string, loc?: string|null): string => {
+  return new Intl.DateTimeFormat(languageConverter(loc ?? BeautyLocale.English), {
     month: "short",
     day: "2-digit",
     year: "2-digit"
   }).format(new Date(value))
 };
 
-export const formatDateToElegantForm: (value: string) => string = (value: string): string => {
-    return new Intl.DateTimeFormat("es-ES", {
+export const formatDateToElegantForm= (value: string, loc: string|null): string => {
+    return new Intl.DateTimeFormat(languageConverter(loc ?? BeautyLocale.English), {
         month: "short",
         day: "2-digit",
         year: "numeric"
