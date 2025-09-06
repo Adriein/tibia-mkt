@@ -1,7 +1,7 @@
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "~/components/ui/card";
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
-import {beautifyCamelCase, formatDateToShortForm} from "~/lib/utils";
+import {camelCaseToTitle, formatDateToShortForm} from "~/lib/utils";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
 import {Button} from "~/components/ui/button";
@@ -53,7 +53,7 @@ function PriceOverview({good, data}: PriceOverviewProps) {
     return (
         <Card className="w-full hover:bg-muted/50">
             <CardHeader>
-                <CardTitle>{beautifyCamelCase(good)}</CardTitle>
+                <CardTitle>{camelCaseToTitle(good)}</CardTitle>
                 <CardDescription>{presentTimeSpan(data.dataPoints)}</CardDescription>
                 <CardAction className="flex gap-3">
                     <Tooltip>

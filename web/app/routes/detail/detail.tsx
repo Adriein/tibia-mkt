@@ -2,7 +2,7 @@ import React from "react";
 import type {Route} from "@/.react-router/types/app/routes/detail/+types/detail";
 import {BeautyLocale, type DetailTranslations, languageConverter, loc} from "~/locale/loc";
 import type {ApiResponse, PriceChartData} from "~/lib/types";
-import {beautifyCamelCase} from "~/lib/utils";
+import {camelCaseToTitle} from "~/lib/utils";
 import {fetchDetailData} from "~/routes/detail/routeFunctions";
 import type {DetailPageData, DetailPageEventsData, DetailPageStatisticsData} from "~/routes/detail/types";
 import {redirect} from "react-router";
@@ -18,7 +18,7 @@ type LoaderData = {
 
 export function meta({params}: Route.MetaArgs) {
     return [
-        { title: `Tibia Mkt | ${beautifyCamelCase(params.good)}` },
+        { title: `Tibia Mkt | ${camelCaseToTitle(params.good)}` },
         { name: "description", content: "Detail" },
     ];
 }

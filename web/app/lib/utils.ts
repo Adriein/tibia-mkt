@@ -1,8 +1,9 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import type {Price} from "~/lib/types";
 import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from "dayjs";
+
+const gifs = import.meta.glob('../assets/*.gif');
 
 dayjs.extend(relativeTime);
 
@@ -39,33 +40,9 @@ export function formatTimeAgo(date: Date): string {
     return dayjs(date).fromNow();
 }
 
-//CHARTS
-
-export const xAxisTick = (data: Price[], xAxisDomain: string[]): string[] => {
-  const SHOW_DATES: string[] = xAxisDomain;
-  const result: string[] = [];
-
-  for (let i: number = 0; i < data.length; i++) {
-    const tick: Price = data[i];
-    const day: string = tick.createdAt.split("-")[2];
-
-    if (i == 0 || i == data.length - 1) {
-      result.push(tick.createdAt)
-    }
-
-    if (!SHOW_DATES.includes(day)) {
-      continue;
-    }
-
-    result.push(tick.createdAt)
-  }
-
-  return result;
-}
-
 //STRINGS
 
-export const beautifyCamelCase = (camelCaseWord: string, maxWordClamp: number = 0): string => {
+export const camelCaseToTitle = (camelCaseWord: string, maxWordClamp: number = 0): string => {
   const word: string = camelCaseWord.replace(/([A-Z])/g, " $1").trim();
 
   const firstLetter: string = (word.split("").at(0) as string).toUpperCase();
@@ -81,5 +58,29 @@ export const beautifyCamelCase = (camelCaseWord: string, maxWordClamp: number = 
   }
 
   return camelCase;
+}
+
+export function camelCaseToKebabCase(camelCase: string): string {
+    return camelCase.replace(/[A-Z]/g, (letter: string): string => `-${letter.toLowerCase()}`);
+}
+
+
+
+//IMAGES
+interface GifModule {
+    default: string;
+}
+
+export async function getGif(good: string): Promise<string|undefined> {
+    const gifName: string = camelCaseToKebabCase(good);
+    const gifPath = `../assets/${gifName}.gif`;
+
+    if (gifs[gifPath]) {
+        const module: GifModule = await gifs[gifPath]() as unknown as GifModule;
+
+        return module.default;
+    }
+
+    return undefined;
 }
 

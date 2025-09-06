@@ -1,7 +1,7 @@
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "~/components/ui/card";
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "~/components/ui/chart";
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts";
-import {beautifyCamelCase, formatDateToElegantForm, formatDateToShortForm, formatTimeAgo} from "~/lib/utils";
+import {camelCaseToTitle, formatDateToElegantForm, formatDateToShortForm, formatTimeAgo, getGif} from "~/lib/utils";
 import type {NameType, Payload, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import React from "react";
 import type {Price, PriceChartData} from "~/lib/types";
@@ -11,7 +11,7 @@ import type {DetailPageEventsData, DetailPageStatisticsData} from "~/routes/deta
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {Badge} from "~/components/ui/badge";
 import {TrendingUp, TrendingDown, CircleQuestionMark, ChartNoAxesCombined, CalendarClock, TriangleAlert, Scale} from "lucide-react";
-import {Avatar, AvatarImage} from "~/components/ui/avatar";
+import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
 import HoneycombGif from "~/assets/honeycomb.gif";
 import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
 
@@ -177,7 +177,7 @@ function PriceDetailChart({good, type, data, t, isMobile}: PriceDetailChartProps
     return (
         <Card className="w-full @container/card">
             <CardHeader>
-                <CardTitle>{beautifyCamelCase(good)}</CardTitle>
+                <CardTitle>{camelCaseToTitle(good)}</CardTitle>
                 <CardDescription>{type === BUY_CHART? t.buyOffer : t.sellOffer}</CardDescription>
                 <CardAction className="flex gap-3">
                     <ToggleGroup
@@ -300,7 +300,7 @@ function PriceDetailStatsCard({title, value, info}: PriceDetailStatsCardProps) {
 }
 
 
-function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetailProps) {
+async function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetailProps) {
     const lastDataRefreshEvent: DetailPageEventsData|null = events.find((event: DetailPageEventsData): boolean => event.name === 'DATA_INGESTION') ?? null;
     return (
         <div className="min-h-screen p-6">
@@ -309,11 +309,11 @@ function PriceDetail({good, prices, statistics, events, t, isMobile}: PriceDetai
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-3">
-                            <Avatar className="w-10 h-10">
-                                <AvatarImage src={HoneycombGif} />
-                            </Avatar>
+                            <div className="p-1.5 rounded-md bg-muted/50">
+                                <img src={await getGif(good)} className="w-10 h-10"  alt="category_icon"/>
+                            </div>
                             <div>
-                                <h1 className="text-3xl font-bold">Honeycomb</h1>
+                                <h1 className="text-3xl font-bold">{camelCaseToTitle(good)}</h1>
                                 <p className="text-sm mt-1">
                                     Data series from {formatDateToElegantForm(prices.sellOffer.at(0)!.createdAt)} {t.to} {formatDateToElegantForm(prices.sellOffer.at(-1)!.createdAt)}
                                 </p>
