@@ -1,6 +1,7 @@
 export default {
     Home: {
        welcome: "Bienvenido a Tibia Mkt!",
+        marketOverview: "Resumen del Mercado",
     },
     Detail: {
         timeSpan3Months: "Últimos 3 meses",

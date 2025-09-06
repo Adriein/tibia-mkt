@@ -120,6 +120,20 @@ func (p *Presenter) getPagePosition(item *Price) PriceConfig {
 			Columns:  6,
 			Rows:     1,
 		}
+	case constants.TurtleShell:
+		return PriceConfig{
+			CogId:    item.Id,
+			Position: 5,
+			Columns:  6,
+			Rows:     1,
+		}
+	case constants.CobraRod:
+		return PriceConfig{
+			CogId:    item.Id,
+			Position: 6,
+			Columns:  6,
+			Rows:     1,
+		}
 	default:
 		return PriceConfig{}
 	}

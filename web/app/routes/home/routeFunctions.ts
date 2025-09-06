@@ -14,7 +14,7 @@ export async function fetchPrices(): Promise<ApiResponse<PricesHomePageData>> {
         `${process.env.API_PROTOCOL}://${process.env.API_URL}` +
         "/prices?" +
         "world=Secura&" +
-        "good=tibiaCoin&good=honeycomb&good=swamplingWood&good=brokenShamanicStaff"
+        "good=tibiaCoin&good=honeycomb&good=swamplingWood&good=brokenShamanicStaff&good=cobraRod&good=turtleShell"
     );
 
     const response = await fetch(homeRequest);
