@@ -4,7 +4,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/c
 import {Button} from "~/components/ui/button";
 import React, {useState} from "react";
 import {Avatar, AvatarImage} from "~/components/ui/avatar";
-import HoneycombGif from "~/assets/honeycomb.gif";
+import RoyalHelmetGif from "~/assets/royal-helmet.gif";
 import {useSearchParams} from "react-router";
 import {BeautyLocale} from "~/locale/loc";
 
@@ -22,9 +22,9 @@ export function HomeHeader() {
             <div className="container mx-auto px-4 py-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                        <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-lg">
+                        <div className="p-1 flex items-center justify-center bg-muted rounded-lg">
                             <Avatar className="w-10 h-10">
-                                <AvatarImage src={HoneycombGif} />
+                                <AvatarImage src={RoyalHelmetGif} />
                             </Avatar>
                         </div>
                         <div>

@@ -81,6 +81,8 @@ export async function getGif(good: string): Promise<string|undefined> {
         return module.default;
     }
 
-    return undefined;
+    const module: GifModule = await gifs[`../assets/golden-helmet.gif`]() as unknown as GifModule
+
+    return module.default;
 }
 
