@@ -36,8 +36,8 @@ const tickFormatter = (loc: string|null) => (value: string) => {
     return formatDateToShortForm(value, loc)
 }
 
-const transformValueNumberToLocale = (value: number|string): string => {
-    return Intl.NumberFormat("es-Es").format(value as number).toString()
+const transformValueNumberToLocale = (loc: string) => (value: number|string): string => {
+    return Intl.NumberFormat(languageConverter(loc ?? BeautyLocale.English)).format(value as number).toString()
 };
 
 function presentTimeSpan(data: HomePagePriceDataPoint[], loc: string|null): string {
@@ -119,7 +119,7 @@ function PriceOverview({good, data, loc}: PriceOverviewProps) {
                             <ChartTooltipContent
                                 indicator="line"
                                 labelFormatter={labelFormatter}
-                                valueFormatter={transformValueNumberToLocale}
+                                valueFormatter={transformValueNumberToLocale(loc)}
                                 className="w-[150px]"/>
                             }
                         />
