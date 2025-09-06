@@ -1,10 +1,11 @@
-import {AlertTriangle, Clock, TrendingUp, Zap} from "lucide-react";
+import {Clock, ExternalLink} from "lucide-react";
 import {Carousel, CarouselContent, CarouselItem} from "~/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import {Card, CardContent, CardHeader} from "~/components/ui/card";
 import {Badge} from "~/components/ui/badge";
 import React from "react";
 import type {TibiaArticleData} from "~/routes/home/types";
+import {Link} from "react-router";
 
 interface HomeTibiaNewsProps {
     news: TibiaArticleData[]
@@ -55,31 +56,43 @@ export function HomeTibiaNews({ news }: HomeTibiaNewsProps) {
                     {news.map((article: TibiaArticleData, index) => {
                         return (
                             <CarouselItem key={index} className="pl-1 md:pl-4 basis-full md:basis-1/2 max-w-md">
-                                <Card className="bg-card border-border hover:bg-muted/50 transition-colors cursor-pointer h-full">
+                                <Card className="bg-card border-border hover:border-border/60 transition-all duration-200 hover:shadow-lg hover:shadow-black/20 group">
                                     <CardHeader className="pb-3">
                                         <div className="flex items-start justify-between gap-3">
-                                            <div className="flex-1">
-                                                <h3 className="font-semibold text-foreground leading-tight mb-3 text-sm md:text-base">
+                                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                                                <div className="p-1.5 rounded-md bg-muted/50">
+                                                    <img src={getIcon(article.category)} className="w-4 h-4"  alt="category_icon"/>
+                                                </div>
+                                                <h3 className="font-semibold text-foreground text-lg leading-tight truncate" title={article.title}>
                                                     {article.title}
                                                 </h3>
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <Badge variant="outline" className={getImpactColor(article.category)}>
-                                                        {article.category}
-                                                    </Badge>
-                                                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                                        <Clock className="w-3 h-3" />
-                                                        {article.date}
-                                                    </div>
-                                                </div>
                                             </div>
-                                            <div className={`p-2 rounded-lg bg-muted/50`}>
-                                                <img src={getIcon(article.category)} className={`w-8 h-8 md:w-8 md:h-8`}  alt="category_icon"/>
-                                            </div>
+                                            <button className="p-1.5 rounded-md hover:bg-muted/50 transition-colors opacity-60 group-hover:opacity-100 cursor-pointer">
+                                                <Link
+                                                    to={article.url}
+                                                    aria-label="visit tibia.com"
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                >
+                                                    <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                                                </Link>
+                                            </button>
                                         </div>
                                     </CardHeader>
+                                    <CardContent className="pt-0">
+                                        <div className="flex items-center justify-between">
+                                            <Badge variant="outline" className={getImpactColor(article.category)}>
+                                                {article.category}
+                                            </Badge>
+                                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                                <Clock className="h-3.5 w-3.5" />
+                                                <span>{article.date}</span>
+                                            </div>
+                                        </div>
+                                    </CardContent>
                                 </Card>
                             </CarouselItem>
-                        )
+                        );
                     })}
                 </CarouselContent>
             </Carousel>

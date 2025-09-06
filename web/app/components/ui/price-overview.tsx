@@ -8,9 +8,7 @@ import {Button} from "~/components/ui/button";
 import {Book, Eye} from "lucide-react";
 import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/ui/tooltip";
 import {Link, useSearchParams} from "react-router";
-import type {Price, PriceChartData} from "~/lib/types";
 import type {HomePagePriceDataPoint, HomePriceChartData} from "~/routes/home/types";
-import * as sea from "node:sea";
 
 const chartConfig = {
     buyOffer: {

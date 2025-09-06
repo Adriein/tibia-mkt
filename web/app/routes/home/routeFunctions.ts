@@ -125,6 +125,7 @@ export async function fetchTibiaNews(): Promise<TibiaArticleData[]> {
             title: r.news,
             date: formatTimeAgo(new Date(r.date)),
             category: r.category,
+            url: r.url,
         };
     });
 }

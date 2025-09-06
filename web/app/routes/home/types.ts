@@ -33,4 +33,5 @@ export type TibiaArticleData = {
     title: string,
     date: string,
     category: string,
+    url: string,
 };
